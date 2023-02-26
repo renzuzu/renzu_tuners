@@ -1298,3 +1298,78 @@
 		export = 'renzu_tuners.useItem'
 	}
 },
+
+['rubber'] = {
+	label = 'Rubber',
+	weight = 20,
+	stack = true,
+	close = true,
+	description = nil,
+},
+['sulfur'] = {
+	label = 'Sulfur',
+	weight = 20,
+	stack = true,
+	close = true,
+	description = nil,
+},
+['steel'] = {
+	label = 'Steel',
+	weight = 20,
+	stack = true,
+	close = true,
+	description = nil,
+},
+['polyester'] = {
+	label = 'Polyester',
+	weight = 20,
+	stack = true,
+	close = true,
+	description = nil,
+},
+['bottle'] = {
+	label = 'Bottle',
+	weight = 20,
+	stack = true,
+	close = true,
+	description = nil,
+},
+['methane'] = {
+	label = 'Methane',
+	weight = 20,
+	stack = true,
+	close = true,
+	description = nil,
+},
+['chip'] = {
+	label = 'Chip',
+	weight = 20,
+	stack = true,
+	close = true,
+	description = nil,
+},
+['board'] = {
+	label = 'Board',
+	weight = 20,
+	stack = true,
+	close = true,
+	description = nil,
+},
+
+['copper'] = {
+	label = 'copper',
+	weight = 20,
+	stack = true,
+},
+
+['iron'] = {
+	label = 'iron',
+	weight = 20,
+	stack = true,
+},
+
+['aluminum'] = {
+	label = 'aluminum',
+	weight = 20,
+	stack = true,
+},
