@@ -79,6 +79,8 @@ AddStateBagChangeHandler('startdyno' --[[key filter]], nil --[[bag filter]], fun
 		SetVehicleGravity(entity,false)
 		SetEntityCoordsNoOffset(dynoentity,vec3(value.platform.coord.x,value.platform.coord.y,value.platform.coord.z)-vec3(0.0,0.0,0.9))
 		SetEntityHeading(dynoentity,value.platform.coord.w)
+		SetVehicleOnGroundProperly(dynoentity)
+		SetEntityCoordsNoOffset(dynoentity,GetEntityCoords(entity)-vec3(0.0,0.0,0.1))
 		Citizen.CreateThreadNow(function()
 			local coord = GetEntityCoords(dynoentity)
 			local rot = GetEntityRotation(dynoentity)
