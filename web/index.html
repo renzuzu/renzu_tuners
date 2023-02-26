@@ -1,0 +1,157 @@
+<html lang="en"><head>
+  <meta charset="UTF-8">
+  <title>renzu_mechanics</title> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" integrity="sha512-iBBXm8fW90+nuLcSKlbmrPcLa0OT92xO1BIsZ+ywDWZCvqsWgccV3gFoRBv0z+8dLJgyAHIhR35VZc2oM/gI1w==" crossorigin="anonymous" />
+    <script src="https://kit.fontawesome.com/44e6403392.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,500,700">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Electrolize">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+  <link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css'>
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css'>
+  <link rel="stylesheet" href="style.css" id="css_default">
+</head>
+
+<body translate="no" id="body" style="display: block;">
+    <div id="dyno" style="display: none;">
+       <main id="section-root-container">
+           <section class="section-single" id="section-single-frequency">
+               <div class="section-main-content frequency-content">
+                   <div class="frequency-single-content">
+                       <div class="frequency-single-histogram">
+                           <div class="frequency-single-info">
+                               <div class="full-txtBlock">
+                                <i class="fas fa-tachometer-alt icon" aria-hidden="true"></i>
+                                   <div class="blockvalue"> <span id="rpm"></span></div>
+                                   <div class="blocktitle">Engine Speed</div>
+                               </div>
+                               <div class="full-txtBlock">
+                                <i class="fas fa-digital-tachograph  icon" aria-hidden="true"></i>
+                                   <div class="blockvalue"><span id="speed">0.0</span><span>Kmh</span></div>
+                                   <div class="blocktitle">Speed</div>
+                               </div>
+                               <div class="full-txtBlock">
+                                    <i class="fas fa-cogs icon" aria-hidden="true"></i>
+                                   <div class="blockvalue"><span id="gear">0.0</span> <span></span></div>
+                                   <div class="blocktitle">Gear</div>
+                               </div>
+                               <div class="full-txtBlock">
+                                <i class="fas fa-chart-bar icon" aria-hidden="true"></i>
+                               <div class="blockvalue"><span id="hp">0.0</span> <span></span></div>
+                               <div class="blocktitle">Horse Power</div>
+                           </div>
+                           </div>
+                       </div>
+                   </div>
+               
+               </div>
+           </section>
+       </main>
+   </div>
+   <div class="card" id='dynochart'>
+
+    <div class="card_inner">
+      <canvas id="line-chart" width="900" height="500"></canvas>
+    </div>
+  </div>
+
+  <div id="gauges">
+    <div id="sensors">
+      <div class="cardstatus">
+        <div class="percent">
+          <svg style="width: 110px;height: 110px;">
+            <circle cx="52" cy="54" r="48"></circle>
+            <circle cx="52" cy="54" r="48" style="--percent: 55" id="oiltemp"></circle>
+          </svg>
+          <div class="number">
+            <h3 id="oiltemp2"> </h3>
+          </div>
+        </div>
+        <div class="title">
+          <h2>Oil Temperature</h2>
+        </div>
+      </div>
+
+      <div class="cardstatus">
+        <div class="percent">
+          <svg style="width: 110px;height: 110px;">
+            <circle cx="52" cy="54" r="48"></circle>
+            <circle cx="52" cy="54" r="48" style="--percent: 55" id="oilpressure"></circle>
+          </svg>
+          <div class="number">
+            <h3 id="oilpressure2"></h3>
+          </div>
+        </div>
+        <div class="title">
+          <h2>Oil Pressure</h2>
+        </div>
+      </div>
+
+      <div class="cardstatus">
+        <div class="percent">
+          <svg style="width: 110px;height: 110px;">
+            <circle cx="52" cy="54" r="48"></circle>
+            <circle cx="52" cy="54" r="48" style="--percent: 55" id="watertemp"></circle>
+          </svg>
+          <div class="number">
+            <h3 id="watertemp2"> </h3>
+          </div>
+        </div>
+        <div class="title">
+          <h2>Water Temperature</h2>
+        </div>
+      </div>
+    </div>
+
+    <div id="sensors2">
+      <div class="cardstatus">
+        <div class="percent">
+          <svg style="width: 110px;height: 110px;">
+            <circle cx="52" cy="54" r="48"></circle>
+            <circle cx="52" cy="54" r="48" style="--percent: 55" id="efficiency"></circle>
+          </svg>
+          <div class="number">
+            <h3 id="efficiency2"></h3>
+          </div>
+        </div>
+        <div class="title">
+          <h2>Tuning Efficiency</h2>
+        </div>
+      </div>
+
+      <div class="cardstatus">
+        <div class="percent">
+          <svg style="width: 110px;height: 110px;">
+            <circle cx="52" cy="54" r="48"></circle>
+            <circle cx="52" cy="54" r="48" style="--percent: 41" id="map"></circle>
+          </svg>
+          <div class="number">
+            <h3 id="map2"></h3>
+          </div>
+        </div>
+        <div class="title">
+          <h2>Map Sensor</h2>
+        </div>
+      </div>
+
+      <div class="cardstatus">
+        <div class="percent">
+          <svg style="width: 110px;height: 110px;">
+            <circle cx="52" cy="54" r="48"></circle>
+            <circle cx="52" cy="54" r="48" style="--percent: 55" id="afr"></circle>
+          </svg>
+          <div class="number">
+            <h3 id="afr2"></h3>
+          </div>
+        </div>
+        <div class="title">
+          <h2>Air Fuel Ratio</h2>
+        </div>
+      </div>
+    </div>
+  </div>
+   <script src='https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js'></script>
+<script src="script.js"></script>
+</body></html>

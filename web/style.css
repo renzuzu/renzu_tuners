@@ -1,0 +1,268 @@
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-size: 16px;
+  font-family: "Roboto", "Helvetica Neue", Helvetica, sans-serif;
+}
+
+body {
+  overflow: hidden;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: "Roboto", "Helvetica Neue", Helvetica, sans-serif;
+}
+
+.card_inner {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border: none;
+  outline: none;
+  background-color: #15191efa;
+  position: relative;
+  width: 35vw;
+  padding: 1.1vw;
+  margin: 1vw;
+  border-radius: 10px;
+  z-index: 2;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  box-shadow: 5px 5px rgb(45 48 48 / 40%), 10px 10px rgb(0 0 0 / 30%), 15px 15px rgb(7 8 8 / 20%), 20px 20px rgb(2 2 2 / 10%), 25px 25px rgb(34 38 38 / 5%);
+}
+
+.icon {
+  position: absolute;
+  bottom: 30%;
+  font-size: 30px;
+}
+
+.card {
+  display: none;
+  padding: 0;
+  right: 0;
+  position: absolute;
+}
+
+#section-single-frequency .frequency-content .frequency-single-content .frequency-single-histogram .frequency-single-info .blocktitle {
+  font-size: 0.95em;
+  text-align: center;
+  color: #2c97de;
+}
+.blocktitle {
+  font-weight: 500;
+  font-size: 0.8em;
+  line-height: 1.2;
+  margin-bottom: 0.15rem;
+  color: #2dbda8;
+}
+
+#section-single-frequency .frequency-content .frequency-single-content .frequency-single-histogram .frequency-single-info .blockvalue {
+  font-size: 1.5em;
+  text-align: center;
+}
+.blockvalue {
+  font-size: 1.15em;
+  font-family: "Electrolize", "Helvetica Neue", Helvetica, sans-serif;
+}
+
+#section-single-frequency .frequency-content {
+  font-size: 1em;
+  font-weight: 500;
+  width: 100%;
+  padding: 25px 25px 10px 30px;
+  margin: 0 auto 0 auto;
+  overflow: auto;
+}
+
+#section-single-frequency .frequency-content .frequency-single-content {
+  display: grid;
+  row-gap: 20px;
+  column-gap: 15px;
+  grid-template-columns: 120px 1fr;
+}
+
+#section-single-frequency .frequency-content .frequency-single-content .frequency-single-histogram .frequency-single-info {
+  width: 100%;
+  display: grid;
+  row-gap: 20px;
+  column-gap: 3%;
+  margin-top: 30px;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+#section-single-frequency .frequency-content .frequency-single-content .frequency-single-histogram {
+  position: relative;
+  text-align: left;
+}
+
+#section-single-frequency .frequency-content {
+  font-size: 1em;
+  font-weight: 500;
+  width: 100%;
+  padding: 25px 25px 10px 30px;
+  margin: 0 auto 0 auto;
+  overflow: auto;
+}
+
+.section-main-content {
+  width: 100%;
+  color: #DDD;
+}
+
+.section-main, .section-expanded, .section-single {
+  width: 100%;
+  display: inline-block;
+  position: absolute;
+  bottom: 5%;
+  left: 25%;
+  visibility: visible;
+  transition: opacity 0.3s, transform 0.3s;
+  border-radius: 5px;
+}
+
+#section-single-frequency .frequency-content .frequency-single-content .frequency-single-histogram .frequency-single-info .full-txtBlock {
+  padding: 10px;
+  border-radius: 7px;
+  background-color: #2d2d2d;
+  display: inline-block;
+  width: 200px;
+  height: 80px;
+}
+
+#section-single-frequency .frequency-content .frequency-single-content .frequency-single-histogram .frequency-single-info .blockvalue {
+  font-size: 1.5em;
+  text-align: center;
+}
+
+.blockvalue {
+  font-size: 1.15em;
+  font-family: "Electrolize", "Helvetica Neue", Helvetica, sans-serif;
+}
+
+.blockvalue span {
+  font-size: 0.7em;
+  font-family: "Roboto", "Helvetica Neue", Helvetica, sans-serif;
+}
+
+.cardstatus {
+  background: #2d2d2d;
+  color: floralwhite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 0 20px;
+  width: 150px;
+  height: 200px;
+  border-radius: 5px;
+  box-shadow: 0 10px 20px -10px rgba(0, 0, 0, 0.2);
+}
+
+.cardstatus .percent {
+  position: relative;
+}
+
+.cardstatus svg {
+  position: relative;
+  width: 210px;
+  height: 210px;
+  transform: rotate(-90deg);
+}
+
+.cardstatus svg circle {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: #929292;
+  stroke-width: 10;
+  stroke-linecap: round;
+}
+
+.cardstatus svg circle:last-of-type {
+  stroke-dasharray: 311px;
+  stroke-dashoffset: calc(311px - (311px * var(--percent)) / 100);
+  stroke: #3498db; 
+  transition  : stroke-dashoffset 0.5s linear;
+}
+
+.cardstatus .number {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.cardstatus .number h3 {
+  font-weight: 200;
+  font-size: 1.5rem;
+}
+
+.cardstatus .number h3 span {
+  font-size: 2rem;
+}
+
+.cardstatus .title h2 {
+  margin: 25px 0 0;
+  font-size: 10px;
+}
+
+.cardstatus:nth-child(1) svg circle:last-of-type {
+  stroke: #f39c12;
+}
+
+.cardstatus:nth-child(2) svg circle:last-of-type {
+  stroke: #2ecc71;
+}
+
+#gauges {
+  position: absolute;
+  right: 0;
+  display:none;
+  bottom:6%;
+  z-index: 99;
+}
+
+#sensors {
+  color: #555555;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#sensors2 {
+  color: #555555;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top:10px
+}
+
+@property --num {
+  syntax: "<integer>";
+  initial-value: 0;
+  inherits: false;
+}
+
+#rpm {
+  will-change: --num;
+  transition: --num 0.8ms linear;
+  counter-set: num var(--num);
+}
+
+#rpm {
+  will-change: --num;
+  z-index: 1005;
+  transition: --num 0.8ms linear;
+  counter-set: num var(--num);
+}
+#rpm::after {
+  content: counter(num);
+}
