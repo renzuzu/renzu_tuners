@@ -255,6 +255,7 @@ lib.callback.register('renzu_tuners:Tune', function(src,data)
 	tune[plate]['active'] = data.tune
 	db.save('ecu','plate',plate,json.encode(tune[plate]))
 	GlobalState.ecu = tune
+	ecu = tune
 end)
 
 GetItemState = function(name)
