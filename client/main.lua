@@ -12,6 +12,7 @@ lib.onCache('vehicle', function(value)
 	local ecu_state = GlobalState.ecu
 	local isdriver = GetPedInVehicleSeat(value,-1) == cache.ped
 	local turbopower = 1.0
+	local turboinstall = GetResourceState('renzu_turbo') == 'started'
 	if not isdriver then return end
 	if value then
 		DefaultSetting(value)
@@ -31,7 +32,7 @@ lib.onCache('vehicle', function(value)
 				turbopower = GetVehicleCheatPowerIncrease(value)
 				efficiency = EngineEfficiency(value,stats,tune,turbopower)
 				local gear = GetVehicleCurrentGear(value) + 1
-				if ecu and ecu[gear-1] and not indyno then
+				if ecu and ecu[gear-1] and not indyno and turboinstall then
 					exports.renzu_turbo:BoostPerGear(ecu[gear-1] or 1.0)
 				end
 				local rpm = GetVehicleCurrentRpm(value)
