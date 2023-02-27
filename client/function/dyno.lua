@@ -117,24 +117,26 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 			Wait(155)
 			currentspeed = dyno and math.floor(((flatspeed * 1.2) / 0.9) * rpm) or math.floor(speed)
 			local hp , torque = calculate_horsepower(rpm*10000)
-			SendNUIMessage({
-				stat = {
-					rpm = math.floor(rpm * 10000),
-					gear = gear,
-					speed = currentspeed,
-					hp = math.floor(hp * efficiency),
-					torque = math.floor(torque * efficiency),
-					maxgear = maxgear,
-					gauges = {
-						oiltemp = GetVehicleDashboardOilTemp(vehicle),
-						watertemp = round(GetVehicleEngineTemperature(vehicle)),
-						oilpressure = GetVehicleDashboardOilPressure(vehicle),
-						efficiency = efficiency * 100.0,
-						afr = afr,
-						map = round(turbopower)+0.0 or 1.0
+			if GetIsVehicleEngineRunning(vehicle) then
+				SendNUIMessage({
+					stat = {
+						rpm = math.floor(rpm * 10000),
+						gear = gear,
+						speed = currentspeed,
+						hp = math.floor(hp * efficiency),
+						torque = math.floor(torque * efficiency),
+						maxgear = maxgear,
+						gauges = {
+							oiltemp = GetVehicleDashboardOilTemp(vehicle),
+							watertemp = round(GetVehicleEngineTemperature(vehicle)),
+							oilpressure = GetVehicleDashboardOilPressure(vehicle),
+							efficiency = efficiency * 100.0,
+							afr = afr,
+							map = round(turbopower)+0.0 or 1.0
+						}
 					}
-				}
-			})
+				})
+			end
 			local temp = GetVehicleEngineTemperature(vehicle)
 			local bone = 'bonnet'
 			local enginelocation = GetWorldPositionOfEntityBone(vehicle, GetEntityBoneIndexByName(vehicle,bone))
@@ -151,10 +153,15 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 				Wait(2000)
 				AddExplosion(enginelocation.x,enginelocation.y,enginelocation.z,3,0.01,true,false,true)
 			end
+			if explode then
+				SetVehicleEngineOn(vehicle,false,true,false)
+				SetVehicleCurrentRpm(vehicle,0.0)
+				SetVehicleEngineHealth(vehicle,-1000.0)
+			end
 			if afr > 14.0 and rpm > 0.5 then
 				SetVehicleEngineTemperature(vehicle,temp * 1+((1.0 - efficiency) * 2) * rawturbopower)
 				if temp > 120.0 then
-					SetVehicleEngineHealth(vehicle,not explode and enginelife < 100.0 and 90.0 or explode and 90.0 or enginelife > 1000.0 and 1000.0 or enginelife)
+					SetVehicleEngineHealth(vehicle,not explode and enginelife < 100.0 and 0.0 or explode and 0.0 or enginelife > 1000.0 and 1000.0 or enginelife)
 				end
 			end
 		end
