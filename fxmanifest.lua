@@ -28,6 +28,5 @@ files {
 dependencies {
 	'/server:5848',
 	'/onesync',
-	'ox_inventory',
 	'ox_lib',
 }

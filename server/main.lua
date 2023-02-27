@@ -280,7 +280,7 @@ lib.callback.register('renzu_tuners:checkitem', function(src,item,isShop,require
 	local items = GetInventoryItems(src, 'slots', name)
 	if items then
 		for k,v in pairs(items) do
-			if metadata and isItemMetadata and v.metadata?.upgrade == item or not isItemMetadata and not v.metadata?.upgrade then
+			if metadata and isItemMetadata and v.metadata?.upgrade == item or not isItemMetadata and not v.metadata?.upgrade or not metadata then
 				RemoveInventoryItem(src, v.name, amount,v.metadata,v.slot)
 				hasitems = true
 			end
@@ -407,7 +407,9 @@ AddEventHandler('entityRemoved', function(entity)
 end)
 
 Citizen.CreateThreadNow(function()
-	for k,v in pairs(config.engineswapper.coords) do
-		RegisterStash('engine_storage:'..k, 'Engine Storage', 70, 1000000, false,{[config.job] = 0})
+	if GetResourceState('ox_inventory') == 'started' then
+		for k,v in pairs(config.engineswapper.coords) do
+			RegisterStash('engine_storage:'..k, 'Engine Storage', 70, 1000000, false,{[config.job] = 0})
+		end
 	end
 end)

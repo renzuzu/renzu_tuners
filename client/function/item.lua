@@ -8,6 +8,7 @@ GetItemMod = function(name)
 end
 
 ItemFunction = function(vehicle,data,menu) -- item use handler
+	if not vehicle then vehicle = GetClosestVehicle(GetEntityCoords(cache.ped), 10.0) end
 	if menu then
 		lib.progressCircle({
 			duration = 2000,

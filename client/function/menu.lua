@@ -17,7 +17,7 @@ UpgradePackage = function(data,shop,job)
 	}, function(selected, scrollIndex, args)
 		for k,v in pairs(config.engineupgrades) do
 			if v.category == args:lower() then
-				local hasitem = lib.callback.await('renzu_tuners:checkitem',false,item,shop,GetUpgradeCosts(item))
+				local hasitem = lib.callback.await('renzu_tuners:checkitem',false,v.item,shop,GetUpgradeCosts(item))
 				if not config.itemrequired or hasitem then
 					ItemFunction(vehicle,{
 						name = v.item,
@@ -45,48 +45,48 @@ Options = function(data,shop,job)
 
 	if data.tires then
 		for k,v in pairs(config.tires) do
-			table.insert(options,{icon = 'nui://ox_inventory/web/images/'..v.item..'.png', label = v.label, description = 'Upgrade tires to '..v.label, args = v.item, checked = v.item == data.type})
+			table.insert(options,{icon = imagepath..''..v.item..'.png', label = v.label, description = 'Upgrade tires to '..v.label, args = v.item, checked = v.item == data.type})
 		end
 	elseif data.drivetrain then
 		for k,v in pairs(config.drivetrain) do
-			table.insert(options,{icon = 'nui://ox_inventory/web/images/'..v.item..'.png', label = v.label, description = 'Swap Drivetrain to '..v.label, args = v.item, checked = v.label == data.type})
+			table.insert(options,{icon = imagepath..''..v.item..'.png', label = v.label, description = 'Swap Drivetrain to '..v.label, args = v.item, checked = v.label == data.type})
 		end
 	elseif data.extras then
 		for k,v in pairs(config.extras) do
-			table.insert(options,{icon = 'nui://ox_inventory/web/images/'..v.item..'.png', label = v.label, description = 'Install '..v.label, args = v.item})
+			table.insert(options,{icon = imagepath..''..v.item..'.png', label = v.label, description = 'Install '..v.label, args = v.item})
 		end
 	elseif data.turbo then
 		local turbos = turboconfig
 		for k,v in pairs(turbos) do
-			table.insert(options,{icon = 'nui://ox_inventory/web/images/'..v.item..'.png' , label = v.label, description = 'Install '..v.label, colorScheme = 'blue', args = v.item})
+			table.insert(options,{icon = imagepath..''..v.item..'.png' , label = v.label, description = 'Install '..v.label, colorScheme = 'blue', args = v.item})
 		end
 	elseif data.nitro then
 		local nitros = exports.renzu_nitro:nitros()
 		for k,v in pairs(nitros) do
-			table.insert(options,{icon = 'nui://ox_inventory/web/images/'..v.item..'.png' , label = v.label, description = 'Install '..v.label..' nitro', colorScheme = 'blue', args = v.item})
+			table.insert(options,{icon = imagepath..''..v.item..'.png' , label = v.label, description = 'Install '..v.label..' nitro', colorScheme = 'blue', args = v.item})
 		end
 	elseif data.localengine then
 		for k,v in pairs(data.value) do
-			table.insert(options,{icon = 'nui://ox_inventory/web/images/engine.png' , label = v.name or 'engine', description = 'Install Engine ', colorScheme = 'blue', args = v.name})
+			table.insert(options,{icon = imagepath..'engine.png' , label = v.name or 'engine', description = 'Install Engine ', colorScheme = 'blue', args = v.name})
 		end
 	elseif data.customengine then
 		for k,v in pairs(data.value) do
-			table.insert(options,{icon = 'nui://ox_inventory/web/images/engine.png' , label = v.label or 'engine', description = 'Install Engine '..v.label, colorScheme = 'blue', args = {engine = true, item = v.soundname}})
+			table.insert(options,{icon = imagepath..'engine.png' , label = v.label or 'engine', description = 'Install Engine '..v.label, colorScheme = 'blue', args = {engine = true, item = v.soundname}})
 		end
 	elseif job and not data.ecu and not data.mileage then
 		if data.state == data.installed then 
-			table.insert(options,{icon = 'nui://ox_inventory/web/images/'..data.installed..'.png', label = 'Repair '..data.label, description = 'Repair '..data.label, args = data.installed})
+			table.insert(options,{icon = imagepath..''..data.installed..'.png', label = 'Repair '..data.label, description = 'Repair '..data.label, args = data.installed})
 		else
-			table.insert(options,{icon = 'nui://ox_inventory/web/images/'..data.state..'.png', label = 'Install OEM ', description = 'Replace '..data.label, args = data.state})
+			table.insert(options,{icon = imagepath..''..data.state..'.png', label = 'Install OEM ', description = 'Replace '..data.label, args = data.state})
 		end
 		for k,v in pairs(config.engineupgrades) do
 			if config.upgradevariation[v.category] and data.part ~= v.item and v.state == data.state then
-				table.insert(options,{icon = 'nui://ox_inventory/web/images/'..v.state..'.png', label = v.item == data.installed and 'Repair '..v.label or 'Install to '..v.label, description = v.item == data.installed and 'Repair '..v.label or 'Upgrade with '..v.label, args = v.item})
+				table.insert(options,{icon = imagepath..''..v.state..'.png', label = v.item == data.installed and 'Repair '..v.label or 'Install to '..v.label, description = v.item == data.installed and 'Repair '..v.label or 'Upgrade with '..v.label, args = v.item})
 			end
 		end
 	elseif job and not data.ecu then
 		options = {
-			{icon = 'nui://ox_inventory/web/images/'..data.part..'.png', label = 'Change Oil', description = 'Restore to 0 Mileage', args = data.part},
+			{icon = imagepath..''..data.part..'.png', label = 'Change Oil', description = 'Restore to 0 Mileage', args = data.part},
 		}
 		hasmenu = true
 	end
@@ -94,14 +94,14 @@ Options = function(data,shop,job)
 		hasmenu = true
 		local tune_profiles = GlobalState.ecu[plate] or {}
 		if GlobalState.ecu[plate] then
-			table.insert(options,{icon = 'nui://ox_inventory/web/images/engine.png' , label = 'New Profile', description = 'Create New Tuning Profile', colorScheme = 'blue', args = {tune = true, profile = 'new'}})
+			table.insert(options,{icon = imagepath..'engine.png' , label = 'New Profile', description = 'Create New Tuning Profile', colorScheme = 'blue', args = {tune = true, profile = 'new'}})
 			for name,tuning in pairs(tune_profiles) do
 				if name ~= 'active' then
-					table.insert(options,{icon = 'nui://ox_inventory/web/images/engine.png' , label = name, description = 'Load Profile '..name, colorScheme = 'blue', args = {tune = true, profile = name, data = tuning}})
+					table.insert(options,{icon = imagepath..'engine.png' , label = name, description = 'Load Profile '..name, colorScheme = 'blue', args = {tune = true, profile = name, data = tuning}})
 				end
 			end
 		else
-			table.insert(options,{icon = 'nui://ox_inventory/web/images/engine.png' , label = ' Programable ECU', description = 'Install Programable ECU', colorScheme = 'blue', args = data.part})
+			table.insert(options,{icon = imagepath..'engine.png' , label = ' Programable ECU', description = 'Install Programable ECU', colorScheme = 'blue', args = data.part})
 		end
 	end
 	if hasmenu then
@@ -297,7 +297,7 @@ CheckVehicle = function(menu,shop)
 			unique[v.state] = true
 			upgrades[v.item] = true
 			local parts = upgrades_data[v.item].label
-			table.insert(options,{icon = 'nui://ox_inventory/web/images/'..v.state..'.png' , label = parts, description = '', progress = ent[v.state] or 100, colorScheme = 'blue', args = {installed = v.item, state = v.state, label = v.label}})
+			table.insert(options,{icon = imagepath..''..v.state..'.png' , label = parts, description = '', progress = ent[v.state] or 100, colorScheme = 'blue', args = {installed = v.item, state = v.state, label = v.label}})
 		end
 	end
 	for k,v in pairs(config.engineparts) do
@@ -305,7 +305,7 @@ CheckVehicle = function(menu,shop)
 			if not ent[v.item] then
 				ent:set(v.item, tonumber(vehiclestat[v.item]) or 100, true)
 			end
-			table.insert(options,{icon = 'nui://ox_inventory/web/images/'..v.item..'.png' , label = v.label, description = '', progress = ent[v.item] or 100, colorScheme = 'blue', args = {installed = v.item, state = v.item, label = v.label}})
+			table.insert(options,{icon = imagepath..''..v.item..'.png' , label = v.label, description = '', progress = ent[v.item] or 100, colorScheme = 'blue', args = {installed = v.item, state = v.item, label = v.label}})
 		end
 	end
 	if menu then
@@ -322,21 +322,21 @@ CheckVehicle = function(menu,shop)
 		local tiretype = ent.tires and ent.tires?.type or 'Default'
 		if GetResourceState('renzu_turbo') == 'started' then
 			local turbo = ent['turbo'] and ent['turbo'].turbo or 'Not Installed'
-			table.insert(options,{icon = 'nui://ox_inventory/web/images/turbostreet.png' ,  label = 'Forced Induction ('..turbo..')', description = ' Installed Custom Turbine', progress = ent['turbo'] and ent['turbo'].durability or 100, colorScheme = 'blue',  args = {turbo = true, label = 'Forced Induction', value = {'turbostreet','turbosports','turboracing','turboultimate'}}})
+			table.insert(options,{icon = imagepath..'turbostreet.png' ,  label = 'Forced Induction ('..turbo..')', description = ' Installed Custom Turbine', progress = ent['turbo'] and ent['turbo'].durability or 100, colorScheme = 'blue',  args = {turbo = true, label = 'Forced Induction', value = {'turbostreet','turbosports','turboracing','turboultimate'}}})
 		end
 		if GetResourceState('renzu_nitro') == 'started' then
-			table.insert(options,{icon = 'nui://ox_inventory/web/images/nitro50shot.png' , label = 'Nitros Oxide System', description = ' Installed Nitros', colorScheme = 'black',  args = {nitro = true, label = 'Nitro', value = {'nitro50shot','nitro100shot','nitro200shot'}}})
+			table.insert(options,{icon = imagepath..'nitro50shot.png' , label = 'Nitros Oxide System', description = ' Installed Nitros', colorScheme = 'black',  args = {nitro = true, label = 'Nitro', value = {'nitro50shot','nitro100shot','nitro200shot'}}})
 		end
-		table.insert(options,{icon = 'nui://ox_inventory/web/images/street_tires.png' , label = 'Tires '..tiretype, description = ' Current Tires Health of the vehicle', progress = ent?.tires?.tirehealth[1] or 100, colorScheme = 'blue',  args = {tires = true, label = 'Tires', type = tiretype}})
-		table.insert(options,{icon = 'nui://ox_inventory/web/images/oem_gearbox.png' , label = 'Drivetrain Type '..drivetraintype, description = ' Change Wheel Type', colorScheme = 'black',  args = {drivetrain = true, label = 'Drivetrain Type', type = drivetraintype}})
-		table.insert(options,{icon = 'nui://ox_inventory/web/images/kers.png' , label = 'Advanced', description = ' Advanced Modification', colorScheme = 'black',  args = {extras = true, label = 'Advanced Modification', value = ent.extras}})
+		table.insert(options,{icon = imagepath..'street_tires.png' , label = 'Tires '..tiretype, description = ' Current Tires Health of the vehicle', progress = ent?.tires?.tirehealth[1] or 100, colorScheme = 'blue',  args = {tires = true, label = 'Tires', type = tiretype}})
+		table.insert(options,{icon = imagepath..'oem_gearbox.png' , label = 'Drivetrain Type '..drivetraintype, description = ' Change Wheel Type', colorScheme = 'black',  args = {drivetrain = true, label = 'Drivetrain Type', type = drivetraintype}})
+		table.insert(options,{icon = imagepath..'kers.png' , label = 'Advanced', description = ' Advanced Modification', colorScheme = 'black',  args = {extras = true, label = 'Advanced Modification', value = ent.extras}})
 		if GetResourceState('renzu_engine') == 'started' then
 			local engine = ent['engine'] or 'Default'
-			table.insert(options,{icon = 'nui://ox_inventory/web/images/engine.png' , label = 'Engine (Locals) (current: '..engine..')', description = ' Installed Engines', colorScheme = 'black',  args = {localengine = true, label = 'Engine Swap', value = exports.renzu_engine:Engines().Locals}})
-			table.insert(options,{icon = 'nui://ox_inventory/web/images/engine.png' , label = 'Engine (Customs) (current: '..engine..')', description = ' Installed Engines', colorScheme = 'black',  args = {customengine = true, label = 'Engine Swap', value = exports.renzu_engine:Engines().Custom}})
+			table.insert(options,{icon = imagepath..'engine.png' , label = 'Engine (Locals) (current: '..engine..')', description = ' Installed Engines', colorScheme = 'black',  args = {localengine = true, label = 'Engine Swap', value = exports.renzu_engine:Engines().Locals}})
+			table.insert(options,{icon = imagepath..'engine.png' , label = 'Engine (Customs) (current: '..engine..')', description = ' Installed Engines', colorScheme = 'black',  args = {customengine = true, label = 'Engine Swap', value = exports.renzu_engine:Engines().Custom}})
 		end
 	end
-	table.insert(options,{icon = 'nui://ox_inventory/web/images/engine.png' , label = 'ECU', description = ' Tune ECU', colorScheme = 'black',  args = {part = 'ecu', ecu = true, label = 'Engine ECU', value = true}})
+	table.insert(options,{icon = imagepath..'engine.png' , label = 'ECU', description = ' Tune ECU', colorScheme = 'black',  args = {part = 'ecu', ecu = true, label = 'Engine ECU', value = true}})
 
 	lib.registerMenu({
 		id = 'checkvehicle',
@@ -490,58 +490,6 @@ CheckWheels = function()
 	lib.showMenu('wheelstatus')
 end
 
-EngineSwaps = function()
-	lib.requestModel(config.engineswapper.model)
-	for k,v in pairs(config.engineswapper.coords) do
-		for k,v2 in pairs(GetGamePool('CPed')) do
-			if #(GetEntityCoords(v2) - vec3(v.x,v.y,v.z)) < 3 then
-				DeleteEntity(v2)
-			end
-		end
-		engineswapper = CreateObjectNoOffset(config.engineswapper.model,v.x,v.y,v.z-0.98,false,true)
-		while not DoesEntityExist(engineswapper) do Wait(1) end
-		SetEntityHeading(engineswapper,v.w-180)
-		FreezeEntityPosition(engineswapper)
-		exports.ox_target:addLocalEntity({engineswapper}, {
-			{
-				name = 'engineswap:',
-				onSelect = function()
-					lib.registerContext({
-						id = 'engine_swapper',
-						title = 'Engine Swap',
-						options = {
-							{
-								title = 'Select and Install Engine',
-								description = 'Choose a engine from storage',
-								arrow = true,
-								onSelect = function(data)
-									local vehicle = GetClosestVehicle(GetEntityCoords(engineswapper), 4.0)
-									ContextMenuOptions('engine_storage:'..k,engineswapper,vehicle)
-								end
-							},
-							{
-								title = 'Engine Storage',
-								description = 'Store a engine',
-								arrow = true,
-								onSelect = function()
-									TriggerEvent('ox_inventory:openInventory', 'stash', {id = 'engine_storage:'..k, name = 'Engine Storage', slots = 70, weight = 1000000, coords = GetEntityCoords(cache.ped)})
-								end
-							},
-						}
-					})
-					lib.showContext('engine_swapper')
-				end,
-				icon = 'fa-solid fa-car',
-				label = 'Engine Stand',
-				canInteract = function(entity, distance, coords, name)
-					return distance < 2 and PlayerData?.job?.name == config.job
-				end
-			}
-		})
-		
-	end
-end
-
 ContextMenuOptions = function(stash,entity,vehicle)
 	Wait(1000)
 	if GetResourceState('renzu_engine') ~= 'started' then return end
@@ -565,7 +513,7 @@ ContextMenuOptions = function(stash,entity,vehicle)
 		end
 		table.insert(options,{
 			title = 'Install '..name,
-			icon = 'nui://ox_inventory/web/images/engine.png',
+			icon = imagepath..'engine.png',
 			description = 'Install this engine to nearby vehicle',
 			metadata = metadata,
 			arrow = true,
@@ -647,11 +595,11 @@ CraftOption = function(items,craft,label)
 		table.insert(options,{
 			title = item.label,
 			metadata = materials,
-			icon = craft == 'engine' and 'nui://ox_inventory/web/images/engine.png' or 'nui://ox_inventory/web/images/'..item.name..'.png',
+			icon = craft == 'engine' and imagepath..'engine.png' or imagepath..''..item.name..'.png',
 			description = 'Craft '..item.name,
 			arrow = true,
 			onSelect = function()
-				local items = exports.ox_inventory:Search('slots', requires)
+				local items = GetInventoryItems(requires)
 				local hasitems = true
 				local missingitems = ''
 				local itemmulti = {}
@@ -706,45 +654,4 @@ CraftOption = function(items,craft,label)
 		options = options
 	})
 	lib.showContext(craft..'_menu')
-end
-
-Crafting = function()
-	for k,v in pairs(config.crafting) do
-		exports.ox_target:addBoxZone({
-			coords = v.coord,
-			size = vec3(2, 2, 2),
-			rotation = 45,
-			debug = drawZones,
-			options = {
-				{
-					name = k..'_boxzone',
-					onSelect = function()
-						local options = {}
-						for k2,v in pairs(v.categories) do
-							table.insert(options,{
-								title = v.label,
-								--icon = k == 'engine' and 'nui://ox_inventory/web/images/engine.png' or 'nui://ox_inventory/web/images/'..v.name..'.png',
-								description = 'Craft '..v.label,
-								arrow = true,
-								onSelect = function()
-									CraftOption(v.items,k,v.label)
-								end,
-							})
-						end
-						lib.registerContext({
-							id = k..'_menu',
-							title = v.label,
-							options = options
-						})
-						lib.showContext(k..'_menu')
-					end,
-					icon = 'fa-solid fa-cube',
-					label = v.label,
-					canInteract = function(entity, distance, coords, name)
-						return true
-					end
-				}
-			}
-		})
-	end
 end

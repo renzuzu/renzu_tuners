@@ -22,7 +22,7 @@ config.plateformat = config.plateprefix..'^ 111' -- this will make plate CFXIE91
 -- points
 config.engineswapper = {
 	coords = {
-		[1] = vec4(-334.9005, -106.0498, 39.0640, 161.8362)
+		[1] = vec4(-325.60,-139.27,39.00,74.43)
 	},
 	label = 'Engine Swap',
 	model = `prop_engine_hoist`,
@@ -294,7 +294,7 @@ end
 config.crafting = { -- crafting config and requires item
 	['engine'] = {
 		label = 'Craft Engines',
-		coord = vec3(-341.36544799805,-140.96472167969,39.027),
+		coord = vec3(-341.58551025391,-141.34959411621,39.115104675293),
 		categories = {
 			[1] = {
 				items = GetEngineLocals(),
@@ -308,7 +308,7 @@ config.crafting = { -- crafting config and requires item
 	},
 	['parts'] = {
 		label = 'Craft Engines Parts',
-		coord = vec3(-344.43450927734,-139.78523254395,39.00966),
+		coord = vec3(-343.77084350586,-140.74291992188,39.026248931885),
 		categories = {
 			[1] = {items = GetCraftableParts(), label = 'Oem Parts'},
 			[2] = {items = GetCraftableUpgradeParts('elite'), label = 'Elite Parts'},
@@ -319,7 +319,7 @@ config.crafting = { -- crafting config and requires item
 	},
 	['etc'] = {
 		label = 'Craft Turbo ,Tires & Advanced parts',
-		coord = vec3(-338.31671142578,-142.10592651367,39.00967025),
+		coord = vec3(-339.31976318359,-142.31146240234,39.177829742432),
 		categories = {
 			[1] = {
 				items = {
