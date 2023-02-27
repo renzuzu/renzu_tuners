@@ -67,7 +67,7 @@ lib.onCache('vehicle', function(value)
 				local nitro = ent.nitroenable -- renzu_nitro states bag if nitro is being used
 				local turbodeduct = 1.0
 				local nitrodeduct = 1.0
-				local chance = nitro and 10 or 20
+				local chance = nitro and 10 or 25
 				if turbo then
 					turbodeduct = turbopower
 				end
@@ -160,7 +160,7 @@ Citizen.CreateThreadNow(function()
 	lib.requestModel(winch)
 	for k,v in pairs(config.dynopoints) do
 		for k,v in pairs(v.winch) do
-			winch_entity = CreateObjectNoOffset(winch,v.x,v.y,v.z,true,true)
+			winch_entity = CreateObjectNoOffset(winch,v.x,v.y,v.z,true,false)
 			while not DoesEntityExist(winch_entity) do Wait(1) end
 			FreezeEntityPosition(winch_entity,true)
 			SetEntityHeading(winch_entity,v.w)
