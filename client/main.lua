@@ -149,9 +149,6 @@ Citizen.CreateThreadNow(function()
 	end
 end)
 
-Citizen.CreateThread(EngineSwaps)
-Citizen.CreateThread(Crafting)
-
 Citizen.CreateThreadNow(function()
 	Wait(2000)
 	local rampmodel = `prop_spray_jackframe`
@@ -182,7 +179,9 @@ Citizen.CreateThreadNow(function()
 end)
 
 Citizen.CreateThreadNow(function()
-	if GetResourceState('renzu_turbo') == 'started' then
+	Wait(1000)
+	local isturbostarted = GetResourceState('renzu_turbo') == 'started'
+	if isturbostarted then
 		turboconfig = exports.renzu_turbo:turbos()
 	end
 end)
