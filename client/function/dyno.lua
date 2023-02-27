@@ -270,7 +270,8 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 			SetVehicleGravity(vehicle,true)
 			SetEntityCollision(vehicle,true,true)
 			SetVehicleOnGroundProperly(vehicle)
-			while Entity(vehicle).state.startdyno.dyno do Wait(111) end
+			SendNuiMessage(json.encode({dyno = false}))
+			--while Entity(vehicle).state.startdyno.dyno do Wait(111) end
 		end
 		-- reset vehicle
 		Wait(1500)
@@ -297,7 +298,6 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 		print('reset',(maxspeed * 1.3) / 3.6,maxspeed,maxgear,GetVehicleHighGear(vehicle),inertia,driveforce)
 		dyno = false
 		indyno = false
-		SendNuiMessage(json.encode({dyno = false}))
 		lib.hideTextUI()
 	end)
 	
