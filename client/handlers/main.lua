@@ -106,6 +106,8 @@ AddStateBagChangeHandler('startdyno' --[[key filter]], nil --[[bag filter]], fun
 			SetVehicleHandlingFloat(dynoentity , "CHandlingData", "fDriveInertia", value.inertia+0.0)
 			SetVehicleHandbrake(dynoentity,false)
 			FreezeEntityPosition(dynoentity,false)
+			SetEntityHasGravity(dynoentity,true)
+			SetVehicleGravity(dynoentity,true)
 			dynovehicle[net] = nil
 		end)
 	end
