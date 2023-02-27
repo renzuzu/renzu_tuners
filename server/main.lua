@@ -129,8 +129,8 @@ CurrentEngine = function(value,bagName)
 	if not value then return end
     local net = tonumber(bagName:gsub('entity:', ''), 10)
 	local vehicle = NetworkGetEntityFromNetworkId(net)
-	if DoesEntityExist(vehicle) then
-		local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
+	local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
+	if DoesEntityExist(vehicle) and string.find(plate,config.plateprefix) ~= 1 or config.debug then
 		currentengine[plate] = value
 		db.save('currentengine','plate',plate,value)
 	end
