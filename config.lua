@@ -1,5 +1,5 @@
 -- renzu_tuners WIP
--- BETA version braking change and bugs is possible
+-- BETA version breaking change and bugs is possible
 config = {}
 config.debug = true -- enable commands for dev. /sethandling 100 (0-100), /setfuel 100 (0-100), /setmileage 1000 (0,10000) !! note this does not have permission checks
 config.itemrequired = false -- for upgrade menu. false best for standalone purpose or testing purpose, for roleplay use the crafting. if true menu will requires you a specific item for each upgrades
