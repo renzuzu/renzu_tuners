@@ -69,11 +69,11 @@ BETA and WIP.
 - (ESX or qbcore)
 
 # Inventory Support
-- right now only ox_inventory is supported
+- right now only ox_inventory/qb-inventory is supported
 - Inventory porting is easy look for inventory.lua
 
 # WIP TASKs
-- thinking to support qb-menu and standalone notification, callbacks for the sake of people who cant use ox_lib from qbcore.
+- ❌ thinking to support qb-menu and standalone notification, callbacks for the sake of people who cant use ox_lib from qbcore.
 - Supports Oxlib Radial in some commands.
 - verify if degration is not too slow or too fast.
 - more inventory support.
