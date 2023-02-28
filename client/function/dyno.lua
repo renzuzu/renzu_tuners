@@ -1,6 +1,7 @@
 Dyno = function(data,index)
+	local closestvehicle = GetClosestVehicle(vec3(data.platform.x,data.platform.y,data.platform.z), 2.0)
 	local candyno = lib.callback.await('renzu_tuners:CheckDyno',false,DoesEntityExist(ramp) and GetEntityModel(ramp) == config.dynoprop,index) and GetPedInVehicleSeat(GetVehiclePedIsIn(cache.ped),-1) == cache.ped
-	if candyno then
+	if candyno and not DoesEntityExist(closestvehicle) then
 		indyno = true
 		lib.notify({
 			title = 'Dynamometer Mode',

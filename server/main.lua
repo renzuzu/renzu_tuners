@@ -29,25 +29,15 @@ SpawnDyno = function(index)
 	end
 end
 
-local dynoInuse = false
 lib.callback.register('renzu_tuners:CheckDyno', function(src,dynamometer,index)
 	local dyno = NetworkGetEntityFromNetworkId(dyno_net[index])
-	if dynoInuse then return false end
-	if not dynoInuse then dynoInuse = true end
+	--if dynoInuse then return false end
 	if not DoesEntityExist(dyno) or not dynamometer then
 		SpawnDyno(index)
 		Wait(2000)
 		return true
 	end
 	return true
-end)
-
-AddStateBagChangeHandler('startdyno' --[[key filter]], nil --[[bag filter]], function(bagName, key, value, _unused, replicated)
-    Wait(0)
-    if not value then return end
-	if not value.dyno then
-		dynoInuse = false
-	end
 end)
 
 -- send specific vehicle data to client. normaly i do check globalstate data in client. but somehow its acting weird on live enviroments and data is not getting sync if server has been up for too long, this is only a work around in state bag issue when data is large.
