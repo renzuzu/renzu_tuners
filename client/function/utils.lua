@@ -309,7 +309,7 @@ SetDefaultHandling = function(vehicle,handling) -- setter from other resource ex
 	local gdefault = ent.defaulthandling
 	ent:set('defaulthandling', handlings, true)
 	Wait(1001)
-	HandleEngineDegration(value,ent,plate)
+	HandleEngineDegration(vehicle,ent,plate)
 end
 
 DoesKersExist = function(data) -- check if kinetic is installed in Flags, 3 is the index value of 32 list of gta flags
