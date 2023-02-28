@@ -9,16 +9,6 @@ AddStateBagChangeHandler('advancedflags' --[[key filter]], nil --[[bag filter]],
 	end
 end)
 
-AddStateBagChangeHandler('height' --[[key filter]], nil --[[bag filter]], function(bagName, key, value, _unused, replicated)
-	Wait(0)
-	if not value then return end
-	local net = tonumber(bagName:gsub('entity:', ''), 10)
-	local vehicle = net and NetworkGetEntityFromNetworkId(net)
-	if DoesEntityExist(vehicle) then
-		SetVehicleSuspensionHeight(NetworkGetEntityFromNetworkId(net),tonumber(value))
-	end
-end)
-
 AddStateBagChangeHandler('drivetrain' --[[key filter]], nil --[[bag filter]], function(bagName, key, value, _unused, replicated)
 	Wait(111)
 	local net = tonumber(bagName:gsub('entity:', ''), 10)
@@ -140,6 +130,8 @@ AddStateBagChangeHandler('vehiclestatreset' --[[key filter]], nil --[[bag filter
 		ModifyVehicleTopSpeed(vehicle,1.0)
 		SetVehicleCheatPowerIncrease(vehicle,1.0)
 		SetVehicleHighGear(vehicle,value.nInitialDriveGears)
+		SetVehicleHandbrake(vehicle,false)
+		dynovehicle[net] = nil
 	end
 end)
 
