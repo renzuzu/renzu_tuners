@@ -188,7 +188,8 @@ end
 
 GetVehicleServerStates = function(plate) -- fetch only the current vehicle data
 	vehiclestats, vehicletires, mileages,GlobalState.ecu = lib.callback.await('renzu_tuners:vehiclestats', 0, plate) -- temporary work around to bypass statebag size limits.
-	return Wait(5000)
+	Wait(5000)
+	return true
 end
 
 SetEntityControlable = function(entity) -- server based entities. incase you are not the owner. server entities are a little complicated
