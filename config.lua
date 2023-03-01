@@ -449,6 +449,57 @@ config.tunableRPM = {
 	[10] = 0.1,
 }
 
+config.radialoptions = {
+	{
+	  id = 'Upgrades',
+	  label = 'Upgrades',
+	  icon = 'wrench',
+	  onSelect = function()
+		return UpgradePackage()
+	  end
+	},
+	{
+	  id = 'Repair',
+	  label = 'Repair',
+	  icon = 'hammer',
+	  onSelect = function()
+		return Repair()
+	  end
+	},
+	{
+	  id = 'tuning',
+	  label = 'Tuning',
+	  icon = 'chart-bar',
+	  onSelect = function()
+		return TuningMenu()
+	  end
+	},
+	{
+	  id = 'parts',
+	  label = 'Engine Parts',
+	  icon = 'cog',
+	  onSelect = function()
+		return CheckVehicle(true)
+	  end
+	},
+	{
+		id = 'performance',
+		label = 'Performance',
+		icon = 'chart-line',
+		onSelect = function()
+		  return CheckPerformance(true)
+		end
+	},
+	{
+		id = 'seetires',
+		label = 'See Tires',
+		icon = 'car',
+		onSelect = function()
+		  return CheckWheels(true)
+		end
+	},
+}
+
 config.drift_handlings = {
 	{'fInitialDriveMaxFlatVel',380.000000},
 	-- {'fDriveInertia', 3.000000},

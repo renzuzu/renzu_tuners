@@ -6,8 +6,8 @@ ui_page {
     'web/index.html',
 }
 client_scripts {
-	'init.lua',
 	'config.lua',
+	'init.lua',
 	'client/function/*.lua',
 	'client/handlers/*.lua',
 	'client/main.lua',
