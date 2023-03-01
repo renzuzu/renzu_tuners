@@ -387,7 +387,7 @@ end)
 
 AddEventHandler('entityRemoved', function(entity)
 	local entity = entity
-	if DoesEntityExist(entity) and GetEntityType(entity) == 2 then
+	if DoesEntityExist(entity) and GetEntityType(entity) == 2 and GetEntityPopulationType(entity) == 7 then
 		local plate = string.gsub(GetVehicleNumberPlateText(entity), '^%s*(.-)%s*$', '%1'):upper()
 		if vehiclestats[plate] and vehiclestats[plate].active then
 			vehiclestats[plate].active = nil
