@@ -47,7 +47,7 @@ HandleTires = function(vehicle,plate,default,state)
 			Wait(1000)
 		end
 	end
-	local tirehealth = gtirehealth or ent.tires?.tirehealth
+	local tirehealth = vehicletires[plate] and vehicletires[plate].tirehealth or ent.tires?.tirehealth
 	local total = 0
 	local wheels = 0
 	for i = 1 , GetVehicleNumberOfWheels(vehicle) do
