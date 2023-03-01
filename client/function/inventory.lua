@@ -18,6 +18,22 @@ GetInventoryItems = function(items)
             end
         end
         return data
+    elseif GetResourceState('es_extended') == 'started' then
+        local data = {}
+        local itemdata = {}
+        for _, item in pairs(PlayerData.inventory) do
+            for k,v in pairs(items) do
+                if v == item.name then
+                    if not itemdata[item.name] then 
+                        itemdata[item.name] = item 
+                    else
+                        itemdata[item.name].count += item.count
+                    end
+                    table.insert(data,itemdata)
+                end
+            end
+        end
+        return data
     end
 end
 
