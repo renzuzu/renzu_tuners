@@ -2,7 +2,7 @@
 -- BETA version breaking change and bugs is possible
 config = {}
 config.debug = true -- enable commands for dev. /sethandling 100 (0-100), /setfuel 100 (0-100), /setmileage 1000 (0,10000) !! note this does not have permission checks
-config.freeupgrade = true -- for upgrade menu. false best for standalone purpose or testing purpose, for roleplay use the crafting. if true menu will requires you a specific item for each upgrades
+config.freeupgrade = true -- for upgrades. false best for standalone purpose or testing purpose, for roleplay use the crafting. if true menu will requires you a specific item for each upgrades
 config.metadata = false -- use item metadata when crafting items if ox_inventory. if your inventory does not support it, set this to false.
 config.job = 'mechanic' -- set to false if you want all feature are accesible by any player, or true, required job to use repairs and upgrade menu, dyno -- job access for menu upgrade and points. ex. mechanic, tuner?
 config.usetarget = true -- if false, please configure the points config -- supports ox_target,qtarget,qb-target only
@@ -15,7 +15,7 @@ config.upgradevariation = { -- enable/disable upgrade variation.
 	['ultimate'] = true,
 }
 config.purchasableUpgrade = false -- dont like crafting / item based? set this to true to use money to all item upgrades
-
+config.jobmanagemoney = false -- use job money if purchasableUpgrade. ex. esx_society, qb-management
 -- prevent local entity / spawn entity by admin to be saved in server.
 config.plateprefix = 'CFX' -- recommended 3 char
 config.plateformat = config.plateprefix..'^ 111' -- this will make plate CFXIE91F for example.. this is required to prevent local vehicles/ admin spawn entity filling up global state vehicle stats -- docs: https://docs.fivem.net/natives/?_0x79780FD2

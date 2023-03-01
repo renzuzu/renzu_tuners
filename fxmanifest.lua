@@ -17,6 +17,7 @@ server_scripts {
 	'@oxmysql/lib/MySQL.lua',
 	'config.lua',
 	'server/inventory.lua',
+	'server/job.lua',
 	'server/main.lua'
 }
 files {

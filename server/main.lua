@@ -288,7 +288,14 @@ lib.callback.register('renzu_tuners:checkitem', function(src,item,isShop,require
 				end
 			end
 		end
-	else
+	elseif config.jobmanagemoney then
+		local cost = GetItemCosts(item)
+		local money = GetJobMoney(config.job)
+		if money >= cost then
+			RemoveJobMoney(config.job, cost)
+			hasitems = true
+		end
+	elseif config.purchasableUpgrade then
 		local cost = GetItemCosts(item)
 		local money = GetMoney(src)
 		if money >= cost then
