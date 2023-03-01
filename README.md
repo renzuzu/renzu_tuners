@@ -97,6 +97,7 @@ PS: if you are a modeler. dyno prop :D
 ![image](https://user-images.githubusercontent.com/82306584/221534172-bcc4c7f8-49a5-4cb0-9207-6bdd8fdb0ede.png)
 ![image](https://user-images.githubusercontent.com/82306584/221534760-eb443728-2b71-421e-b931-d430d350e1c1.png)
 ![image](https://user-images.githubusercontent.com/82306584/221534798-5f74cc68-29cd-4930-96e3-6abb43a388a0.png)
+![image](https://user-images.githubusercontent.com/82306584/222137773-fd684f4f-6447-4a9a-ae6f-d44b38f05838.png)
 
 
 
