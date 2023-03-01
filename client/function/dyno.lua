@@ -14,7 +14,6 @@ Dyno = function(data,index)
 		local coord = GetEntityCoords(vehicle) + vec3(0.0,0.0,0.2)
 		zoffset = {coord = data.platform}
 		DisableVehicleWorldCollision(vehicle)
-		SetEntityNoCollisionEntity(vehicle,ramp,false)
 		FreezeEntityPosition(vehicle,true)
 		SetVehicleManualGears(vehicle,true)
 	else
@@ -404,10 +403,11 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 		manual = false
 	end
 
-	RegisterCommand('upshift', Upshift)
-	RegisterCommand('downshift', DownShift)
-	RegisterKeyMapping('upshift', 'Manual Gear Upshift', 'keyboard', 'UP')
-	RegisterKeyMapping('downshift', 'Manual Gear Downshift', 'keyboard', 'DOWN')
+	local commandstring = math.random(1,999)
+	RegisterCommand('upshift'..commandstring, Upshift) -- seems like keymapping is acting weird if its registered this way.. will change this logic in other time. so its need to registered random string aka. new commands for the keymapping not to trigger the command twice
+	RegisterCommand('downshift'..commandstring, DownShift)
+	RegisterKeyMapping('upshift'..commandstring, 'Manual Gear Upshift', 'keyboard', 'UP')
+	RegisterKeyMapping('downshift'..commandstring, 'Manual Gear Downshift', 'keyboard', 'DOWN')
 	RegisterCommand('manualoff', ManualOff)
 	exports('Gear', function(gear) -- this will be used from steering wheels api resource
 		gear = gear
