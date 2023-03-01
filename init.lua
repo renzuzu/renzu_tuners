@@ -3,7 +3,7 @@ PlayerData, localhandling, invehicle, gtirehealth, turboconfig, ecu, indyno, eff
 if GetResourceState('es_extended') == 'started' then
 	ESX = exports['es_extended']:getSharedObject()
 	PlayerData = ESX.GetPlayerData()
-	if PlayerData?.job?.name == config.job then
+	if lib.addRadialItem and PlayerData?.job?.name == config.job then
 		lib.addRadialItem(config.radialoptions)
 	end
 
@@ -20,7 +20,7 @@ if GetResourceState('es_extended') == 'started' then
 elseif GetResourceState('qb-core') == 'started' then
 	QBCore = exports['qb-core']:GetCoreObject()
 	PlayerData = QBCore.Functions.GetPlayerData()
-	if PlayerData?.job?.name == config.job then
+	if lib.addRadialItem and PlayerData?.job?.name == config.job then
 		lib.addRadialItem(config.radialoptions)
 	end
 	RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
@@ -35,5 +35,5 @@ elseif GetResourceState('qb-core') == 'started' then
 	imagepath = 'nui://qb-inventory/html/images/'
 else -- standalone ?
 	PlayerData = {job = 'mechanic'}
-	lib.addRadialItem(config.radialoptions)
+	if lib.addRadialItem then lib.addRadialItem(config.radialoptions) end
 end
