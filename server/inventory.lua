@@ -20,6 +20,24 @@ GetInventoryItems = function(src, method, items, metadata)
 	end
 end
 
+GetMoney = function(src)
+	if GetResourceState('ox_inventory') == 'started' then
+		return exports.ox_inventory:Search(src, 'count', 'money')
+	elseif QbCore then
+		local Player = QbCore.Functions.GetPlayer(src)
+        return Player.PlayerData.money['cash']
+	end
+end
+
+RemoveMoney = function(src,amount)
+	if GetResourceState('ox_inventory') == 'started' then
+		RemoveInventoryItem(src,'money',amount)
+	else
+		local Player = QbCore.Functions.GetPlayer(src)
+		Player.Functions.RemoveMoney('cash',tonumber(amount))
+	end
+end
+
 RemoveInventoryItem = function(src, item, count, metadata, slot)
 	if GetResourceState('ox_inventory') == 'started' then
 		return exports.ox_inventory:RemoveItem(src, item, count, metadata, slot)

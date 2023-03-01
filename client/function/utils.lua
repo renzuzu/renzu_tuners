@@ -61,17 +61,6 @@ SetVehicleDriveTrain = function(vehicle,value)
 	applyVehicleMods(vehicle,value)
 end
 
-GetUpgradeCosts = function(item)
-	local cost = nil
-	for k,v in pairs(config.engineupgrades) do
-		if v.item == item then
-			cost = v.cost
-			break
-		end
-	end
-	return {cost = cost}
-end
-
 LoadVehicleSetup = function(value,ent,stats)
 	plate = string.gsub(GetVehicleNumberPlateText(value), '^%s*(.-)%s*$', '%1'):upper()
 	Citizen.CreateThreadNow(function()

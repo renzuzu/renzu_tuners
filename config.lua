@@ -2,10 +2,10 @@
 -- BETA version breaking change and bugs is possible
 config = {}
 config.debug = true -- enable commands for dev. /sethandling 100 (0-100), /setfuel 100 (0-100), /setmileage 1000 (0,10000) !! note this does not have permission checks
-config.itemrequired = false -- for upgrade menu. false best for standalone purpose or testing purpose, for roleplay use the crafting. if true menu will requires you a specific item for each upgrades
+config.freeupgrade = false -- for upgrade menu. false best for standalone purpose or testing purpose, for roleplay use the crafting. if true menu will requires you a specific item for each upgrades
 config.metadata = false -- use item metadata when crafting items if ox_inventory. if your inventory does not support it, set this to false.
-config.job = 'mechanic' -- required job to use repairs and upgrade menu -- job access for menu upgrade and points. ex. mechanic, tuner?
-config.usetarget = true -- if false, please configure the points config -- supports ox_target only
+config.job = 'mechanic' -- set to false if you want all feature are accesible by any player, or true, required job to use repairs and upgrade menu, dyno -- job access for menu upgrade and points. ex. mechanic, tuner?
+config.usetarget = true -- if false, please configure the points config -- supports ox_target,qtarget,qb-target only
 config.enablepackage = true -- easy install all upgrade variants. ex. Full Upgrade all Racing Parts. this will install all in one package for each variants. each upgrades requires item if itemrequired is true
 config.upgradepackageAnimation = false -- do animation for each upgrades in package
 config.upgradevariation = { -- enable/disable upgrade variation.
@@ -14,6 +14,7 @@ config.upgradevariation = { -- enable/disable upgrade variation.
 	['racing'] = true,
 	['ultimate'] = true,
 }
+config.purchasableUpgrade = true -- dont like crafting / item based? set this to true to use money to all item upgrades
 
 -- prevent local entity / spawn entity by admin to be saved in server.
 config.plateprefix = 'CFX' -- recommended 3 char
@@ -27,12 +28,14 @@ config.engineswapper = {
 	label = 'Engine Swap',
 	model = `prop_engine_hoist`,
 }
-config.points = { -- usable only when config.usetarget is false.
+
+config.enablemarkers = true -- markers points
+config.points = { -- marker and drawtext type interactions
 	[1] = {label = 'Upgrade Vehicle', coord = vec3(-323.3034362793,-131.25146484375,38.210)},
 	-- add new here
 }
 
-config.repairpoints = { -- usable only when config.usetarget is false.
+config.repairpoints = { -- marker and drawtext type interactions
 	[1] = {label = 'Repair Vehicle', coord = vec3(-341.18142700195,-129.10722351074,38.53271)},
 }
 
@@ -138,22 +141,22 @@ config.tunableonly = { -- bypasses upgrade add stats. dont disable these if you 
 }
 
 config.engineparts = { -- @item = item name, @handling = Affected Handling when degraded
-	[1] = {item = 'engine_oil', label = 'Engine Oil', handling = {'fInitialDriveMaxFlatVel'}, maxdegrade = 0.1, affects = 'Top Speed'},
-	[2] = {item = 'engine_sparkplug', label = 'Engine Spark Plug', handling = {'fDriveInertia'}, maxdegrade = 0.2, affects = 'Torque'},
-	[3] = {item = 'engine_gasket', label = 'Engine Head Gasket', handling = {'fDriveInertia'}, maxdegrade = 0.3, affects = 'Torque'},
-	[4] = {item = 'engine_airfilter', label = 'Engine Air Filter', handling = {'fInitialDriveForce'}, maxdegrade = 0.15, affects = 'Horsepower'},
-	[5] = {item = 'engine_fuelinjector', label = 'Engine Fuel Injectors', handling = {'fInitialDriveForce'}, maxdegrade = 0.15, affects = 'Horsepower'},
-	[6] = {item = 'engine_pistons', label = 'Engine Pistons' , handling = {'fInitialDriveMaxFlatVel'}, maxdegrade = 0.2, affects = 'Top Speed'},
-	[7] = {item = 'engine_connectingrods', label = 'Engine Connecting Rods' , handling = {'fInitialDriveForce'}, maxdegrade = 0.2, affects = 'Top Speed'},
-	[8] = {item = 'engine_valves', label = 'Engine Valves', handling = {'fInitialDriveForce'}, maxdegrade = 0.2, affects = 'Horsepower'},
-	[9] = {item = 'engine_block', label = 'Engine Block', handling = {'fInitialDriveMaxFlatVel'}, maxdegrade = 0.2, affects = 'Top Speed'},
-	[10] = {item = 'engine_crankshaft', label = 'Engine CranfkShaft', handling = {'fDriveInertia'}, maxdegrade = 0.3, affects = 'Torque'},
-	[11] = {item = 'transmition_clutch', label = 'Transmission Clutch', handling = {'fClutchChangeRateScaleUpShift'}, maxdegrade = 0.7, affects = 'Down Shifting'},
-	[12] = {item = 'engine_flywheel', label = 'Engine FlyWheel', handling = {'fClutchChangeRateScaleDownShift'}, maxdegrade = 0.8, affects = 'Up Shifting'},
-	[13] = {item = 'engine_camshaft', label = 'Engine Camshaft', handling = {'fInitialDriveMaxFlatVel'}, maxdegrade = 0.5, affects = 'Top Speed'},
-	[14] = {item = 'oem_brakes', label = 'OEM Brakes', handling = {'fBrakeForce','fHandBrakeForce'}, maxdegrade = 0.8, affects = 'Brake Power'},
-	[15] = {item = 'oem_suspension', label = 'OEM Suspension', handling = {'fSuspensionForce','fSuspensionCompDamp','fSuspensionReboundDamp'}, maxdegrade = 0.8, affects = 'Suspension'},
-	[16] = {item = 'oem_gearbox', label = 'OEM Gearbox', handling = {'nInitialDriveGears','fDriveInertia','fClutchChangeRateScaleUpShift','fClutchChangeRateScaleDownShift'}, maxdegrade = 0.2, affects = 'Acceleration'},
+	[1] = {item = 'engine_oil', label = 'Engine Oil', handling = {'fInitialDriveMaxFlatVel'}, maxdegrade = 0.1, affects = 'Top Speed', cost = 25000},
+	[2] = {item = 'engine_sparkplug', label = 'Engine Spark Plug', handling = {'fDriveInertia'}, maxdegrade = 0.2, affects = 'Torque', cost = 25000},
+	[3] = {item = 'engine_gasket', label = 'Engine Head Gasket', handling = {'fDriveInertia'}, maxdegrade = 0.3, affects = 'Torque', cost = 25000},
+	[4] = {item = 'engine_airfilter', label = 'Engine Air Filter', handling = {'fInitialDriveForce'}, maxdegrade = 0.15, affects = 'Horsepower', cost = 25000},
+	[5] = {item = 'engine_fuelinjector', label = 'Engine Fuel Injectors', handling = {'fInitialDriveForce'}, maxdegrade = 0.15, affects = 'Horsepower', cost = 25000},
+	[6] = {item = 'engine_pistons', label = 'Engine Pistons' , handling = {'fInitialDriveMaxFlatVel'}, maxdegrade = 0.2, affects = 'Top Speed', cost = 25000},
+	[7] = {item = 'engine_connectingrods', label = 'Engine Connecting Rods' , handling = {'fInitialDriveForce'}, maxdegrade = 0.2, affects = 'Top Speed', cost = 25000},
+	[8] = {item = 'engine_valves', label = 'Engine Valves', handling = {'fInitialDriveForce'}, maxdegrade = 0.2, affects = 'Horsepower', cost = 25000},
+	[9] = {item = 'engine_block', label = 'Engine Block', handling = {'fInitialDriveMaxFlatVel'}, maxdegrade = 0.2, affects = 'Top Speed', cost = 25000},
+	[10] = {item = 'engine_crankshaft', label = 'Engine CranfkShaft', handling = {'fDriveInertia'}, maxdegrade = 0.3, affects = 'Torque', cost = 25000},
+	[11] = {item = 'transmition_clutch', label = 'Transmission Clutch', handling = {'fClutchChangeRateScaleUpShift'}, maxdegrade = 0.7, affects = 'Down Shifting', cost = 25000},
+	[12] = {item = 'engine_flywheel', label = 'Engine FlyWheel', handling = {'fClutchChangeRateScaleDownShift'}, maxdegrade = 0.8, affects = 'Up Shifting', cost = 25000},
+	[13] = {item = 'engine_camshaft', label = 'Engine Camshaft', handling = {'fInitialDriveMaxFlatVel'}, maxdegrade = 0.5, affects = 'Top Speed', cost = 25000},
+	[14] = {item = 'oem_brakes', label = 'OEM Brakes', handling = {'fBrakeForce','fHandBrakeForce'}, maxdegrade = 0.8, affects = 'Brake Power', cost = 25000},
+	[15] = {item = 'oem_suspension', label = 'OEM Suspension', handling = {'fSuspensionForce','fSuspensionCompDamp','fSuspensionReboundDamp'}, maxdegrade = 0.8, affects = 'Suspension', cost = 25000},
+	[16] = {item = 'oem_gearbox', label = 'OEM Gearbox', handling = {'nInitialDriveGears','fDriveInertia','fClutchChangeRateScaleUpShift','fClutchChangeRateScaleDownShift'}, maxdegrade = 0.2, affects = 'Acceleration', cost = 25000},
 }
 
 -- @category = category of upgrades, @state = state bag name of degration status. @item = item name, @handling = affected handling when upgraded , @add = percent added when upgraded
@@ -210,10 +213,10 @@ config.engineupgrades = {
 	{category = 'pro', state = 'oem_suspension', item = 'pro_suspension', label = 'Pro Suspension', handling = {'fSuspensionForce','fSuspensionCompDamp','fSuspensionReboundDamp','fSuspensionUpperLimit','fSuspensionLowerLimit','fSuspensionRaise','fSuspensionBiasFront','fAntiRollBarForce','fAntiRollBarBiasFront','fRollCentreHeightFront','fRollCentreHeightRear'}, add = 1.25, affects = 'Suspension', mod = {index = 15, add = 4}, cost = 25000},
 	{category = 'pro', state = 'oem_gearbox', item = 'pro_gearbox', label = 'Pro Gearbox', handling = {'nInitialDriveGears','fDriveInertia','fClutchChangeRateScaleUpShift','fClutchChangeRateScaleDownShift'}, add = 1.3, affects = 'Acceleration', mod = {index = 13, add = 1}, cost = 25000},
 	-- ELITE
-	{category = 'elite', state = 'engine_oil', item = 'elite_oil', label = 'Elite Oil', handling = {'fInitialDriveMaxFlatVel'}, add = 1.03, affects = 'Top Speed', cost = 25000},
+	{category = 'elite', state = 'engine_oil', item = 'elite_oil', label = 'Elite Oil', handling = {'fInitialDriveMaxFlatVel'}, add = 1.03, affects = 'Top Speed', cost = 125000},
 	{category = 'elite', state = 'engine_sparkplug', item = 'elite_sparkplug', label = 'Elite Spark Plug',stat = {ignition = 0.4}, handling = {'fDriveInertia'}, add = 1.05, affects = 'Torque', cost = 25000},
-	{category = 'elite', state = 'engine_gasket', item = 'elite_gasket', label = 'Elite Head Gasket', handling = {'fDriveInertia'}, add = 1.03, affects = 'Torque', cost = 25000},
-	 {category = 'elite', state = 'engine_airfilter', item = 'elite_airfilter', label = 'Elite Air Filter', handling = {'fInitialDriveForce'}, add =1.03, affects = 'Horsepower', cost = 25000},
+	{category = 'elite', state = 'engine_gasket', item = 'elite_gasket', label = 'Elite Head Gasket', handling = {'fDriveInertia'}, add = 1.03, affects = 'Torque', cost = 125000},
+	 {category = 'elite', state = 'engine_airfilter', item = 'elite_airfilter', label = 'Elite Air Filter', handling = {'fInitialDriveForce'}, add =1.03, affects = 'Horsepower', cost = 125000},
 	{category = 'elite', state = 'engine_fuelinjector', item = 'elite_fuelinjector', label = 'Elite Fuel Injectors', stat = {fuelpressure = 5.2}, handling = {'fInitialDriveForce'}, add = 1.03, affects = 'Horsepower', cost = 25000},
 	{category = 'elite', state = 'engine_pistons', item = 'elite_pistons', label = 'Elite Pistons' ,stat = {compression = 2.0, fuelpressure = -2.0, ignition = 1.0}, handling = {'fInitialDriveMaxFlatVel'}, add = 1.03, affects = 'Top Speed', mod = {index = 11, add = 1}, cost = 25000},
 	{category = 'elite', state = 'engine_connectingrods', item = 'elite_connectingrods', label = 'Elite Connecting Rods' , handling = {'fInitialDriveForce'}, add = 1.03, affects = 'Top Speed', cost = 25000},
@@ -391,36 +394,36 @@ config.degrade = { -- degrade value when specific mileage value is reach
 }
 
 config.tires = { -- tires handling @item = item name, @degrade = degrade percent for each MS tick. 
-	[1] = {label = 'Street Tires', item = 'street_tires', degrade = 0.01, handling = {fLowSpeedTractionLossMult = 1.1,fTractionLossMult = 1.1,fTractionCurveMin = 1.2, fTractionCurveMax = 1.0, fTractionCurveLateral = 1.25}},
-	[2] = {label = 'Sports Tires', item = 'sports_tires', degrade = 0.02, handling = {fLowSpeedTractionLossMult = 0.9,fTractionLossMult = 0.9,fTractionCurveMin = 1.1, fTractionCurveMax = 1.1, fTractionCurveLateral = 1.0}},
-	[3] = {label = 'Racing Tires', item = 'racing_tires', degrade = 0.03, handling = {fLowSpeedTractionLossMult = 0.65,fTractionLossMult = 0.7,fTractionCurveMin = 1.25, fTractionCurveMax = 1.35, fTractionCurveLateral = 0.7}},
-	[4] = {label = 'Drag Tires', item = 'drag_tires', degrade = 0.1, handling = {fLowSpeedTractionLossMult = 0.7,fTractionLossMult = 2.1,fTractionCurveMin = 1.91, fTractionCurveMax = 0.4, fTractionCurveLateral = 1.4}},
-	[5] = {label = 'Drift Tires', item = 'drift_tires', degrade = 0.2, handling = {fLowSpeedTractionLossMult = 1.0,fTractionLossMult = 1.0,fTractionCurveMin = 1.0, fTractionCurveMax = 1.0, fTractionCurveLateral = 1.0}},
+	[1] = {label = 'Street Tires', item = 'street_tires', degrade = 0.01, handling = {fLowSpeedTractionLossMult = 1.1,fTractionLossMult = 1.1,fTractionCurveMin = 1.2, fTractionCurveMax = 1.0, fTractionCurveLateral = 1.25}, cost = 25000},
+	[2] = {label = 'Sports Tires', item = 'sports_tires', degrade = 0.02, handling = {fLowSpeedTractionLossMult = 0.9,fTractionLossMult = 0.9,fTractionCurveMin = 1.1, fTractionCurveMax = 1.1, fTractionCurveLateral = 1.0}, cost = 25000},
+	[3] = {label = 'Racing Tires', item = 'racing_tires', degrade = 0.03, handling = {fLowSpeedTractionLossMult = 0.65,fTractionLossMult = 0.7,fTractionCurveMin = 1.25, fTractionCurveMax = 1.35, fTractionCurveLateral = 0.7}, cost = 25000},
+	[4] = {label = 'Drag Tires', item = 'drag_tires', degrade = 0.1, handling = {fLowSpeedTractionLossMult = 0.7,fTractionLossMult = 2.1,fTractionCurveMin = 1.91, fTractionCurveMax = 0.4, fTractionCurveLateral = 1.4}, cost = 25000},
+	[5] = {label = 'Drift Tires', item = 'drift_tires', degrade = 0.2, handling = {fLowSpeedTractionLossMult = 1.0,fTractionLossMult = 1.0,fTractionCurveMin = 1.0, fTractionCurveMax = 1.0, fTractionCurveLateral = 1.0}, cost = 25000},
 
 }
 
 config.drivetrain = {
-	[1] = { label = 'FWD', item = 'frontwheeldrive', value = 1.0 },
-	[2] = { label = 'AWD', item = 'allwheeldrive', value = 0.5 },
-	[3] = { label = 'RWD', item = 'rearwheeldrive', value = 0.0 }
+	[1] = { label = 'FWD', item = 'frontwheeldrive', value = 1.0, cost = 25000 },
+	[2] = { label = 'AWD', item = 'allwheeldrive', value = 0.5, cost = 25000 },
+	[3] = { label = 'RWD', item = 'rearwheeldrive', value = 0.0, cost = 25000 }
 }
 
 config.extras = { -- do not change unless you know how vehicle flags works for this resource
-	[1] = { label = 'Limited Slip Differential (Front)', item = 'lsdf' ,handling = {type = 'CCarHandlingData', name = 'strAdvancedFlags', value = {0,3}}},
-	[2] = { label = 'Limited Slip Differential (Rear)', item = 'lsdr', handling = {type = 'CCarHandlingData', name = 'strAdvancedFlags', value = {1,4}}},
-	[3] = { label = 'Traction Control System', item = 'tcs', handling = {type = 'CCarHandlingData', name = 'strAdvancedFlags', value = {13}}},
-	[4] = { label = 'Stability Control System', item = 'esc', handling = {type = 'CCarHandlingData', name = 'strAdvancedFlags', value = {14}}},
-	[5] = { label = 'Close Ratio Gears', item = 'closerationgears', handling = {type = 'CCarHandlingData', name = 'strAdvancedFlags', value = {21}}},
-	[6] = { label = 'CVT Transmission', item = 'cvttranny', handling = {type = 'CHandlingData', name = 'strHandlingFlags', value = {12}}},
-	[7] = { label = 'Anti-lock braking', item = 'abs', handling = {type = 'CHandlingData', name = 'strModelFlags', value = {4}}},
-	[8] = { label = 'Axle Torsion (Front)', item = 'axletorsionfront', handling = {type = 'CHandlingData', name = 'strModelFlags', value = {16}}},
-	[9] = { label = 'Axle Torsion (Rear)', item = 'axletorsionrear', handling = {type = 'CHandlingData', name = 'strModelFlags', value = {20}}},
-	[10] = { label = 'Axle Solid (Front)', item = 'axlesolidfront', handling = {type = 'CHandlingData', name = 'strModelFlags', value = {17}}},
-	[11] = { label = 'Axle Solid (Rear)', item = 'axlesolidrear', handling = {type = 'CHandlingData', name = 'strModelFlags', value = {21}}},
-	[12] = { label = 'Kinetic Energy Recovery System (KERS)', item = 'kers', handling = {type = 'CHandlingData', name = 'strHandlingFlags', value = {2}}},
-	[13] = { label = 'Offroad Tune 1', item = 'offroadtune1', handling = {type = 'CHandlingData', name = 'strHandlingFlags', value = {20}}},
-	[14] = { label = 'Offroad Tune 2', item = 'offroadtune2', handling = {type = 'CHandlingData', name = 'strHandlingFlags', value = {21}}},
-	[15] = { label = 'Stanced', item = 'stanced', handling = {type = 'CCarHandlingData', name = 'strAdvancedFlags', value = {15,26}}},
+	[1] = { label = 'Limited Slip Differential (Front)', item = 'lsdf' ,handling = {type = 'CCarHandlingData', name = 'strAdvancedFlags', value = {0,3}}, cost = 25000},
+	[2] = { label = 'Limited Slip Differential (Rear)', item = 'lsdr', handling = {type = 'CCarHandlingData', name = 'strAdvancedFlags', value = {1,4}}, cost = 25000},
+	[3] = { label = 'Traction Control System', item = 'tcs', handling = {type = 'CCarHandlingData', name = 'strAdvancedFlags', value = {13}}, cost = 25000},
+	[4] = { label = 'Stability Control System', item = 'esc', handling = {type = 'CCarHandlingData', name = 'strAdvancedFlags', value = {14}}, cost = 25000},
+	[5] = { label = 'Close Ratio Gears', item = 'closerationgears', handling = {type = 'CCarHandlingData', name = 'strAdvancedFlags', value = {21}}, cost = 25000},
+	[6] = { label = 'CVT Transmission', item = 'cvttranny', handling = {type = 'CHandlingData', name = 'strHandlingFlags', value = {12}}, cost = 25000},
+	[7] = { label = 'Anti-lock braking', item = 'abs', handling = {type = 'CHandlingData', name = 'strModelFlags', value = {4}}, cost = 25000},
+	[8] = { label = 'Axle Torsion (Front)', item = 'axletorsionfront', handling = {type = 'CHandlingData', name = 'strModelFlags', value = {16}}, cost = 25000},
+	[9] = { label = 'Axle Torsion (Rear)', item = 'axletorsionrear', handling = {type = 'CHandlingData', name = 'strModelFlags', value = {20}}, cost = 25000},
+	[10] = { label = 'Axle Solid (Front)', item = 'axlesolidfront', handling = {type = 'CHandlingData', name = 'strModelFlags', value = {17}}, cost = 25000},
+	[11] = { label = 'Axle Solid (Rear)', item = 'axlesolidrear', handling = {type = 'CHandlingData', name = 'strModelFlags', value = {21}}, cost = 25000},
+	[12] = { label = 'Kinetic Energy Recovery System (KERS)', item = 'kers', handling = {type = 'CHandlingData', name = 'strHandlingFlags', value = {2}}, cost = 25000},
+	[13] = { label = 'Offroad Tune 1', item = 'offroadtune1', handling = {type = 'CHandlingData', name = 'strHandlingFlags', value = {20}}, cost = 25000},
+	[14] = { label = 'Offroad Tune 2', item = 'offroadtune2', handling = {type = 'CHandlingData', name = 'strHandlingFlags', value = {21}}, cost = 25000},
+	[15] = { label = 'Stanced', item = 'stanced', handling = {type = 'CCarHandlingData', name = 'strAdvancedFlags', value = {15,26}}, cost = 25000},
 
 }
 
@@ -541,3 +544,34 @@ function import(file)
 	local f, err = load(content)
 	return f()
 end
+
+-- customs items from other resource
+config.customItems = {
+	[1] = {item = 'turbostreet', cost = 25000},
+	[2] = {item = 'turbosports', cost = 25000},
+	[3] = {item = 'turboracing', cost = 25000},
+	[4] = {item = 'nitro50shot', cost = 25000},
+	[5] = {item = 'nitro100shot', cost = 25000},
+	[6] = {item = 'nitro200shot', cost = 25000},
+}
+
+itemsData = {}
+for k,v in pairs(config.engineparts) do
+	table.insert(itemsData,v)
+end
+for k,v in pairs(config.engineupgrades) do
+	table.insert(itemsData,v)
+end
+for k,v in pairs(config.tires) do
+	table.insert(itemsData,v)
+end
+for k,v in pairs(config.drivetrain) do
+	table.insert(itemsData,v)
+end
+for k,v in pairs(config.extras) do
+	table.insert(itemsData,v)
+end
+for k,v in pairs(config.customItems) do
+	table.insert(itemsData,v)
+end
+table.insert(itemsData,{item = 'ecu', cost = 25000})

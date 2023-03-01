@@ -260,20 +260,40 @@ GetItemState = function(name)
 	return state,upgrade
 end
 
+GetItemCosts = function(item)
+	local cost = 25000 -- default if item not found
+	for k,v in pairs(itemsData) do
+		if v.item == item then
+			cost = v.cost
+			break
+		end
+	end
+	return cost
+end
+
 lib.callback.register('renzu_tuners:checkitem', function(src,item,isShop,required)
 	local hasitems = false
 	local amount = 1
-	local metadata = config.metadata
-	local itemstate = GetItemState(item)
-	local isItemMetadata = itemstate ~= item
-	local name = metadata and isItemMetadata and itemstate or item
-	local items = GetInventoryItems(src, 'slots', name)
-	if items then
-		for k,v in pairs(items) do
-			if metadata and isItemMetadata and v.metadata?.upgrade == item or not isItemMetadata and not v.metadata?.upgrade or not metadata then
-				RemoveInventoryItem(src, v.name, amount,v.metadata,v.slot)
-				hasitems = true
+	if not config.purchasableUpgrade then
+		local metadata = config.metadata
+		local itemstate = GetItemState(item)
+		local isItemMetadata = itemstate ~= item
+		local name = metadata and isItemMetadata and itemstate or item
+		local items = GetInventoryItems(src, 'slots', name)
+		if items then
+			for k,v in pairs(items) do
+				if metadata and isItemMetadata and v.metadata?.upgrade == item or not isItemMetadata and not v.metadata?.upgrade or not metadata then
+					RemoveInventoryItem(src, v.name, amount,v.metadata,v.slot)
+					hasitems = true
+				end
 			end
+		end
+	else
+		local cost = GetItemCosts(item)
+		local money = GetMoney(src)
+		if money >= cost then
+			RemoveMoney(src, cost)
+			hasitems = true
 		end
 	end
 	return hasitems

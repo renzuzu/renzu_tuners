@@ -3,7 +3,8 @@ PlayerData, localhandling, invehicle, gtirehealth, turboconfig, ecu, indyno, eff
 if GetResourceState('es_extended') == 'started' then
 	ESX = exports['es_extended']:getSharedObject()
 	PlayerData = ESX.GetPlayerData()
-	if lib.addRadialItem and PlayerData?.job?.name == config.job then
+	local access = not config.job or PlayerData?.job?.name == config.job
+	if lib.addRadialItem and access then
 		lib.addRadialItem(config.radialoptions)
 	end
 
@@ -20,7 +21,8 @@ if GetResourceState('es_extended') == 'started' then
 elseif GetResourceState('qb-core') == 'started' then
 	QBCore = exports['qb-core']:GetCoreObject()
 	PlayerData = QBCore.Functions.GetPlayerData()
-	if lib.addRadialItem and PlayerData?.job?.name == config.job then
+	local access = not config.job or PlayerData?.job?.name == config.job
+	if lib.addRadialItem and access then
 		lib.addRadialItem(config.radialoptions)
 	end
 	RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()

@@ -142,7 +142,7 @@ end)
 
 Citizen.CreateThreadNow(function()
 	SetDefaultVehicleNumberPlateTextPattern(-1, config.plateformat)
-	if not config.usetarget then
+	if config.enablemarkers then
 		for k,v in pairs(config.points) do
 			SetupUpgradePoints(v,k)
 		end
@@ -171,7 +171,7 @@ end)
 
 Citizen.CreateThreadNow(function()
 	Wait(1000)
-	if not config.usetarget then
+	if config.enablemarkers then
 		for k,v in pairs(config.repairpoints) do
 			SetupRepairPoints(v,k)
 		end

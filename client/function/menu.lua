@@ -17,21 +17,22 @@ UpgradePackage = function(data,shop,job)
 	}, function(selected, scrollIndex, args)
 		for k,v in pairs(config.engineupgrades) do
 			if v.category == args:lower() then
-				local hasitem = lib.callback.await('renzu_tuners:checkitem',false,v.item,shop,GetUpgradeCosts(item))
-				if not config.itemrequired or hasitem then
+				local hasitem = lib.callback.await('renzu_tuners:checkitem',false,v.item)
+				if config.freeupgrade or hasitem then
 					ItemFunction(vehicle,{
 						name = v.item,
 						label = v.label,
 					},config.upgradepackageAnimation)
 				else
+					local required = config.purchasableUpgrade and 'money' or 'item'
 					lib.notify({
-						description = 'you dont have the item',   
+						description = 'you dont have the '..required, 
 						type = 'error'
 					})
 				end
 			end
 		end
-		CheckVehicle(PlayerData?.job?.name == config.job or type,shop)
+		CheckVehicle(not config.job or PlayerData?.job?.name == config.job or type,shop)
 	end)
 
 	lib.showMenu('upgradepackage')
@@ -116,16 +117,17 @@ Options = function(data,shop,job)
 			onCheck = function(selected, checked, args)
 				lib.hideMenu()
 				local item = selected == 2 and data.upgrade or data.part or args
-				local hasitem = lib.callback.await('renzu_tuners:checkitem',false,item,shop,GetUpgradeCosts(item))
-				if not config.itemrequired or hasitem then
+				local hasitem = lib.callback.await('renzu_tuners:checkitem',false,item)
+				if config.freeupgrade or hasitem then
 					ItemFunction(vehicle,{
 						name = item,
 						label = data.label
 					},true)
-					CheckVehicle(PlayerData?.job?.name == config.job or type,shop)
+					CheckVehicle(not config.job or PlayerData?.job?.name == config.job or type,shop)
 				else
+					local required = config.purchasableUpgrade and 'money' or 'item'
 					lib.notify({
-						description = 'you dont have the item',   
+						description = 'you dont have the '..required, 
 						type = 'error'
 					})
 				end
@@ -244,8 +246,8 @@ Options = function(data,shop,job)
 					end
 				end
 			else
-				local hasitem = lib.callback.await('renzu_tuners:checkitem',false,item,shop,GetUpgradeCosts(item))
-				if not config.itemrequired or hasitem then
+				local hasitem = lib.callback.await('renzu_tuners:checkitem',false,item)
+				if config.freeupgrade or hasitem then
 					Entity(vehicle).state:set(data.upgrade or '',false,true)
 					ItemFunction(vehicle,{
 						name = item,
@@ -253,11 +255,12 @@ Options = function(data,shop,job)
 						engine = data.localengine or data.customengine or false
 					},true)
 					if not engine then
-						CheckVehicle(PlayerData?.job?.name == config.job or type,shop)
+						CheckVehicle(not config.job or PlayerData?.job?.name == config.job or type,shop)
 					end
 				else
+					local required = config.purchasableUpgrade and 'money' or 'item'
 					lib.notify({
-						description = 'you dont have the item',   
+						description = 'you dont have the '..required, 
 						type = 'error'
 					})
 				end

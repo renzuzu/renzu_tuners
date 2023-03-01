@@ -18,7 +18,7 @@ SetupUpgradePoints = function(data,index)
 	function point:nearby()
 		--DrawMarker(2, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 180.0, 0.0, 1.0, 1.0, 1.0, 200, 20, 20, 50, false, true, 2, nil, nil, false)
 		if self.currentDistance < 1 and IsControlJustReleased(0, 38) and IsPedInAnyVehicle(cache.ped) then
-			CheckVehicle(PlayerData?.job?.name == config.job)
+			CheckVehicle(not config.job or PlayerData?.job?.name == config.job)
 		end
 	end
 end
@@ -40,7 +40,8 @@ SetupRepairPoints = function(data,index)
 	end
 	
 	function point:nearby()
-		if self.currentDistance < 4 and IsControlJustReleased(0, 38) and PlayerData?.job?.name == config.job then
+		local access = not config.job or PlayerData?.job?.name == config.job
+		if self.currentDistance < 4 and IsControlJustReleased(0, 38) and access then
 			Repair()
 		end
 	end
@@ -65,7 +66,8 @@ SetupDynoPoints = function(data,index)
 	end
 	
 	function point:nearby()
-		if self.currentDistance < 4 and IsControlJustReleased(0, 38) and PlayerData?.job?.name == config.job then
+		local access = not config.job or PlayerData?.job?.name == config.job
+		if self.currentDistance < 4 and IsControlJustReleased(0, 38) and access then
 			Dyno(data,index)
 		end
 	end

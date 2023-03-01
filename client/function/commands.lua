@@ -1,17 +1,17 @@
 RegisterCommand('repair', function() -- repair command
-	if PlayerData.job.name == config.job then
+	if not config.job or PlayerData.job.name == config.job then
 		Repair()
 	end
 end)
 
 RegisterCommand('upgrades', function() -- upgrade package command
-	if PlayerData?.job?.name == config.job then
+	if not config.job or PlayerData?.job?.name == config.job then
 		UpgradePackage()
 	end
 end)
 
 RegisterCommand('checkvehicle', function(src,args) -- check current vehicle status, can upgrade if job is met.
-	return CheckVehicle(PlayerData.job.name == config.job)
+	return CheckVehicle(not config.job or PlayerData.job.name == config.job)
 end)
 
 if config.debug then
