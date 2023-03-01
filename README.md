@@ -74,9 +74,9 @@ BETA and WIP.
 
 # WIP TASKs
 - ❌ thinking to support qb-menu and standalone notification, callbacks for the sake of people who cant use ox_lib from qbcore.
-- Supports Oxlib Radial in some commands.
+- ✔️ Supports Oxlib Radial in some commands.
 - verify if degration is not too slow or too fast.
-- more inventory support.
+- ✔️ more inventory support.
 - Camber Tuning - thinking a more optimise way since CCarhandlingData does not support other logic for Stancer.
 - Create Simple Job Stash.
 - other suggestion from community. (please dont suggest any mechanic job logic)
