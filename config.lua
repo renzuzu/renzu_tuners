@@ -38,6 +38,7 @@ config.repairpoints = { -- usable only when config.usetarget is false.
 
 config.dynoprop = `prop_spray_jackframe` -- replace with your dyno prop or leave default
 config.dynopropShow = true -- set to false if your MLO has a DYNO area.. but setting up the coordinates for prop is still require to make the dyno logic work.
+config.dynocollision = false -- set to true if your using dynamometer prop
 config.routingbucket = 0 -- leave default if your not using custom routing buckets
 config.dynopoints = { -- @platform = exact location of prop. @coord marker location of dyno access
     -- east lost santos customs sample placement

@@ -29,8 +29,10 @@ AddStateBagChangeHandler('ramp' --[[key filter]], nil --[[bag filter]], function
 		ramp = entity
 		SetEntityHeading(entity,value.heading)
 		FreezeEntityPosition(entity,true)
-		DisableVehicleWorldCollision(entity)
-		SetEntityCollision(entity,false,true)
+		if not config.dynocollision then
+			DisableVehicleWorldCollision(entity)
+			SetEntityCollision(entity,false,true)
+		end
 		SetEntityVisible(entity,config.dynopropShow)
 	end
 end)
