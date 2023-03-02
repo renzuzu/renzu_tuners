@@ -152,19 +152,8 @@ end)
 Citizen.CreateThreadNow(function()
 	Wait(2000)
 	local rampmodel = `prop_spray_jackframe`
-	local winch = `prop_bison_winch`
 	lib.requestModel(rampmodel)
-	lib.requestModel(winch)
 	for k,v in pairs(config.dynopoints) do
-		for k,v in pairs(v.winch) do
-			winch_entity = CreateObjectNoOffset(winch,v.x,v.y,v.z,true,false)
-			while not DoesEntityExist(winch_entity) do Wait(1) end
-			FreezeEntityPosition(winch_entity,true)
-			SetEntityHeading(winch_entity,v.w)
-			DisableVehicleWorldCollision(winch_entity)
-			SetEntityCollision(winch_entity,false,true)
-			table.insert(winches,winch_entity)
-		end
 		SetupDynoPoints(v,k)
 	end
 end)

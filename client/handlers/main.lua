@@ -72,7 +72,7 @@ AddStateBagChangeHandler('startdyno' --[[key filter]], nil --[[bag filter]], fun
 		SetEntityCoordsNoOffset(dynoentity,vec3(value.platform.coord.x,value.platform.coord.y,value.platform.coord.z)-vec3(0.0,0.0,0.9))
 		SetEntityHeading(dynoentity,value.platform.coord.w)
 		SetVehicleOnGroundProperly(dynoentity)
-		SetEntityCoordsNoOffset(dynoentity,GetEntityCoords(entity)-vec3(0.0,0.0,0.1))
+		SetEntityCoordsNoOffset(dynoentity,GetEntityCoords(entity)-value.platform.offsets)
 		Citizen.CreateThreadNow(function()
 			local coord = GetEntityCoords(dynoentity)
 			local rot = GetEntityRotation(dynoentity)
@@ -141,9 +141,6 @@ AddEventHandler('onResourceStop', function(res)
 	if res == GetCurrentResourceName() then
 		if DoesEntityExist(engineswapper) then
 			DeleteEntity(engineswapper)
-		end
-		for k,v in pairs(winches) do
-			DeleteEntity(v)
 		end
 	end
 end)

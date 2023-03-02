@@ -24,6 +24,7 @@ files {
 	'web/index.html',
 	'web/script.js',
 	'web/style.css',
+	'stream/mist_dy.ytyp'
 }
 
 dependencies {
@@ -31,3 +32,5 @@ dependencies {
 	'/onesync',
 	'ox_lib',
 }
+
+data_file 'DLC_ITYP_REQUEST' 'stream/mist_dy.ytyp'

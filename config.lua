@@ -39,35 +39,23 @@ config.repairpoints = { -- marker and drawtext type interactions
 	[1] = {label = 'Repair Vehicle', coord = vec3(-341.18142700195,-129.10722351074,38.53271)},
 }
 
-config.dynoprop = `prop_spray_jackframe` -- replace with your dyno prop or leave default
+config.dynoprop = `mist_dyno` -- replace with your dyno prop or leave default
 config.dynopropShow = true -- set to false if your MLO has a DYNO area.. but setting up the coordinates for prop is still require to make the dyno logic work.
-config.dynocollision = false -- set to true if your using dynamometer prop
+config.dynocollision = true -- set to true if your using dynamometer prop
 config.routingbucket = 0 -- leave default if your not using custom routing buckets
 config.dynopoints = { -- @platform = exact location of prop. @coord marker location of dyno access
     -- east lost santos customs sample placement
 	[1] = { 
 		label = "Dynojet", 
-		platform = vec4(-327.30157470703,-144.77243041992,39.300028894043,251.22994995117-180), -- location of dyno prop ( if you have ) the current install one is GTA props
-		winch = {
-			[1] = vec4(-328.2233569336, -143.53862609863, 37.95668518066,69.2), -- <-- comment this if you use Real Dynamometer Prop
-			[2] = vec4(-328.87533569336, -145.21852416992, 37.95668518066,69.2),-- <-- comment this if you use Real Dynamometer Prop
-			[3] = vec4(-325.9233569336, -144.30862609863, 37.95668518066,69.2),-- <-- comment this if you use Real Dynamometer Prop
-			[4] = vec4(-326.54533569336, -145.97852416992, 37.95668518066,69.2),-- <-- comment this if you use Real Dynamometer Prop
-			
-		},
+		platform = vec4(-327.30157470703,-144.77243041992,39.300028894043,251.22994995117), -- location of dyno position where vehicle will align 
+		offsets = vec3(0.2,0.0,0.0), -- additional (+) offset to vehicle fittings
 		coord = vec3(-331.58612060547,-143.29803466797,39.00) -- location of Interaction
 	},
 	-- benny sample placement
 	[2] = {
 		label = "Dynojet", 
-		platform = vec4(-214.057, -1319.63, 31.15, 181.93), -- location of dyno prop ( if you have ) the current install one is GTA props
-		winch = {
-			[1] = vec4(-213.1169642334, -1321.0320976563, 29.815131835938, 359.834), -- <-- comment this if you use Real Dynamometer Prop
-			[2] = vec4(-213.229642334, -1318.5320976563, 29.815131835938, 359.834), -- <-- comment this if you use Real Dynamometer Prop
-			[3] = vec4(-214.8969642334, -1321.0320976563, 29.815131835938, 359.834), -- <-- comment this if you use Real Dynamometer Prop
-			[4] = vec4(-214.989642334, -1318.5320976563, 29.815131835938, 359.834), -- <-- comment this if you use Real Dynamometer Prop
-
-		},
+		platform = vec4(-214.057, -1319.63, 31.15, 1.93), -- location of dyno position where vehicle will align
+		offsets = vec3(0.0,0.2,0.0), -- additional (+) offset to vehicle fittings
 		coord = vec3(-213.894, -1324.475, 30.909) -- location of Interaction
 	}
 }

@@ -12,7 +12,7 @@ Dyno = function(data,index)
 		if manual then manual = false Wait(2000) end
 		local vehicle = GetVehiclePedIsIn(cache.ped)
 		local coord = GetEntityCoords(vehicle) + vec3(0.0,0.0,0.2)
-		zoffset = {coord = data.platform}
+		zoffset = {coord = data.platform, offsets = data.offsets}
 		DisableVehicleWorldCollision(vehicle)
 		FreezeEntityPosition(vehicle,true)
 		SetVehicleManualGears(vehicle,true)
