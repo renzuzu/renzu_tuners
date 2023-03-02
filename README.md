@@ -83,7 +83,7 @@ BETA and WIP.
 
 
 ```
-PS: if you are a modeler. dyno prop :D
+PS: Thank to MIST and his friend the modeler for providing a dynamometer model.
 ```
 
 # Image Upgrade Menu
