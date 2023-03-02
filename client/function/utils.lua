@@ -217,13 +217,16 @@ RemoveDuplicatePart = function(vehicle,state)
 	end
 end
 
+local hashandling = false
+
 GetDefaultHandling = function(vehicle, plate) -- saves default handling of new vehicles
 	local ent = Entity(vehicle).state
 	local handlings = ent.defaulthandling
 	if not ent.engine then
 		ent:set('currentengine','default',true)
 	end
-	if not handlings and not ent.engine then
+	if not handlings and not ent.engine or not hashandling then
+		hashandling = true
 		handlings = {
 			fInitialDriveForce = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fInitialDriveForce'),
 			fDriveInertia = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fDriveInertia'),
@@ -266,7 +269,7 @@ SetDefaultHandling = function(vehicle,handling) -- setter from other resource ex
 	if ent.engine then
 		ent:set('currentengine',ent.engine,true)
 	end
-	if not handling then return end
+	if not handling then hashandling = false return end
 	local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
 	local handlings = ent.defaulthandling
 	handlings = {
