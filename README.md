@@ -1,8 +1,6 @@
 # renzu_tuners
 Fivem Advanced Vehicle System. Including Mileages , Degrations ,Multiple Engine Parts Variation like Racing Pistons , Tuning and more.
 
-BETA and WIP.
-
 ![image](https://user-images.githubusercontent.com/82306584/221592284-7bbf65f2-0e71-4158-a819-5e3277c255f6.png)
 
 # Feature
