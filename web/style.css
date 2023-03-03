@@ -116,11 +116,11 @@ body {
 }
 
 .section-main, .section-expanded, .section-single {
-  width: 100%;
+  width: 1000px;
   display: inline-block;
   position: absolute;
-  bottom: 5%;
-  left: 25%;
+  bottom: 0%;
+  right: 22vw;
   visibility: visible;
   transition: opacity 0.3s, transform 0.3s;
   border-radius: 5px;
@@ -226,6 +226,7 @@ body {
   display:none;
   bottom:6%;
   z-index: 99;
+  width: 100%;
 }
 
 #sensors {
@@ -234,6 +235,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
+  margin-left: 70%;
 }
 
 #sensors2 {
@@ -242,7 +244,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding-top:10px
+  padding-top:10px;
+  margin-left: 70%;
 }
 
 @property --num {

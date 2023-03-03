@@ -181,6 +181,7 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 		end
 		while invehicle and manual do
 			Wait(4)
+			HideHudAndRadarThisFrame()
 			if dyno then
 				local new_inertia = GetGearInertia(gear_ratio)
 				SetVehicleHandlingFloat(vehicle , "CHandlingData", "fDriveInertia", new_inertia+0.04)

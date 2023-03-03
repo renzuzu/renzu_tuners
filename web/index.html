@@ -15,49 +15,48 @@
 </head>
 
 <body translate="no" id="body" style="display: block;">
-    <div id="dyno" style="display: none;">
-       <main id="section-root-container">
-           <section class="section-single" id="section-single-frequency">
-               <div class="section-main-content frequency-content">
-                   <div class="frequency-single-content">
-                       <div class="frequency-single-histogram">
-                           <div class="frequency-single-info">
-                               <div class="full-txtBlock">
-                                <i class="fas fa-tachometer-alt icon" aria-hidden="true"></i>
-                                   <div class="blockvalue"> <span id="rpm"></span></div>
-                                   <div class="blocktitle">Engine Speed</div>
-                               </div>
-                               <div class="full-txtBlock">
-                                <i class="fas fa-digital-tachograph  icon" aria-hidden="true"></i>
-                                   <div class="blockvalue"><span id="speed">0.0</span><span>Kmh</span></div>
-                                   <div class="blocktitle">Speed</div>
-                               </div>
-                               <div class="full-txtBlock">
-                                    <i class="fas fa-cogs icon" aria-hidden="true"></i>
-                                   <div class="blockvalue"><span id="gear">0.0</span> <span></span></div>
-                                   <div class="blocktitle">Gear</div>
-                               </div>
-                               <div class="full-txtBlock">
-                                <i class="fas fa-chart-bar icon" aria-hidden="true"></i>
-                               <div class="blockvalue"><span id="hp">0.0</span> <span></span></div>
-                               <div class="blocktitle">Horse Power</div>
-                           </div>
-                           </div>
-                       </div>
-                   </div>
-               
-               </div>
-           </section>
-       </main>
-   </div>
    <div class="card" id='dynochart'>
-
     <div class="card_inner">
       <canvas id="line-chart" width="900" height="500"></canvas>
     </div>
   </div>
 
   <div id="gauges">
+    <div id="dyno" style="display: none;">
+      <main id="section-root-container">
+          <section class="section-single" id="section-single-frequency">
+              <div class="section-main-content frequency-content">
+                  <div class="frequency-single-content">
+                      <div class="frequency-single-histogram">
+                          <div class="frequency-single-info">
+                              <div class="full-txtBlock">
+                               <i class="fas fa-tachometer-alt icon" aria-hidden="true"></i>
+                                  <div class="blockvalue"> <span id="rpm"></span></div>
+                                  <div class="blocktitle">Engine Speed</div>
+                              </div>
+                              <div class="full-txtBlock">
+                               <i class="fas fa-digital-tachograph  icon" aria-hidden="true"></i>
+                                  <div class="blockvalue"><span id="speed">0.0</span><span>Kmh</span></div>
+                                  <div class="blocktitle">Speed</div>
+                              </div>
+                              <div class="full-txtBlock">
+                                   <i class="fas fa-cogs icon" aria-hidden="true"></i>
+                                  <div class="blockvalue"><span id="gear">0.0</span> <span></span></div>
+                                  <div class="blocktitle">Gear</div>
+                              </div>
+                              <div class="full-txtBlock">
+                               <i class="fas fa-chart-bar icon" aria-hidden="true"></i>
+                              <div class="blockvalue"><span id="hp">0.0</span> <span></span></div>
+                              <div class="blocktitle">Horse Power</div>
+                          </div>
+                          </div>
+                      </div>
+                  </div>
+              
+              </div>
+          </section>
+      </main>
+    </div>
     <div id="sensors">
       <div class="cardstatus">
         <div class="percent">
