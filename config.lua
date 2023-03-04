@@ -46,9 +46,9 @@ config.dynopoints = { -- @platform = exact location of prop. @coord marker locat
     -- east lost santos customs sample placement
 	[1] = { 
 		label = "Dynojet", 
-		platform = vec4(-327.30157470703,-144.77243041992,39.300028894043,251.22994995117), -- location of dyno position where vehicle will align 
+		platform = vec4(-360.3323, -112.5015, 38.9845, 158.4727+180), -- location of dyno position where vehicle will align 
 		offsets = vec3(0.2,0.0,0.0), -- additional (+) offset to vehicle fittings
-		coord = vec3(-331.58612060547,-143.29803466797,39.00) -- location of Interaction
+		coord = vec3(-362.3821, -117.6957, 39.083) -- location of Interaction
 	},
 	-- benny sample placement
 	[2] = {
