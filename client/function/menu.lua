@@ -1,6 +1,13 @@
 UpgradePackage = function(data,shop,job)
 	local options = {}
 	local vehicle = GetClosestVehicle(GetEntityCoords(cache.ped), 10.0)
+	if not DoesEntityExist(vehicle) then 
+		lib.notify({
+			description = 'No nearby vehicle', 
+			type = 'error'
+		})
+		return 
+	end
 	local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
 	local hasmenu = job
 	for k,enable in pairs(config.upgradevariation) do
@@ -278,6 +285,13 @@ end
 
 CheckVehicle = function(menu,shop)
     local vehicle = GetClosestVehicle(GetEntityCoords(cache.ped), 10.0)
+	if not DoesEntityExist(vehicle) then 
+		lib.notify({
+			description = 'No nearby vehicle', 
+			type = 'error'
+		})
+		return 
+	end
 	local ent = Entity(vehicle).state
 	local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
 	local default_perf = GetEnginePerformance(vehicle,plate)
@@ -355,6 +369,13 @@ end
 
 CheckPerformance = function()
     local vehicle = GetClosestVehicle(GetEntityCoords(cache.ped), 10.0)
+	if not DoesEntityExist(vehicle) then 
+		lib.notify({
+			description = 'No nearby vehicle', 
+			type = 'error'
+		})
+		return 
+	end
 	local ent = Entity(vehicle).state
 	local options = {}
 	local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
@@ -381,12 +402,25 @@ end
 
 TuningMenu = function()
     local vehicle = GetClosestVehicle(GetEntityCoords(cache.ped), 10.0)
+	if not DoesEntityExist(vehicle) then 
+		lib.notify({
+			description = 'No nearby vehicle', 
+			type = 'error'
+		})
+		return 
+	end
 	local default = GetDefaultHandling(vehicle)
 	local ent = Entity(vehicle).state
 	local options = {}
 	local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
 	local activeprofile = GlobalState.ecu[plate] and GlobalState.ecu[plate].active
-	if not activeprofile then return end
+	if not activeprofile then
+		lib.notify({
+			description = 'No Programable ECU Install', 
+			type = 'error'
+		}) 
+		return 
+	end
 	HandleEngineDegration(vehicle,ent,plate)
 	for k,v in ipairs(config.tuningmenu) do
 		table.insert(options, {icon = v.icon , label = v.label, description = v.description, args = {handling = v.handlingname, label = v.label, type = v.type, min = v.min, max = v.max, attributes = v.attributes}})
@@ -473,6 +507,13 @@ end
 
 CheckWheels = function()
     local vehicle = GetClosestVehicle(GetEntityCoords(cache.ped), 10.0)
+	if not DoesEntityExist(vehicle) then 
+		lib.notify({
+			description = 'No nearby vehicle', 
+			type = 'error'
+		})
+		return 
+	end
 	local ent = Entity(vehicle).state
 	local options = {}
 	local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
