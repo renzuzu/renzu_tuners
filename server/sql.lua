@@ -35,7 +35,17 @@ local db = setmetatable({},{
 			return data
 		end
 
+		self.busycd = {}
+		self.busy = {}
 		self.save = function(column, where, string, data)
+			if self.busycd[string] == nil then 
+				self.busycd[string] = 0 
+			end
+			while self.busy[string] and self.busycd[string] < 100 do 
+				if self.busycd[string] then self.busycd[string] += 1 end
+				Wait(10) 
+			end
+			self.busy[string] = true
 			local str = 'SELECT 1 FROM %s WHERE %s = ?'
 			local success, result = pcall(MySQL.scalar.await, str:format('renzu_tuner',where),{string})
 			if success and result then
@@ -43,18 +53,28 @@ local db = setmetatable({},{
 			else
 				self.insert(column, data, string)
 			end
+			self.busy[string] = false
+			self.busycd[string] = nil
 		end
 
 		self.savemulti = function(data,plate)
+			if self.busycd[plate] == nil then self.busycd[plate] = 0 end
+			while self.busy[plate] and self.busycd[plate] < 100 do 
+				if self.busycd[plate] then self.busycd[plate] += 1 end				
+				Wait(1)
+			end
+			self.busy[plate] = true
 			local str = 'SELECT 1 FROM %s WHERE %s = ?'
 			local success, result = pcall(MySQL.scalar.await, str:format('renzu_tuner','plate'),{plate})
 			if success and result then
 				local str = 'UPDATE %s SET %s = ?, %s = ?, %s = ?, %s = ? WHERE %s = ?'
-				return MySQL.query(str:format('renzu_tuner','vehiclestats','defaulthandling','vehicleupgrades','mileages','plate'),{data.vehiclestats,data.defaulthandling,data.vehicleupgrades,data.mileages,plate})
+				MySQL.query(str:format('renzu_tuner','vehiclestats','defaulthandling','vehicleupgrades','mileages','plate'),{data.vehiclestats,data.defaulthandling,data.vehicleupgrades,data.mileages,plate})
 			else
 				local str = 'INSERT INTO %s (%s, %s, %s, %s, %s) VALUES(?, ?, ?, ?, ?)'
-				return MySQL.insert.await(str:format('renzu_tuner','vehiclestats','defaulthandling','vehicleupgrades','mileages','plate'),{data.vehiclestats,data.defaulthandling,data.vehicleupgrades,data.mileages,plate})
+				MySQL.insert.await(str:format('renzu_tuner','vehiclestats','defaulthandling','vehicleupgrades','mileages','plate'),{data.vehiclestats,data.defaulthandling,data.vehicleupgrades,data.mileages,plate})
 			end
+			self.busy[plate] = false
+			self.busycd[plate] = nil
 		end
 
 		self.saveall = function(data)
