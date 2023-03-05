@@ -1,5 +1,9 @@
 
 lib.onCache('vehicle', function(value)
+	return OnVehicle(value)
+end)
+
+OnVehicle = function(value)
 	invehicle = value
 	if not DoesEntityExist(value) then return end
 	local plate = string.gsub(GetVehicleNumberPlateText(value), '^%s*(.-)%s*$', '%1'):upper()
@@ -138,7 +142,7 @@ lib.onCache('vehicle', function(value)
 			end
 		end
 	end)
-end)
+end
 
 Citizen.CreateThreadNow(function()
 	SetDefaultVehicleNumberPlateTextPattern(-1, config.plateformat)
@@ -169,6 +173,10 @@ end)
 
 Citizen.CreateThreadNow(function()
 	Wait(1000)
+	local vehicle = GetVehiclePedIsIn(cache.ped)
+	if vehicle and GetPedInVehicleSeat(vehicle,-1) == cache.ped then
+		OnVehicle(vehicle)
+	end
 	local isturbostarted = GetResourceState('renzu_turbo') == 'started'
 	if isturbostarted then
 		turboconfig = exports.renzu_turbo:turbos()
