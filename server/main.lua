@@ -13,32 +13,31 @@ local dyno_net = {}
 local ramp = {}
 
 SpawnDyno = function(index)
+	if config.useMlo then return end
 	local rampmodel = config.dynoprop
 	for k,v in ipairs(config.dynopoints) do
 		local object = CreateObjectNoOffset(rampmodel,v.platform.x,v.platform.y,v.platform.z-1.2,true,true)
 		while not DoesEntityExist(object) do Wait(1) end
-		Wait(500)
 		SetEntityRoutingBucket(object,config.routingbucket)
 		Wait(100)
 		FreezeEntityPosition(object,true)
 		SetEntityHeading(object,v.platform.w)
 		dyno_net[k] = NetworkGetNetworkIdFromEntity(object)
 		ramp[k] = object
-		Wait(1000)
+		Wait(100)
 		Entity(object).state:set('ramp', {ts = os.time(), heading = v.platform.w}, true)
 	end
 end
 
 lib.callback.register('renzu_tuners:CheckDyno', function(src,dynamometer,index)
-	local dyno = NetworkGetEntityFromNetworkId(dyno_net[index])
-	--if dynoInuse then return false end
-	if not DoesEntityExist(dyno) or not dynamometer then
+	local dyno = not config.useMlo and NetworkGetEntityFromNetworkId(dyno_net[index])
+	if not config.useMlo and not DoesEntityExist(dyno) or not config.useMlo and not dynamometer then
 		SpawnDyno(index)
-		Wait(2000)
 		return true
 	end
 	return true
 end)
+
 
 -- send specific vehicle data to client. normaly i do check globalstate data in client. but somehow its acting weird on live enviroments and data is not getting sync if server has been up for too long, this is only a work around in state bag issue when data is large.
 lib.callback.register('renzu_tuners:vehiclestats', function(src, plate) -- only the efficient way to send data to client. normaly people will just fetch sql every time player goes into vehicle. which is not performant.

@@ -1,7 +1,11 @@
 Dyno = function(data,index)
-	local closestvehicle = GetClosestVehicle(vec3(data.platform.x,data.platform.y,data.platform.z), 2.0)
-	local candyno = lib.callback.await('renzu_tuners:CheckDyno',false,DoesEntityExist(ramp) and GetEntityModel(ramp) == config.dynoprop,index) and GetPedInVehicleSeat(GetVehiclePedIsIn(cache.ped),-1) == cache.ped
-	if candyno and not DoesEntityExist(closestvehicle) then
+	local dynoprop = not config.useMlo and DoesEntityExist(ramp) and GetEntityModel(ramp) == config.dynoprop or config.useMlo
+	local vehicle = GetClosestVehicle(vec3(data.platform.x,data.platform.y,data.platform.z), 2.0)
+	local candyno = lib.callback.await('renzu_tuners:CheckDyno',false,dynoprop,index)
+	local dynotaken = DoesEntityExist(vehicle)
+	local dynostate = dynotaken and Entity(vehicle).state?.dyno
+	local dynodriver = GetPedInVehicleSeat(GetVehiclePedIsIn(cache.ped),-1) == cache.ped
+	if candyno and not dynotaken then
 		indyno = true
 		lib.notify({
 			title = 'Dynamometer Mode',
@@ -16,7 +20,7 @@ Dyno = function(data,index)
 		DisableVehicleWorldCollision(vehicle)
 		FreezeEntityPosition(vehicle,true)
 		SetVehicleManualGears(vehicle,true)
-	else
+	elseif not dynotaken and not dynodriver then
 		lib.notify({
 			title = 'Dynamometer is being used',
 			type = 'error'
@@ -298,9 +302,7 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 		--SetVehicleGravityAmount(vehicle,1.0)
 		SetEntityHasGravity(vehicle,true)
 		SetVehicleGravity(vehicle,true)
-		SetEntityControlable(ramp)
 		DetachEntity(vehicle,false,false)
-		DetachEntity(ramp,false,false)
 		FreezeEntityPosition(vehicle,false)
 		manual = false
 		print('reset',(maxspeed * 1.3) / 3.6,maxspeed,maxgear,GetVehicleHighGear(vehicle),inertia,driveforce)
@@ -400,7 +402,6 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 	ManualOff = function()
 		FreezeEntityPosition(vehicle,false)
 		DetachEntity(vehicle,false,true)
-		DetachEntity(ramp,false,true)
 		manual = false
 	end
 

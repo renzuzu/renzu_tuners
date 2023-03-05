@@ -38,6 +38,7 @@ config.repairpoints = { -- marker and drawtext type interactions
 	[1] = {label = 'Repair Vehicle', coord = vec3(-341.18142700195,-129.10722351074,38.53271)},
 }
 
+config.useMlo = false -- set to true if your using MLO and there will be no need to spawn Dynamometer prop
 config.dynoprop = `mist_dyno` -- replace with your dyno prop or leave default
 config.dynopropShow = true -- set to false if your MLO has a DYNO area.. but setting up the coordinates for prop is still require to make the dyno logic work.
 config.dynocollision = true -- set to true if your using dynamometer prop
