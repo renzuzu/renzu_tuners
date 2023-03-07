@@ -378,9 +378,7 @@ AddEventHandler('onResourceStop', function(res)
 	end
 end)
 
-AddEventHandler('entityCreated', function(entity)
-	local entity = entity
-	Wait(3000)
+SetTunerData = function(entity)
 	if DoesEntityExist(entity) and GetEntityType(entity) == 2 and GetEntityPopulationType(entity) >= 6 then
     	local plate = string.gsub(GetVehicleNumberPlateText(entity), '^%s*(.-)%s*$', '%1'):upper()
 		local ent = Entity(entity).state
@@ -409,6 +407,23 @@ AddEventHandler('entityCreated', function(entity)
 			ent:set('advancedflags',advancedflags[plate],true)
 		end
 	end
+end
+
+AddStateBagChangeHandler('VehicleProperties' --[[key filter]], nil --[[bag filter]], function(bagName, key, value, _unused, replicated)
+	Wait(0)
+	local net = tonumber(bagName:gsub('entity:', ''), 10)
+	if not value then return end
+    local entity = NetworkGetEntityFromNetworkId(net)
+    Wait(1000)
+    if DoesEntityExist(entity) then
+        SetTunerData(entity) -- compatibility with ESX onesync server setter vehicle spawn
+    end
+end)
+
+AddEventHandler('entityCreated', function(entity)
+	local entity = entity
+	Wait(3000)
+	SetTunerData(entity)
 end)
 
 AddEventHandler('entityRemoved', function(entity)
