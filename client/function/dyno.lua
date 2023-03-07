@@ -184,8 +184,9 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 			ent:set('gearshift',{gear = 1, gearmaxspeed = (((maxspeed * 1.32) / 3.6) / gear_ratio), flatspeed = (maxspeed / gear_ratio), driveforce = (driveforce * gear_ratio)}, true)
 		end
 		while invehicle and manual do
-			Wait(4)
-			HideHudAndRadarThisFrame()
+			if dyno then
+				HideHudAndRadarThisFrame()
+			end
 			if dyno then
 				local new_inertia = GetGearInertia(gear_ratio)
 				SetVehicleHandlingFloat(vehicle , "CHandlingData", "fDriveInertia", new_inertia+0.04)
@@ -273,6 +274,7 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 				manual = false
 				break
 			end
+			Wait(0)
 		end
 
 		if dyno then
