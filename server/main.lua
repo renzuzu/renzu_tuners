@@ -414,7 +414,7 @@ AddStateBagChangeHandler('VehicleProperties' --[[key filter]], nil --[[bag filte
 	local net = tonumber(bagName:gsub('entity:', ''), 10)
 	if not value then return end
     local entity = NetworkGetEntityFromNetworkId(net)
-    Wait(1000)
+    Wait(3000)
     if DoesEntityExist(entity) then
         SetTunerData(entity) -- compatibility with ESX onesync server setter vehicle spawn
     end
