@@ -38,7 +38,18 @@ lib.callback.register('renzu_tuners:CheckDyno', function(src,dynamometer,index)
 	return true
 end)
 
+AddEventHandler('onResourceStop', function(res)
+	if res == GetCurrentResourceName() then
+		for k,v in pairs(ramp) do
+			if DoesEntityExist(v) then
+				DeleteEntity(v)
+			end
+		end
+	end
+end)
 
+CreateThread(SpawnDyno)
+if config.sandboxmode then return end
 -- send specific vehicle data to client. normaly i do check globalstate data in client. but somehow its acting weird on live enviroments and data is not getting sync if server has been up for too long, this is only a work around in state bag issue when data is large.
 lib.callback.register('renzu_tuners:vehiclestats', function(src, plate) -- only the efficient way to send data to client. normaly people will just fetch sql every time player goes into vehicle. which is not performant.
 	local stats = {[plate] = vehiclestats[plate] or {}}
@@ -50,7 +61,6 @@ end)
 
 CreateThread(function()
     Wait(2000)
-	SpawnDyno()
 	local cache = db.fetchAll()
 	local stats = {}
 	for k,v in pairs(cache.vehiclestats or {}) do
@@ -368,16 +378,6 @@ lib.callback.register('renzu_tuners:Craft', function(src,slots,requiredata,item,
 	return success
 end)
 
-AddEventHandler('onResourceStop', function(res)
-	if res == GetCurrentResourceName() then
-		for k,v in pairs(ramp) do
-			if DoesEntityExist(v) then
-				DeleteEntity(v)
-			end
-		end
-	end
-end)
-
 SetTunerData = function(entity)
 	if DoesEntityExist(entity) and GetEntityType(entity) == 2 and GetEntityPopulationType(entity) >= 6 then
     	local plate = string.gsub(GetVehicleNumberPlateText(entity), '^%s*(.-)%s*$', '%1'):upper()
@@ -443,4 +443,12 @@ Citizen.CreateThreadNow(function()
 			RegisterStash('engine_storage:'..k, 'Engine Storage', 70, 1000000, false,{[config.job] = 0})
 		end
 	end
+end)
+
+lib.addCommand('sandboxmode', {
+    help = 'Enable Developer mode Tuning and Disable Engine Degration',
+    params = {},
+    restricted = 'group.admin'
+}, function(source, args, raw)
+    TriggerClientEvent('renzu_tuners:SandBoxmode',source)
 end)

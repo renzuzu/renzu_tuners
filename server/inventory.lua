@@ -1,4 +1,5 @@
 -- here you can port other inventory functions
+if config.sandboxmode then return end
 QbCore, ESX = nil, nil
 if GetResourceState('qb-core') == 'started' then
 	QbCore = exports['qb-core']:GetCoreObject()

@@ -95,7 +95,7 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 	local lastgear = 1
 	local flatspeed = maxspeed
 	local GetGearInertia = function(ratio_)
-		local dyno_inertia = (fDriveInertia / maxgear)
+		local dyno_inertia = (default_fDriveInertia / maxgear)
 		local new_inertia = (dyno_inertia * turbopower) - ((dyno_inertia * turbopower) / ratio_)
 		return new_inertia
 	end
@@ -186,12 +186,11 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 		while invehicle and manual do
 			if dyno then
 				HideHudAndRadarThisFrame()
-			end
-			if dyno then
 				local new_inertia = GetGearInertia(gear_ratio)
 				SetVehicleHandlingFloat(vehicle , "CHandlingData", "fDriveInertia", new_inertia+0.04)
 				--SetVehicleForwardSpeed(vehicle,gearmaxspeed * rpm)
 			end
+			default_fDriveInertia = tuning_inertia or default_fDriveInertia
 			maxgear = nInitialDriveGears
 			driveforce = fInitialDriveForce
 			maxspeed = fInitialDriveMaxFlatVel
@@ -222,7 +221,7 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 						SetVehicleMaxSpeed(vehicle,gearmaxspeed+1.0)
 						ModifyVehicleTopSpeed(vehicle,1.0)
 						SetVehicleHandlingInt(vehicle , "CCarHandlingData", "strAdvancedFlags", vehicleflags+0x400000+0x20000+0x4000000+0x20000000)
-						SetVehicleHandlingFloat(vehicle , "CHandlingData", "fDriveInertia", fDriveInertia)
+						SetVehicleHandlingFloat(vehicle , "CHandlingData", "fDriveInertia", default_fDriveInertia)
 					end
 				elseif not switching and not auto and gear < maxgear then
 					if rpm > 0.9 then
@@ -234,7 +233,7 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 						SetVehicleHandlingFloat(vehicle , "CHandlingData", "fInitialDriveMaxFlatVel", maxspeed+0.01)
 						SetVehicleHandlingFloat(vehicle , "CHandlingData", "fInitialDriveForce", driveforce+0.0)
 						SetVehicleHandlingInt(vehicle , "CHandlingData", "nInitialDriveGears", maxgear)
-						SetVehicleHandlingFloat(vehicle , "CHandlingData", "fDriveInertia", fDriveInertia)
+						SetVehicleHandlingFloat(vehicle , "CHandlingData", "fDriveInertia", default_fDriveInertia)
 						SetVehicleCheatPowerIncrease(vehicle,1.0)
 						ForceVehicleGear(vehicle,switch and gear or 1)
 						SetVehicleHighGear(vehicle,switch and maxgear or 1)
@@ -256,7 +255,7 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 			elseif not dyno and GetControlNormal(0,72) < 0.1 and gear_ratio and rpm > 0.3 then
 				local rpm = ((speed / 3.6) / gearmaxspeed) * 1.01
 				switch = false
-				SetVehicleHandlingFloat(vehicle , "CHandlingData", "fDriveInertia", 0.1+ (fDriveInertia / gear) * (1.0 - rpm))
+				SetVehicleHandlingFloat(vehicle , "CHandlingData", "fDriveInertia", 0.1+ (default_fDriveInertia / gear) * (1.0 - rpm))
 				SetVehicleHandlingFloat(vehicle , "CHandlingData", "fInitialDriveForce", (driveforce * (gear / maxgear)) * (1 - rpm))
             end
 
@@ -291,7 +290,11 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 		Wait(1500)
 		SetVehicleCurrentRpm(vehicle,0.2)
 		SetEntityAsMissionEntity(vehicle,true,true)
-		ent:set('vehiclestatreset',{strAdvancedFlags = vehicleflags, fInitialDriveMaxFlatVel = maxspeed, fInitialDriveForce = driveforce, fDriveInertia = inertia, nInitialDriveGears = maxgear}, true)
+		if config.sandboxmode then
+			ent:set('vehiclestatreset',{strAdvancedFlags = GetVehicleHandlingInt(vehicle, 'CCarHandlingData', 'strAdvancedFlags'), fInitialDriveMaxFlatVel = fInitialDriveMaxFlatVel, fInitialDriveForce = fInitialDriveForce, fDriveInertia = tuning_inertia or default_fDriveInertia, nInitialDriveGears = nInitialDriveGears}, true)
+		else
+			ent:set('vehiclestatreset',{strAdvancedFlags = vehicleflags, fInitialDriveMaxFlatVel = maxspeed, fInitialDriveForce = driveforce, fDriveInertia = inertia, nInitialDriveGears = maxgear}, true)
+		end
 		SetVehicleHighGear(vehicle,maxgear)
 		ForceVehicleGear(vehicle,0)
 		SetEntityMaxSpeed(vehicle,(maxspeed * 1.3) / 3.6)
@@ -311,6 +314,7 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 		dyno = false
 		indyno = false
 		lib.hideTextUI()
+		tuning_inertia = nil
 	end)
 	
 	if auto then -- custom automatic gears. purpose is to use Tuned Custom Gear Ratios and can use eco mode.

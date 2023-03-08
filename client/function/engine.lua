@@ -38,6 +38,7 @@ EngineEfficiency = function(vehicle,stats,tune,turboTorque)
 end
 
 HandleEngineDegration = function(vehicle,state,plate)
+	if config.sandboxmode then return end
 	local ent = state
 	local statehandling = ent.defaulthandling
 	local plate = plate

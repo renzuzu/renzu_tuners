@@ -414,7 +414,7 @@ TuningMenu = function()
 	local options = {}
 	local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
 	local activeprofile = GlobalState.ecu[plate] and GlobalState.ecu[plate].active
-	if not activeprofile then
+	if not activeprofile and not config.sandboxmode then
 		lib.notify({
 			description = 'No Programable ECU Install', 
 			type = 'error'
@@ -436,50 +436,63 @@ TuningMenu = function()
 		local options = {}
 		local type = args.type
 		local data = {}
-		if not activeprofile.gear_ratio then
-			activeprofile.gear_ratio = config.gears[maxgear]
-		end
-		if not activeprofile.boostpergear then
-			local boostpergear = {}
-			for i = 1, totalgears do
-				boostpergear[i] = 1.0
+		if not config.sandboxmode then
+			if not activeprofile.gear_ratio then
+				activeprofile.gear_ratio = config.gears[maxgear]
 			end
-			activeprofile.boostpergear = boostpergear
-		end
-		if not activeprofile.suspension then
-			local suspension = {}
-			for k,v in ipairs(config.tuningmenu[4].attributes) do
-				suspension[v.label] = 1.0
+			if not activeprofile.boostpergear then
+				local boostpergear = {}
+				for i = 1, totalgears do
+					boostpergear[i] = 1.0
+				end
+				activeprofile.boostpergear = boostpergear
 			end
-			activeprofile.suspension = suspension
-		end
-		if args.type == 'engine' then
+			if not activeprofile.suspension then
+				local suspension = {}
+				for k,v in ipairs(config.tuningmenu[4].attributes) do
+					suspension[v.label] = 1.0
+				end
+				activeprofile.suspension = suspension
+			end
+			if args.type == 'engine' then
+				for k,v in ipairs(args.attributes) do
+					table.insert(options, { type = v.type, label = v.label, min = v.min, max = v.max , step = v.step, default = activeprofile[v.name] or v.default})
+				end
+			elseif args.type == 'turbo' then
+				for i = 1, totalgears do
+					table.insert(options,{ type = "slider", label = "Gear "..i..' Boost', min = -0.5, max = 1.5 , step = 0.01, default = activeprofile.boostpergear[i] or 1.0})
+				end
+			elseif args.type == 'gearratio' then
+				for i = 1, totalgears do
+					table.insert(options,{ type = "input", label = "Gear "..i..' Ratio', default = activeprofile.gear_ratio[i]})
+				end
+			elseif args.type == 'suspension' then
+				for k,v in ipairs(args.attributes) do
+					table.insert(options, { type = v.type, label = v.label, min = v.min, max = v.max , step = v.step, default = activeprofile.suspension[v.label] or 1.0})
+				end
+			end
+		else
+			local HandlingGetter = function(type,handling,name)
+				if type == 'number' then
+					return GetVehicleHandlingInt(vehicle,handling,name)
+				elseif type == 'input' then
+					if name == 'fDriveInertia' and tuning_inertia == nil then
+						tuning_inertia = ent.defaulthandling.fDriveInertia
+					end
+					return name == 'fDriveInertia' and tuning_inertia or GetVehicleHandlingFloat(vehicle,handling,name)
+				else
+					local vec = GetVehicleHandlingVector(vehicle,handling,name)
+					return table.concat({vec.x,vec.y, vec.z},',')
+				end
+			end
 			for k,v in ipairs(args.attributes) do
-				table.insert(options, { type = v.type, label = v.label, min = v.min, max = v.max , step = v.step, default = activeprofile[v.name] or v.default})
-			end
-		elseif args.type == 'turbo' then
-			for i = 1, totalgears do
-				table.insert(options,{ type = "slider", label = "Gear "..i..' Boost', min = -0.5, max = 1.5 , step = 0.01, default = activeprofile.boostpergear[i] or 1.0})
-			end
-		elseif args.type == 'gearratio' then
-			for i = 1, totalgears do
-				table.insert(options,{ type = "input", label = "Gear "..i..' Ratio', default = activeprofile.gear_ratio[i]})
-			end
-		elseif args.type == 'suspension' then
-			for k,v in ipairs(args.attributes) do
-				table.insert(options, { type = v.type, label = v.label, min = v.min, max = v.max , step = v.step, default = activeprofile.suspension[v.label] or 1.0})
+				table.insert(options, { type = v.type, label = v.label, description = v.description, default = HandlingGetter(v.type,args.handling,v.label)})
 			end
 		end
-		local input = lib.inputDialog('Profile Name: '..activeprofile.profile, options,{}, function(data)
-			if args.handling then
-				data.index += 1
-				local zerovalue = (default[args.attributes[data.index].label] + 1.0)
-				local value = default[args.attributes[data.index].label] <= 0.0 and (zerovalue * data.value) - 1.0 or default[args.attributes[data.index].label] * data.value
-				SetVehicleHandlingFloat(vehicle, args.handling, args.attributes[data.index].label, tonumber(value)+0.0)
-			end
-		end)
+		local profile = activeprofile?.profile or 'SANDBOX MODE'
+		local input = lib.inputDialog('Profile Name: '..profile, options)
 		if not input then return end
-		json.encode(input or {}, {indent = true})
+		--json.encode(input or {}, {indent = true})
 		if type == 'engine' then
 			activeprofile.acceleration = input[1]
 			activeprofile.topspeed = input[4]
@@ -500,7 +513,25 @@ TuningMenu = function()
 			end
 			activeprofile.suspension = suspension
 		end
-		lib.callback.await('renzu_tuners:Tune',false,{vehicle = NetworkGetNetworkIdFromEntity(vehicle) ,profile = activeprofile.profile, tune = activeprofile})
+		if not config.sandboxmode then
+			lib.callback.await('renzu_tuners:Tune',false,{vehicle = NetworkGetNetworkIdFromEntity(vehicle) ,profile = activeprofile.profile, tune = activeprofile})
+		else
+			for k,v in ipairs(args.attributes) do
+				if v.type == 'number' then
+					SetVehicleHandlingInt(vehicle,args.handling,v.label,tonumber(input[k]))
+				elseif v.type == 'input' then
+					if v.label == 'fDriveInertia' then
+						tuning_inertia = tonumber(input[k])+0.0
+					end
+					SetVehicleHandlingFloat(vehicle,args.handling,v.label,tonumber(input[k])+0.0)
+				else
+					local x, y, z = input[k]:match("([^,]+),([^,]+),([^,]+)")
+					SetVehicleHandlingVector(vehicle,args.handling,v.label,vec3(tonumber(x),tonumber(y),tonumber(z)))
+				end
+			end
+			ModifyVehicleTopSpeed(vehicle,1.0)
+			SetVehicleCheatPowerIncrease(vehicle,1.0)
+		end
 	end)
 	lib.showMenu('tuningmenu')
 end

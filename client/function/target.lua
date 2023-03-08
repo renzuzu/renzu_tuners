@@ -231,7 +231,9 @@ Targets = function()
 		end
 	end
 	Citizen.CreateThread(EngineSwaps)
-	Citizen.CreateThread(Crafting)
+	if config.enablecrafting then
+		Citizen.CreateThread(Crafting)
+	end
 end
 
 CreateThread(function()

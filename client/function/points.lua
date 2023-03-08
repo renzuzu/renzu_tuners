@@ -66,7 +66,7 @@ SetupDynoPoints = function(data,index)
 	end
 	
 	function point:nearby()
-		local access = not config.job or PlayerData?.job?.name == config.job
+		local access = not config.job or PlayerData?.job?.name == config.job or config.sandboxmode
 		if self.currentDistance < 4 and IsControlJustReleased(0, 38) and access then
 			Dyno(data,index)
 		end

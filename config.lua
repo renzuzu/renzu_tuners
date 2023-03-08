@@ -1,6 +1,7 @@
 -- renzu_tuners
 config = {}
 config.debug = true -- enable commands for dev. /sethandling 100 (0-100), /setfuel 100 (0-100), /setmileage 1000 (0,10000) !! note this does not have permission checks
+config.sandboxmode = false -- different tuning and no degrations and other stuff. mostly used only when trying to tweak a vehicle handling meta in dyno.
 config.freeupgrade = true -- for upgrades. set to true best for standalone purpose or testing purpose, for roleplay use the crafting/jobmanage money. if false menu will requires you a specific item for each upgrades
 config.metadata = false -- use item metadata when crafting items if ox_inventory. if your inventory does not support it, set this to false.
 config.job = 'mechanic' -- set to false if you want all feature are accesible by any player, or true, required job to use repairs and upgrade menu, dyno -- job access for menu upgrade and points. ex. mechanic, tuner?
@@ -13,6 +14,7 @@ config.upgradevariation = { -- enable/disable upgrade variation.
 	['racing'] = true,
 	['ultimate'] = true,
 }
+config.enablecrafting = true -- crafting for items and parts,turbo, engine etc..
 config.purchasableUpgrade = false -- dont like crafting / item based? set this to true to use money to all item upgrades
 config.jobmanagemoney = false -- use job money if purchasableUpgrade. ex. esx_society, qb-management
 -- prevent local entity / spawn entity by admin to be saved in server.
@@ -563,3 +565,133 @@ for k,v in pairs(config.customItems) do
 	table.insert(itemsData,v)
 end
 table.insert(itemsData,{item = 'ecu', cost = 25000})
+config.developertune = {
+	[1] = { 
+		label = 'Physical Attributes',
+		icon = 'wrench',
+		description = 'These seven values represent the vehicle physical proportions within the game:',
+		type = 'PhysicalAttributes',
+		handlingname = 'CHandlingData',
+		attributes = {
+			{ type = "input", label = "fMass",  default = 1.0, description = 'This is the weight of the vehicle in kilograms'},
+			{ type = "input", label = "fInitialDragCoeff", default = 1.0, description = ' Increase to simulate aerodynamic drag.'},
+			{ type = "input", label = "fDownForceModifier", default = 1.0, description = ' Increase this value to increase the grip at high speed.'},
+			{ type = "input", label = "fPopUpLightRotation", default = 1.0, description = 'Overrides the behavior of light_cover bone to allow it to rotate up to the specified angle.'},
+			{ type = "input", label = "fPercentSubmerged", default = 1.0, description = 'A percentage of vehicle height in the water before vehicle "floats". '},
+			{ type = "textarea", label = "vecCentreOfMassOffset", default = 1.0, description = 'This value shifts the center of gravity in meters from side to side '},
+			{ type = "textarea", label = "vecInertiaMultiplier", default = 1.0, description = ''},
+
+		}
+	},
+	[2] = { 
+		label = 'Transmission Attributes',
+		icon = 'wrench',
+		description = 'These values describe the vehicle straight line performance.',
+		type = 'Transmission',
+		handlingname = 'CHandlingData',
+		attributes = {
+			{ type = "input", label = "fDriveBiasFront",  default = 1.0, description = 'This value is used to determine whether a vehicle is front, rear, or four wheel drive.'},
+			{ type = "number", label = "nInitialDriveGears", default = 1.0, description = 'How many forward speeds a transmission contains.'},
+			{ type = "input", label = "fInitialDriveForce", default = 1.0, description = 'This value specifies the drive force of the car, at the wheels.'},
+			{ type = "input", label = "fDriveInertia", default = 1.0, description = 'Describes how fast an engine will rev.'},
+			{ type = "input", label = "fClutchChangeRateScaleUpShift", default = 1.0, description = 'Clutch speed multiplier on up shifts, bigger number = faster shifts.'},
+			{ type = "input", label = "fClutchChangeRateScaleDownShift", default = 1.0, description = 'Clutch speed multiplier on down shifts, bigger number = faster shifts.'},
+			{ type = "input", label = "fInitialDriveMaxFlatVel", default = 1.0, description = 'Determines the speed at redline in top gear; Controls the final drive of the vehicles gearbox.'},
+			{ type = "input", label = "fBrakeForce", default = 1.0, description = 'Multiplies the games calculation of deceleration. Bigger number = harder braking'},
+			{ type = "input", label = "fBrakeBiasFront", default = 1.0, description = 'This controls the distribution of braking force between the front and rear axles.'},
+			{ type = "input", label = "fHandBrakeForce", default = 1.0, description = 'Braking power for handbrake. Bigger number = harder braking'},
+			{ type = "input", label = "fSteeringLock", default = 1.0, description = 'This value is a multiplier of the games calculation of the angle a steer wheel will turn while at full turn.'},
+		}
+	},
+	[3] = { 
+		label = 'Wheel Traction Attributes',
+		icon = 'wrench',
+		description = 'The following attributes describe how the vehicle will behave dynamically, from negotiating corners to acceleration and deceleration',
+		type = 'Transmission',
+		handlingname = 'CHandlingData',
+		attributes = {
+			{ type = "input", label = "fTractionCurveMax",  default = 1.0, description = 'Cornering grip of the vehicle as a multiplier of the tire surface friction.'},
+			{ type = "input", label = "fTractionCurveMin", default = 1.0, description = 'Accelerating/braking grip of the vehicle as a multiplier of the tire surface friction. '},
+			{ type = "input", label = "fTractionCurveLateral", default = 1.0, description = 'Shape of lateral traction curve (peak traction position in degrees). Lower values make the vehicles grip more responsive but less forgiving to loss of traction.'},
+			{ type = "input", label = "fTractionSpringDeltaMax", default = 1.0, description = 'Max distance of the lateral sidewall travel. Unit: meter. A force will pull the vehicle in the opposite direction of the lateral travel'},
+			{ type = "input", label = "fLowSpeedTractionLossMult", default = 1.0, description = 'How much traction is reduced at low speed, 0.0 means normal traction. It affects mainly car burnout '},
+			{ type = "input", label = "fCamberStiffnesss", default = 1.0, description = 'How much the vehicle is pushed towards its roll direction. Road camber also affects roll and applied forces.'},
+			{ type = "input", label = "fTractionBiasFront", default = 1.0, description = 'Determines the distribution of traction from front to rear.'},
+			{ type = "input", label = "fTractionLossMult", default = 1.0, description = 'How much is traction affected by material grip differences from 1.0. Basically it affects how much grip is changed when driving on asphalt and mud'},
+		}
+	},
+	[4] = { 
+		label = 'Suspension Attributes',
+		type = 'suspension',
+		icon = 'car',
+		description = 'Adjust Your vehicle suspension setting',
+		handlingname = 'CHandlingData',
+		attributes = {
+			{ type = "input", label = "fSuspensionForce",  default = 1.0, description = ' Affects how strong suspension is. Can help if car is easily flipped over when turning.'},
+			{ type = "input", label = "fSuspensionCompDamp", default = 1.0, description = 'Damping during strut compression. Bigger = stiffer.'},
+			{ type = "input", label = "fSuspensionReboundDamp", default = 1.0, description = 'Damping during strut rebound. Bigger = stiffer'},
+			{ type = "input", label = "fSuspensionUpperLimit", default = 1.0, description = 'Visual limit... how far can wheels move up / down from original position'},
+			{ type = "input", label = "fSuspensionLowerLimit", default = 1.0, description = 'Visual limit... how far can wheels move up / down from original position'},
+			{ type = "input", label = "fSuspensionRaise", default = 1.0, description = 'The amount that the suspension raises the body off the wheels.'},
+			{ type = "input", label = "fSuspensionBiasFront", default = 1.0, description = 'Force damping scale front/back.'},
+			{ type = "input", label = "fAntiRollBarForce", default = 1.0, description = 'The spring constant that is transmitted to the opposite wheel when under compression larger numbers are a larger force. Larger Numbers = less body roll'},
+			{ type = "input", label = "fAntiRollBarBiasFront", default = 1.0, description = 'The bias between front and rear for the antiroll bar(0 front, 1 rear)'},
+			{ type = "input", label = "fRollCentreHeightFront", default = 1.0, description = 'The roll center height for the front axle, from the bottom of the model (road), in meters.'},
+			{ type = "input", label = "fRollCentreHeightRear", default = 1.0, description = 'The roll center height for the rear axle, from the bottom of the model (road), in meters.'},
+		}
+	},
+	[5] = { 
+		label = 'Damage Attributes',
+		type = 'Damage',
+		icon = 'car',
+		description = 'The following attributes dictate how the vehicle will react to damaging effects.',
+		handlingname = 'CHandlingData',
+		attributes = {
+			{ type = "input", label = "fCollisionDamageMult",  default = 1.0, description = 'Multiplies the games calculation of damage to the vehicle through collision, causing gas tank and wheels to catch fire.'},
+			{ type = "input", label = "fWeaponDamageMult", default = 1.0, description = 'Multiplies the games calculation of damage to the vehicle through weapon damage.'},
+			{ type = "input", label = "fDeformationDamageMult", default = 1.0, description = 'Multiplies the games calculation of deformation-causing damage.'},
+			{ type = "input", label = "fEngineDamageMult", default = 1.0, description = 'Multiplies the games calculation of damage to the engine, causing explosion or engine failure.'},
+			{ type = "input", label = "fPetrolTankVolume", default = 1.0, description = 'Amount of petrol that will leak after shooting the vehicles petrol tank. Also used by some fuel-usage scripts.'},
+			{ type = "input", label = "fOilVolume", default = 1.0, description = 'Black smoke time before engine dies?'},
+			{ type = "input", label = "fPetrolConsumptionRate", default = 1.0, description = ''},
+		}
+	},
+	[6] = { 
+		label = 'Vehicle Flags',
+		type = 'Flags',
+		icon = 'car',
+		description = 'CHandlingData Flags',
+		handlingname = 'CHandlingData',
+		attributes = {
+			{ type = "number", label = "strModelFlags",  default = 1.0, description = 'Affects model-related functions.'},
+			{ type = "number", label = "strHandlingFlags", default = 1.0, description = 'Affects handling-related functions.'},
+			{ type = "number", label = "strDamageFlags", default = 1.0, description = 'Indicates the doors that are nonbreakable.'},
+		}
+	},
+	[7] = { 
+		label = 'SubHandlingData',
+		type = 'SubHandlingData',
+		icon = 'car',
+		description = 'CCarHandlingData Attributes',
+		handlingname = 'CCarHandlingData',
+		attributes = {
+			{ type = "input", label = "fBackEndPopUpCarImpulseMult",  default = 1.0, description = '.'},
+			{ type = "input", label = "fBackEndPopUpBuildingImpulseMult", default = 1.0, description = ''},
+			{ type = "input", label = "fBackEndPopUpMaxDeltaSpeed", default = 1.0, description = ''},
+			{ type = "input", label = "fToeFront", default = 1.0, description = 'Adjusts the toe of the vehicles front wheels. '},
+			{ type = "input", label = "fToeRear", default = 1.0, description = 'Adjusts the toe of the vehicles rear wheels.'},
+			{ type = "input", label = "fCamberFront", default = 1.0, description = 'Adjusts the camber of the vehicles front wheels. '},
+			{ type = "input", label = "fCamberRear", default = 1.0, description = 'Adjusts the camber of the vehicles rear wheels.'},
+			{ type = "input", label = "fCastor", default = 1.0, description = 'Adjusts the caster angle of the vehicle.'},
+			{ type = "input", label = "fEngineResistance", default = 1.0, description = 'Adjusted by several vehicles since the addition of this parameter, however there are no known or observed effects.'},
+			{ type = "input", label = "fMaxDriveBiasTransfer", default = 1.0, description = 'Transfers the drive force from the slipping wheels to the less-driven wheels. Affects differentials'},
+			{ type = "input", label = "fJumpForceScale", default = 1.0, description = 'Adjusts the force with which vehicles with a jump boost are boosted. The higher the value, the higher the jump.'},
+			{ type = "input", label = "fIncreasedRammingForceScale", default = 1.0, description = 'Increase Ramming Force.'},
+			{ type = "number", label = "strAdvancedFlags", default = 1.0, description = 'Car advanced flags. Infamous for their original application having negative effects on certain vehicles.'},
+		}
+	},
+}
+if config.sandboxmode then
+	config.tuningorig = config.tuningmenu
+	config.tuningmenu = config.developertune
+end

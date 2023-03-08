@@ -1,4 +1,5 @@
 
+if config.sandboxmode then return end
 local db = setmetatable({},{
 	__call = function(self)
 

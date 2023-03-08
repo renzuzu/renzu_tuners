@@ -1,6 +1,10 @@
 
 lib.onCache('vehicle', function(value)
-	return OnVehicle(value)
+	if config.sandboxmode then
+		Sandbox(value)
+	else
+		return OnVehicle(value)
+	end
 end)
 
 OnVehicle = function(value)
@@ -155,8 +159,6 @@ end)
 
 Citizen.CreateThreadNow(function()
 	Wait(2000)
-	local rampmodel = `prop_spray_jackframe`
-	lib.requestModel(rampmodel)
 	for k,v in pairs(config.dynopoints) do
 		SetupDynoPoints(v,k)
 	end
@@ -174,11 +176,15 @@ end)
 Citizen.CreateThreadNow(function()
 	Wait(1000)
 	local vehicle = GetVehiclePedIsIn(cache.ped)
-	if vehicle and GetPedInVehicleSeat(vehicle,-1) == cache.ped then
-		OnVehicle(vehicle)
-	end
 	local isturbostarted = GetResourceState('renzu_turbo') == 'started'
 	if isturbostarted then
 		turboconfig = exports.renzu_turbo:turbos()
+	end
+	if vehicle and GetPedInVehicleSeat(vehicle,-1) == cache.ped then
+		if config.sandboxmode then
+			Sandbox(vehicle)
+		else
+			OnVehicle(vehicle)
+		end
 	end
 end)

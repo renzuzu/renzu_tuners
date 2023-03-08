@@ -144,3 +144,14 @@ AddEventHandler('onResourceStop', function(res)
 		end
 	end
 end)
+
+RegisterNetEvent('renzu_tuners:SandBoxmode', function()
+	config.sandboxmode = not config.sandboxmode
+	if config.sandboxmode then
+		warn('Sandbox mode is Enable')
+		config.tuningmenu = config.developertune
+	else
+		warn('Sandbox mode is Disable')
+		config.tuningmenu = config.tuningorig
+	end
+end)

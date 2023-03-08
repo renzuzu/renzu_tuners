@@ -219,6 +219,38 @@ end
 
 local hashandling = false
 
+Sandbox = function(vehicle)
+	invehicle = vehicle
+	if vehicle then GetDefaultHandling(vehicle) end
+	while invehicle do
+		fInitialDriveForce = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fInitialDriveForce')
+		fDriveInertia = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fDriveInertia')
+		fInitialDriveMaxFlatVel = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fInitialDriveMaxFlatVel')
+		fClutchChangeRateScaleUpShift = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fClutchChangeRateScaleUpShift')
+		fClutchChangeRateScaleDownShift = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fClutchChangeRateScaleDownShift')
+		fLowSpeedTractionLossMult = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fLowSpeedTractionLossMult')
+		fTractionLossMult = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fTractionLossMult')
+		fTractionCurveMin = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fTractionCurveMin')
+		fTractionCurveMax = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fTractionCurveMax')
+		fTractionCurveLateral = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fTractionCurveLateral')
+		fBrakeForce = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fBrakeForce')
+		fHandBrakeForce = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fHandBrakeForce')
+		fSuspensionForce = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fSuspensionForce')
+		fSuspensionCompDamp = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fSuspensionCompDamp')
+		fSuspensionReboundDamp = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fSuspensionReboundDamp')
+		fSuspensionUpperLimit = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fSuspensionUpperLimit')
+		fSuspensionLowerLimit = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fSuspensionLowerLimit')
+		fSuspensionRaise = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fSuspensionRaise')
+		fSuspensionBiasFront = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fSuspensionBiasFront')
+		fAntiRollBarForce = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fAntiRollBarForce')
+		fAntiRollBarBiasFront = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fAntiRollBarBiasFront')
+		fRollCentreHeightFront = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fRollCentreHeightFront')
+		fRollCentreHeightRear = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fRollCentreHeightRear')
+		nInitialDriveGears = GetVehicleHandlingInt(vehicle,'CHandlingData', 'nInitialDriveGears')
+		Wait(1000)
+	end
+end
+
 GetDefaultHandling = function(vehicle, plate) -- saves default handling of new vehicles
 	local ent = Entity(vehicle).state
 	local handlings = ent.defaulthandling
