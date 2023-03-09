@@ -5,7 +5,9 @@ if GetResourceState('es_extended') == 'started' then
 	PlayerData = ESX.GetPlayerData()
 	local access = not config.job or PlayerData?.job?.name == config.job
 	if lib.addRadialItem and access then
-		lib.addRadialItem(config.radialoptions)
+		SetTimeout(100,function()
+			return HasRadialMenu()
+		end)
 	end
 
 	RegisterNetEvent('esx:playerLoaded', function(xPlayer)
@@ -23,7 +25,9 @@ elseif GetResourceState('qb-core') == 'started' then
 	PlayerData = QBCore.Functions.GetPlayerData()
 	local access = not config.job or PlayerData?.job?.name == config.job
 	if lib.addRadialItem and access then
-		lib.addRadialItem(config.radialoptions)
+		SetTimeout(100,function()
+			return HasRadialMenu()
+		end)
 	end
 	RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
 		PlayerData = QBCore.Functions.GetPlayerData()
@@ -37,5 +41,5 @@ elseif GetResourceState('qb-core') == 'started' then
 	imagepath = 'nui://qb-inventory/html/images/'
 else -- standalone ?
 	PlayerData = {job = 'mechanic'}
-	if lib.addRadialItem then lib.addRadialItem(config.radialoptions) end
+	if lib.addRadialItem then HasRadialMenu() end
 end
