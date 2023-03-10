@@ -1,7 +1,7 @@
 
 Targets = function()
 	local target = GetResourceState('ox_target') == 'started' and "ox_target" or GetResourceState('qb-target') == 'started' and "qb-target" or GetResourceState('qtarget') == 'started' and 'qtarget'
-
+	if not target then return end
 	local options = {
 		{
 			name = 'renzu_tuners:checkengine',
@@ -96,7 +96,6 @@ Targets = function()
 			end
 		}
 	}
-
 	if target ~= 'ox_target' then
 		for k,v in pairs(options) do
 			if v.onSelect then
