@@ -103,11 +103,9 @@ if GetResourceState('ox_inventory') ~= 'started' then
 	local register = function(source, item)
 		local src = source
 		local Player = GetPlayerFromId(src)
-		local iteminfo = Player?.Functions?.GetItemByName(item.name) or ESX?.Items[item.name]
-		if iteminfo then
-			RemoveInventoryItem(src,item.name,1,item.metadata,item.slot)
-			TriggerClientEvent("useItem", src,false,{name = item.name, label = item.label},true)
-		end
+		local itemdata = type(item) == 'table' and item or {name = item, label = item} -- support ancient framework
+		RemoveInventoryItem(src,itemdata.name,1,itemdata.metadata,itemdata.slot)
+		TriggerClientEvent("useItem", src,false,{name = itemdata.name, label = itemdata.label},true)
 	end
 	for k,v in pairs(config.engineparts) do
 		RegisterUsableItem(v.item, register)
