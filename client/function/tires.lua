@@ -31,7 +31,7 @@ HandleTires = function(vehicle,plate,default,state)
 	else
 		local tiresdata = vehicletires or {}
 		if tiresdata[plate] and tiresdata[plate].tirehealth then
-			ent:set('tires',tiresdata[plate],true)
+			ent:set('tires',tiresdata[plate],false)
 		else
 			local tirehealth = {}
 			local ent = Entity(vehicle).state
@@ -42,7 +42,7 @@ HandleTires = function(vehicle,plate,default,state)
 				type = 'default',
 				tirehealth = tirehealth
 			}
-			ent:set('tires',tiresdata,true)
+			ent:set('tires',tiresdata,false)
 			tires = {type = 'default'}
 			Wait(1000)
 		end
@@ -52,7 +52,7 @@ HandleTires = function(vehicle,plate,default,state)
 	local wheels = 0
 	for i = 1 , GetVehicleNumberOfWheels(vehicle) do
 		if tirehealth and math.random(1,100) < 50 then
-			tirehealth[i] -= tires?.degrade or 0.01
+			tirehealth[i] -= tires?.degrade or 0.1
 		end
 		if tirehealth then
 		    total += tirehealth[i]
@@ -61,7 +61,7 @@ HandleTires = function(vehicle,plate,default,state)
 	end
 	gtirehealth = tirehealth
 	tiresave += 1
-	if tiresave > 10 then
+	if tiresave > 60 then
 		tiresave = 0
 		ent:set('tires', {type = tires.type, tirehealth = gtirehealth}, true)
 	end

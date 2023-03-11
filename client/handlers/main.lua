@@ -2,19 +2,16 @@
 AddStateBagChangeHandler('advancedflags' --[[key filter]], nil --[[bag filter]], function(bagName, key, value, _unused, replicated)
 	Wait(0)
 	if not value then return end
-	local net = tonumber(bagName:gsub('entity:', ''), 10)
-	local vehicle = net and NetworkGetEntityFromNetworkId(net)
+	local vehicle = GetEntityFromStateBagName(bagName)
 	if DoesEntityExist(vehicle) then
 		SetVehicleFlags(vehicle,value)
 	end
 end)
 
 AddStateBagChangeHandler('drivetrain' --[[key filter]], nil --[[bag filter]], function(bagName, key, value, _unused, replicated)
-	Wait(111)
-	local net = tonumber(bagName:gsub('entity:', ''), 10)
-	local value = value
+	Wait(0)
 	if not value then return end
-	local vehicle = net and NetworkGetEntityFromNetworkId(net)
+	local vehicle = GetEntityFromStateBagName(bagName)
 	if DoesEntityExist(vehicle) then
 		SetVehicleDriveTrain(vehicle,tonumber(value))
 	end
@@ -23,8 +20,7 @@ end)
 AddStateBagChangeHandler('ramp' --[[key filter]], nil --[[bag filter]], function(bagName, key, value, _unused, replicated)
     Wait(0)
     if not value then return end
-    local net = tonumber(bagName:gsub('entity:', ''), 10)
-    local entity = net and NetworkGetEntityFromNetworkId(net)
+    local vehicle = GetEntityFromStateBagName(bagName)
 	if DoesEntityExist(entity) then
 		ramp = entity
 		SetEntityHeading(entity,value.heading)
@@ -41,8 +37,7 @@ local dynoentity = nil
 AddStateBagChangeHandler('dynodata' --[[key filter]], nil --[[bag filter]], function(bagName, key, value, _unused, replicated)
     Wait(0)
     if not value then return end
-    local net = tonumber(bagName:gsub('entity:', ''), 10)
-    local entity = net and NetworkGetEntityFromNetworkId(net)
+    local vehicle = GetEntityFromStateBagName(bagName)
 	if DoesEntityExist(entity) then
 		dynoentity = entity
 		SetVehicleCurrentRpm(entity,value.rpm)
@@ -60,7 +55,8 @@ AddStateBagChangeHandler('startdyno' --[[key filter]], nil --[[bag filter]], fun
 	if replicated then return end
     if not value then return end
     local net = tonumber(bagName:gsub('entity:', ''), 10)
-    local entity = net and NetworkGetEntityFromNetworkId(net)
+	if not net then return end
+    local vehicle = GetEntityFromStateBagName(bagName)
 	if dynovehicle[net] == false and value.dyno then return end -- anti replication of statebag, seems first data is being replicated again after i change the data
 	if dynovehicle[net] then dynovehicle[net] = false end
 	if DoesEntityExist(entity) and value.dyno and not dynovehicle[net] then
@@ -108,8 +104,7 @@ end)
 AddStateBagChangeHandler('gearshift' --[[key filter]], nil --[[bag filter]], function(bagName, key, value, _unused, replicated) -- sync gear shifting and other vehicle stats
     Wait(0)
     if not value then return end
-    local net = tonumber(bagName:gsub('entity:', ''), 10)
-    local vehicle = net and NetworkGetEntityFromNetworkId(net)
+    local vehicle = GetEntityFromStateBagName(bagName)
 	if DoesEntityExist(vehicle) and GetPedInVehicleSeat(vehicle,-1) ~= cache.ped then
 		SetVehicleHandlingFloat(vehicle , "CHandlingData", "fInitialDriveMaxFlatVel", value.flatspeed+0.0)
 		SetVehicleHandlingFloat(vehicle , "CHandlingData", "fInitialDriveForce", value.driveforce+0.0)
@@ -122,7 +117,7 @@ AddStateBagChangeHandler('vehiclestatreset' --[[key filter]], nil --[[bag filter
     Wait(0)
     if not value then return end
     local net = tonumber(bagName:gsub('entity:', ''), 10)
-    local vehicle = net and NetworkGetEntityFromNetworkId(net)
+    local vehicle = GetEntityFromStateBagName(bagName)
 	if DoesEntityExist(vehicle) then
 		SetVehicleHandlingInt(vehicle , "CCarHandlingData", "strAdvancedFlags", value.strAdvancedFlags)
 		SetVehicleHandlingFloat(vehicle , "CHandlingData", "fInitialDriveMaxFlatVel", value.fInitialDriveMaxFlatVel+0.0)

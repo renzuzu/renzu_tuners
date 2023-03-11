@@ -69,7 +69,8 @@ LoadVehicleSetup = function(value,ent,stats)
 		HandleEngineDegration(value,ent,plate)
 		for k,v in ipairs(config.engineparts) do
 			if not ent[v.item] and stats then
-				ent:set(v.item, tonumber(stats[v.item]) or 100, true)
+				Wait(100)
+				ent:set(v.item, tonumber(stats[v.item]) or 100, false)
 			end
 		end
 	end)
@@ -255,7 +256,7 @@ GetDefaultHandling = function(vehicle, plate) -- saves default handling of new v
 	local ent = Entity(vehicle).state
 	local handlings = ent.defaulthandling
 	if not ent.engine then
-		ent:set('currentengine','default',true)
+		ent:set('currentengine','default',false)
 	end
 	if not handlings and not ent.engine or not hashandling then
 		hashandling = true

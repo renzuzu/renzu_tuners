@@ -10,18 +10,18 @@ end)
 OnVehicle = function(value)
 	invehicle = value
 	if not DoesEntityExist(value) then return end
+	local isdriver = GetPedInVehicleSeat(value,-1) == cache.ped
+	if not isdriver then return end
 	local plate = string.gsub(GetVehicleNumberPlateText(value), '^%s*(.-)%s*$', '%1'):upper()
-	GetVehicleServerStates(plate)
+	local state = GetVehicleServerStates(plate)
 	--local vehiclestats = GlobalState.vehiclestats
     local coord = GetEntityCoords(value)
     local lastcoord = nil
 	local ent = value and Entity(value).state
 	local turbo = ent.turbo?.turbo -- renzu_turbo states bag
 	local ecu_state = GlobalState.ecu
-	local isdriver = GetPedInVehicleSeat(value,-1) == cache.ped
 	local turbopower = 1.0
 	local turboinstall = GetResourceState('renzu_turbo') == 'started'
-	if not isdriver then return end
 	if value then
 		DefaultSetting(value)
 		plate = string.gsub(GetVehicleNumberPlateText(value), '^%s*(.-)%s*$', '%1'):upper()
@@ -65,7 +65,7 @@ OnVehicle = function(value)
 		end
 		--local vehiclestats = GlobalState.vehiclestats
 		local synctimer = 0
-        while value ~= 0 and tonumber(value) and invehicle do
+        while invehicle do
 			local ent = ent
 			local sleep = ent.nitroenable and 200 or 3000
 			local rpm = GetVehicleCurrentRpm(value)
@@ -123,19 +123,22 @@ OnVehicle = function(value)
 
 	local coord = GetEntityCoords(value)
     local lastcoord = nil
-	Citizen.CreateThreadNow(function() -- mileage setter. this is not realistic mileage computation. this only adds +1 for every 4000 tick as default
-        while value ~= 0 and tonumber(value) and GetPedInVehicleSeat(value,-1) == cache.ped do
+	Citizen.CreateThreadNow(function() -- mileage setter. this is not realistic mileage computation. this only adds +10 for every 4000 tick as default
+		local updatestate = 0
+        while invehicle and  GetPedInVehicleSeat(value,-1) == cache.ped do
 			coord = GetEntityCoords(value)
-			if lastcoord and #(coord - lastcoord) > 1 or lastcoord == nil then
+			if lastcoord and #(coord - lastcoord) > 10 or lastcoord == nil then
 				local ent = Entity(value).state
 				local plate = string.gsub(GetVehicleNumberPlateText(value), '^%s*(.-)%s*$', '%1'):upper()
 				if ent.mileage then
-					ent:set('mileage', ent.mileage+1, true)
+					updatestate += 1
+					ent:set('mileage', ent.mileage+1, updatestate > 10)
+					if updatestate > 10 then updatestate = 0 end
 				elseif mileages[plate] then
-					ent:set('mileage', tonumber(mileages[plate]), true)
+					ent:set('mileage', tonumber(mileages[plate]), false)
 					lastcoord = GetEntityCoords(value)
 				else
-					ent:set('mileage', 0, true)
+					ent:set('mileage', 0, false)
 					lastcoord = GetEntityCoords(value)
 				end
 			end

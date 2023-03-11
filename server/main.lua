@@ -97,7 +97,7 @@ CreateThread(function()
 			vehiclestats[plate].active = true
 			vehiclestats[plate].plate = plate
 			for k,v2 in pairs(config.engineparts) do
-				Wait(0)
+				Wait(100)
 				ent:set(v2.item, tonumber(vehiclestats[plate][v2.item] or 100), true)
 			end
 			if mileages[plate] then
