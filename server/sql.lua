@@ -10,7 +10,7 @@ local db = setmetatable({},{
 
 		self.update = function(column, where, string, data)
 			local str = 'UPDATE %s SET %s = ? WHERE %s = ?'
-			return MySQL.query(str:format('renzu_tuner',column,where),{data,string})
+			return MySQL.update(str:format('renzu_tuner',column,where),{data,string})
 		end
 
 		self.query = function(column, where, string)
@@ -42,7 +42,7 @@ local db = setmetatable({},{
 			if self.busycd[string] == nil then 
 				self.busycd[string] = 0 
 			end
-			while self.busy[string] and self.busycd[string] < 100 do 
+			while self.busy[string] and self.busycd[string] and self.busycd[string] < 100 do 
 				if self.busycd[string] then self.busycd[string] += 1 end
 				Wait(10) 
 			end
@@ -60,7 +60,7 @@ local db = setmetatable({},{
 
 		self.savemulti = function(data,plate)
 			if self.busycd[plate] == nil then self.busycd[plate] = 0 end
-			while self.busy[plate] and self.busycd[plate] < 100 do 
+			while self.busy[plate] and self.busycd[plate] and self.busycd[plate] < 100 do 
 				if self.busycd[plate] then self.busycd[plate] += 1 end				
 				Wait(1)
 			end
@@ -69,7 +69,7 @@ local db = setmetatable({},{
 			local success, result = pcall(MySQL.scalar.await, str:format('renzu_tuner','plate'),{plate})
 			if success and result then
 				local str = 'UPDATE %s SET %s = ?, %s = ?, %s = ?, %s = ? WHERE %s = ?'
-				MySQL.query(str:format('renzu_tuner','vehiclestats','defaulthandling','vehicleupgrades','mileages','plate'),{data.vehiclestats,data.defaulthandling,data.vehicleupgrades,data.mileages,plate})
+				MySQL.update(str:format('renzu_tuner','vehiclestats','defaulthandling','vehicleupgrades','mileages','plate'),{data.vehiclestats,data.defaulthandling,data.vehicleupgrades,data.mileages,plate})
 			else
 				local str = 'INSERT INTO %s (%s, %s, %s, %s, %s) VALUES(?, ?, ?, ?, ?)'
 				MySQL.insert.await(str:format('renzu_tuner','vehiclestats','defaulthandling','vehicleupgrades','mileages','plate'),{data.vehiclestats,data.defaulthandling,data.vehicleupgrades,data.mileages,plate})
@@ -88,6 +88,7 @@ local db = setmetatable({},{
 						vehicleupgrades = json.encode(data.vehicleupgrades[v.plate] or {}),
 						mileages = tonumber(data.mileages[v.plate]) or 0,
 					},v.plate)
+					Wait(500)
 				end
 			end
 		end
