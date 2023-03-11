@@ -3,10 +3,10 @@ PlayerData, localhandling, invehicle, gtirehealth, turboconfig, ecu, indyno, eff
 if GetResourceState('es_extended') == 'started' then
 	ESX = exports['es_extended']:getSharedObject()
 	PlayerData = ESX.GetPlayerData()
-	local access = not config.job or PlayerData?.job?.name == config.job
-	if lib.addRadialItem and access then
+	if lib.addRadialItem then
 		SetTimeout(100,function()
-			return HasRadialMenu()
+			local access = HasAccess()
+			return access and HasRadialMenu()
 		end)
 	end
 
@@ -23,10 +23,10 @@ if GetResourceState('es_extended') == 'started' then
 elseif GetResourceState('qb-core') == 'started' then
 	QBCore = exports['qb-core']:GetCoreObject()
 	PlayerData = QBCore.Functions.GetPlayerData()
-	local access = not config.job or PlayerData?.job?.name == config.job
-	if lib.addRadialItem and access then
+	if lib.addRadialItem then
 		SetTimeout(100,function()
-			return HasRadialMenu()
+			local access = HasAccess()
+			return access and HasRadialMenu()
 		end)
 	end
 	RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
@@ -40,6 +40,11 @@ elseif GetResourceState('qb-core') == 'started' then
 	end)
 	imagepath = 'nui://qb-inventory/html/images/'
 else -- standalone ?
-	PlayerData = {job = 'mechanic'}
-	if lib.addRadialItem then HasRadialMenu() end
+	PlayerData = {job = 'mechanic', grade = 9}
+	if lib.addRadialItem then
+		SetTimeout(100,function()
+			return HasRadialMenu()
+		end)
+	end
+	warn('you are not using any supported framework')
 end

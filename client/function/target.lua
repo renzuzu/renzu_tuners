@@ -78,7 +78,7 @@ Targets = function()
 			label = 'Upgrade Vehicle',
 			canInteract = function(entity, distance, coords, name, boneId)
 				if GetVehicleDoorLockStatus(entity) > 1 then return end
-				return type(coords) ~= 'table' and #(coords - GetEntityCoords(entity)) < 1.9 and PlayerData?.job?.name == config.job or PlayerData?.job?.name == config.job or not config.job
+				return type(coords) ~= 'table' and #(coords - GetEntityCoords(entity)) < 1.9 and HasAccess() or HasAccess()
 			end,
 			onSelect = function(data)
 				Citizen.CreateThreadNow(function()
@@ -91,7 +91,7 @@ Targets = function()
 							car = true,
 						},
 					}) 
-					CheckVehicle(not config.job or PlayerData?.job?.name == config.job)
+					CheckVehicle(HasAccess())
 				end)
 			end
 		}
@@ -138,7 +138,7 @@ Targets = function()
 					icon = 'fa-solid fa-cube',
 					label = v.label,
 					canInteract = function(entity, distance, coords, name)
-						return not config.job or config.job == PlayerData?.job?.name
+						return HasAccess()
 					end
 				}
 			}
@@ -211,7 +211,7 @@ Targets = function()
 					icon = 'fa-solid fa-car',
 					label = 'Engine Stand',
 					canInteract = function(entity, distance, coords, name)
-						return distance < 2 and PlayerData?.job?.name == config.job or not config.job
+						return distance < 2 and HasAccess() or HasAccess()
 					end
 				}
 			}

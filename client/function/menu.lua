@@ -39,7 +39,7 @@ UpgradePackage = function(data,shop,job)
 				end
 			end
 		end
-		CheckVehicle(not config.job or PlayerData?.job?.name == config.job or type,shop)
+		CheckVehicle(HasAccess() or type,shop)
 	end)
 
 	lib.showMenu('upgradepackage')
@@ -130,7 +130,7 @@ Options = function(data,shop,job)
 						name = item,
 						label = data.label
 					},true)
-					CheckVehicle(not config.job or PlayerData?.job?.name == config.job or type,shop)
+					CheckVehicle(HasAccess() or type,shop)
 				else
 					local required = config.purchasableUpgrade and 'money' or 'item'
 					lib.notify({
@@ -262,7 +262,7 @@ Options = function(data,shop,job)
 						engine = data.localengine or data.customengine or false
 					},true)
 					if not engine then
-						CheckVehicle(not config.job or PlayerData?.job?.name == config.job or type,shop)
+						CheckVehicle(HasAccess() or type,shop)
 					end
 				else
 					local required = config.purchasableUpgrade and 'money' or 'item'

@@ -15,7 +15,7 @@ end
 HasRadialMenu = function()
 	if not lib.addRadialItem then return end
 	lib.removeRadialItem('tuners_menu')
-	if not config.job or PlayerData?.job?.name == config.job then
+	if HasAccess() then
 		return CreateRadialMenu()
 	end
 end

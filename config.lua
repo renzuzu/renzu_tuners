@@ -4,7 +4,10 @@ config.debug = true -- enable commands for dev. /sethandling 100 (0-100), /setfu
 config.sandboxmode = false -- different tuning and no degrations and other stuff. mostly used only when trying to tweak a vehicle handling meta in dyno.
 config.freeupgrade = true -- for upgrades. set to true best for standalone purpose or testing purpose, for roleplay use the crafting/jobmanage money. if false menu will requires you a specific item for each upgrades
 config.metadata = false -- use item metadata when crafting items if ox_inventory. if your inventory does not support it, set this to false.
-config.job = 'mechanic' -- set to false if you want all feature are accesible by any player, or true, required job to use repairs and upgrade menu, dyno -- job access for menu upgrade and points. ex. mechanic, tuner?
+config.job = { -- set to false (config.job = false) if you want all feature are accesible by any player, or true, required job to use repairs and upgrade menu, dyno -- job access for menu upgrade and points. ex. mechanic, tuner?
+	['mechanic'] = 5, -- @jobname -- @grade_level
+	['tuners'] = 3, -- @jobname -- @grade_level
+}
 config.usetarget = true -- if false, please configure the points config -- supports ox_target,qtarget,qb-target only
 config.enablepackage = true -- easy install all upgrade variants. ex. Full Upgrade all Racing Parts. this will install all in one package for each variants. each upgrades requires item if itemrequired is true
 config.upgradepackageAnimation = false -- do animation for each upgrades in package

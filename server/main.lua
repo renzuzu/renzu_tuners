@@ -297,11 +297,12 @@ lib.callback.register('renzu_tuners:checkitem', function(src,item,isShop,require
 				end
 			end
 		end
-	elseif config.jobmanagemoney then
+	elseif config.jobmanagemoney and config.job[xPlayer.job.name] then
+		local xPlayer = GetPlayerFromId(src)
 		local cost = GetItemCosts(item)
-		local money = GetJobMoney(config.job)
+		local money = GetJobMoney(xPlayer.job.name)
 		if money >= cost then
-			RemoveJobMoney(config.job, cost)
+			RemoveJobMoney(xPlayer.job.name, cost)
 			hasitems = true
 		end
 	elseif config.purchasableUpgrade then
@@ -440,7 +441,7 @@ end)
 Citizen.CreateThreadNow(function()
 	if GetResourceState('ox_inventory') == 'started' then
 		for k,v in pairs(config.engineswapper.coords) do
-			RegisterStash('engine_storage:'..k, 'Engine Storage', 70, 1000000, false,{[config.job] = 0})
+			RegisterStash('engine_storage:'..k, 'Engine Storage', 70, 1000000, false,config.job)
 		end
 	end
 end)

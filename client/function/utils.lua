@@ -404,3 +404,13 @@ DoesVehicleFlagsExist = function(val,vehicleflag)
 	end
 	return false
 end
+
+HasAccess = function()
+	local job = PlayerData?.job?.name
+	if not job then return end
+	local access = config.job[PlayerData.job.name]
+	if not config.job or access and access <= PlayerData.job.grade then
+		return true
+	end
+	return false
+end
