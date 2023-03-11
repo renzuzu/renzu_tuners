@@ -98,6 +98,7 @@ local db = setmetatable({},{
 })
 
 Citizen.CreateThreadNow(function()
+	
 	local success, result = pcall(MySQL.scalar.await, 'SELECT 1 FROM renzu_tuner')
 	if not success then
 		MySQL.query([[CREATE TABLE `renzu_tuner` (
@@ -115,6 +116,8 @@ Citizen.CreateThreadNow(function()
 		)]])
 		print("^2SQL INSTALL SUCCESSFULLY, dont forget to install the items. /install/ folder ^0")
 	end
+	-- query to fix column type
+	local success, result = pcall(MySQL.query.await, 'ALTER TABLE `renzu_tuner` CHANGE COLUMN `advancedflags` `advancedflags` LONGTEXT NULL') -- temp
 end)
 
 return db()
