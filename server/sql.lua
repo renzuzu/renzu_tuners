@@ -109,7 +109,7 @@ Citizen.CreateThreadNow(function()
 			`vehicleupgrades` longtext DEFAULT NULL,
 			`vehicletires` longtext DEFAULT NULL,
 			`drivetrain` varchar(60) DEFAULT NULL,
-			`advancedflags` varchar(60) DEFAULT NULL,
+			`advancedflags` longtext DEFAULT NULL,
 			`ecu` longtext DEFAULT NULL,
 			`currentengine` varchar(60) DEFAULT NULL
 		)]])
