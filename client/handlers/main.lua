@@ -20,7 +20,7 @@ end)
 AddStateBagChangeHandler('ramp' --[[key filter]], nil --[[bag filter]], function(bagName, key, value, _unused, replicated)
     Wait(0)
     if not value then return end
-    local vehicle = GetEntityFromStateBagName(bagName)
+    local entity = GetEntityFromStateBagName(bagName)
 	if DoesEntityExist(entity) then
 		ramp = entity
 		SetEntityHeading(entity,value.heading)
@@ -37,7 +37,7 @@ local dynoentity = nil
 AddStateBagChangeHandler('dynodata' --[[key filter]], nil --[[bag filter]], function(bagName, key, value, _unused, replicated)
     Wait(0)
     if not value then return end
-    local vehicle = GetEntityFromStateBagName(bagName)
+    local entity = GetEntityFromStateBagName(bagName)
 	if DoesEntityExist(entity) then
 		dynoentity = entity
 		SetVehicleCurrentRpm(entity,value.rpm)
@@ -56,7 +56,7 @@ AddStateBagChangeHandler('startdyno' --[[key filter]], nil --[[bag filter]], fun
     if not value then return end
     local net = tonumber(bagName:gsub('entity:', ''), 10)
 	if not net then return end
-    local vehicle = GetEntityFromStateBagName(bagName)
+    local entity = GetEntityFromStateBagName(bagName)
 	if dynovehicle[net] == false and value.dyno then return end -- anti replication of statebag, seems first data is being replicated again after i change the data
 	if dynovehicle[net] then dynovehicle[net] = false end
 	if DoesEntityExist(entity) and value.dyno and not dynovehicle[net] then
