@@ -23,7 +23,11 @@ config.jobmanagemoney = false -- use job money if purchasableUpgrade. ex. esx_so
 -- prevent local entity / spawn entity by admin to be saved in server.
 config.plateprefix = 'CFX' -- recommended 3 char
 config.plateformat = config.plateprefix..'^ 111' -- this will make plate CFXIE91F for example.. this is required to prevent local vehicles/ admin spawn entity filling up global state vehicle stats -- docs: https://docs.fivem.net/natives/?_0x79780FD2
-
+config.nosaveplate = { -- dont save this plate pattern
+	['CFX'] = true,
+	['RENT'] = true,
+	['ESX'] = true,
+}
 -- points
 config.engineswapper = {
 	coords = {

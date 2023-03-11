@@ -64,7 +64,7 @@ CreateThread(function()
 	local cache = db.fetchAll()
 	local stats = {}
 	for k,v in pairs(cache.vehiclestats or {}) do
-		if string.find(k, 'ESX') ~= 1 or string.find(k,config.plateprefix) ~= 1 then
+		if isPlateOwned(k) then
 			stats[k] = v
 		end
 	end
@@ -92,24 +92,26 @@ CreateThread(function()
 		Wait(0)
 		if DoesEntityExist(v) and GetEntityPopulationType(v) == 7 then
 			local plate = string.gsub(GetVehicleNumberPlateText(v), '^%s*(.-)%s*$', '%1'):upper()
-			if not vehiclestats[plate] then vehiclestats[plate] = {} end
-			local ent = Entity(v).state
-			vehiclestats[plate].active = true
-			vehiclestats[plate].plate = plate
-			for k,v2 in pairs(config.engineparts) do
-				Wait(100)
-				ent:set(v2.item, tonumber(vehiclestats[plate][v2.item] or 100), true)
-			end
-			if mileages[plate] then
+			if isPlateOwned(plate) or config.debug then
+				if not vehiclestats[plate] then vehiclestats[plate] = {} end
 				local ent = Entity(v).state
-				ent:set('mileage', tonumber(mileages[plate]), true)
+				vehiclestats[plate].active = true
+				vehiclestats[plate].plate = plate
+				for k,v2 in pairs(config.engineparts) do
+					Wait(100)
+					ent:set(v2.item, tonumber(vehiclestats[plate][v2.item] or 100), true)
+				end
+				if mileages[plate] then
+					local ent = Entity(v).state
+					ent:set('mileage', tonumber(mileages[plate]), true)
+				end
 			end
 		end
     end
     while true do
         Wait(60000)
 		for k,v in pairs(defaulthandling) do
-			if string.find(k,'ESX') or string.find(k,config.plateprefix) then
+			if not isPlateOwned(k) then
 				defaulthandling[k] = nil
 			end
 		end
@@ -129,7 +131,7 @@ CurrentEngine = function(value,bagName)
     local net = tonumber(bagName:gsub('entity:', ''), 10)
 	local vehicle = NetworkGetEntityFromNetworkId(net)
 	local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
-	if DoesEntityExist(vehicle) and string.find(plate,config.plateprefix) ~= 1 or config.debug then
+	if DoesEntityExist(vehicle) and isPlateOwned(plate) or config.debug then
 		currentengine[plate] = value
 		db.save('currentengine','plate',plate,value)
 	end
@@ -176,7 +178,7 @@ AddStateBagChangeHandler('mileage' --[[key filter]], nil --[[bag filter]], funct
 	local vehicle = NetworkGetEntityFromNetworkId(net)
 	if DoesEntityExist(vehicle) then
 		local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
-		if string.find(plate,config.plateprefix) ~= 1 or config.debug then
+		if isPlateOwned(plate) or config.debug then
 			mileages[plate] = value
 		end
 	end
@@ -191,7 +193,7 @@ for k,v in pairs(config.engineparts) do
 		local vehicle = NetworkGetEntityFromNetworkId(net)
 		if DoesEntityExist(vehicle) then
 			local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
-			if string.find(plate,config.plateprefix) ~= 1 or config.debug then
+			if isPlateOwned(plate) or config.debug then
 				if not vehiclestats[plate] then vehiclestats[plate] = {} end
 				vehiclestats[plate][name] = value
 				vehiclestats[plate].plate = plate
@@ -210,6 +212,7 @@ for k,v in pairs(config.engineupgrades) do
 		local vehicle = NetworkGetEntityFromNetworkId(net)
 		if DoesEntityExist(vehicle) then
 			local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
+			if not isPlateOwned(plate) and not config.debug then return end
 			if not vehicleupgrades[plate] then vehicleupgrades[plate] = {} end
 			vehicleupgrades[plate][name] = value
 			db.save('vehicleupgrades','plate',plate,json.encode(vehicleupgrades[plate]))
@@ -224,7 +227,7 @@ AddStateBagChangeHandler('defaulthandling' --[[key filter]], nil --[[bag filter]
 	local vehicle = NetworkGetEntityFromNetworkId(net)
 	if DoesEntityExist(vehicle) then
 		local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
-		if string.find(plate,config.plateprefix) ~= 1 or config.debug then
+		if isPlateOwned(plate) or config.debug then
 			defaulthandling[plate] = value
 		end
 	end
@@ -236,7 +239,7 @@ AddStateBagChangeHandler('tires' --[[key filter]], nil --[[bag filter]], functio
 	local net = tonumber(bagName:gsub('entity:', ''), 10)
 	local vehicle = NetworkGetEntityFromNetworkId(net)
 	local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
-	if DoesEntityExist(vehicle) and string.find(plate,config.plateprefix) ~= 1 or config.debug then
+	if DoesEntityExist(vehicle) and isPlateOwned(plate) or config.debug then
 		vehicletires[plate] = value
 		db.save('vehicletires','plate',plate,json.encode(vehicletires[plate]))
 	end
@@ -252,8 +255,9 @@ lib.callback.register('renzu_tuners:Tune', function(src,data)
 	if not tune[plate] then tune[plate] = {} end
 	tune[plate][data.profile] = data.tune
 	tune[plate]['active'] = data.tune
-	db.save('ecu','plate',plate,json.encode(tune[plate]))
 	GlobalState.ecu = tune
+	if not isPlateOwned(plate) and not config.debug then return end
+	db.save('ecu','plate',plate,json.encode(tune[plate]))
 	ecu = tune
 end)
 
@@ -408,6 +412,15 @@ SetTunerData = function(entity)
 			ent:set('advancedflags',advancedflags[plate],true)
 		end
 	end
+end
+
+isPlateOwned = function(plate)
+	for temp_plate,_ in pairs(config.nosaveplate) do
+		if string.find(plate,temp_plate) == 1 then
+			return false
+		end
+	end
+	return true
 end
 
 AddStateBagChangeHandler('VehicleProperties' --[[key filter]], nil --[[bag filter]], function(bagName, key, value, _unused, replicated)
