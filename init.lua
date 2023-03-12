@@ -23,6 +23,9 @@ if GetResourceState('es_extended') == 'started' then
 elseif GetResourceState('qb-core') == 'started' then
 	QBCore = exports['qb-core']:GetCoreObject()
 	PlayerData = QBCore.Functions.GetPlayerData()
+	if PlayerData.job ~= nil then
+		PlayerData.job.grade = PlayerData?.job?.grade?.level or 1
+	end
 	if lib.addRadialItem then
 		SetTimeout(100,function()
 			local access = HasAccess()
@@ -31,11 +34,17 @@ elseif GetResourceState('qb-core') == 'started' then
 	end
 	RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
 		PlayerData = QBCore.Functions.GetPlayerData()
+		if PlayerData.job ~= nil then
+			PlayerData.job.grade = PlayerData?.job?.grade?.level or 1
+		end
 		return HasRadialMenu()
 	end)
 
 	RegisterNetEvent('QBCore:Client:OnJobUpdate', function(job)
 		PlayerData.job = job
+		if PlayerData.job ~= nil then
+			PlayerData.job.grade = PlayerData?.job?.grade?.level or 1
+		end
 		HasRadialMenu()
 	end)
 	imagepath = 'nui://qb-inventory/html/images/'
