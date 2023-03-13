@@ -51,7 +51,7 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 	LoadVehicleSetup(vehicle,ent)
 	local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
 	while fInitialDriveMaxFlatVel == nil or fDriveInertia == nil or nInitialDriveGears == nil or fInitialDriveForce == nil do Wait(1) end
-	local maxgear = nInitialDriveGears
+	local maxgear = nInitialDriveGears or 1
 	local inertia = fDriveInertia
 	local gear = 1
 	local vehicle_gear_ratio = {}
@@ -72,6 +72,8 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 	local rpm = 0.1
 	local currentspeed = 0
 	local gear_ratio = nil
+	local clutch = false
+	local reverse = false
 	local speed = 0.0
 	local switch = true
 	local currentmaxgear = maxgear
@@ -208,20 +210,21 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 				Wait(1)
 				switching = false
 			end
-			turbopower = GetVehicleCheatPowerIncrease(vehicle)
 			rawturbopower = turbopower
-			if GetControlNormal(0,71) > 0.0 and not dyno and not switching then
+			local throttle = GetControlNormal(0,71)
+			turbopower = GetVehicleCheatPowerIncrease(vehicle) * throttle
+			if throttle > 0.0 and not dyno and not switching and not clutch then
 				if gear > (auto and 0 or 1) and gear <= maxgear and rpm < 0.99999 or customgears and rpm < 0.99999 then
 					switch = false
 					if currentmaxgear > 1 or true then
 						currentmaxgear = 1
 						SetVehicleHandlingFloat(vehicle , "CHandlingData", "fInitialDriveMaxFlatVel", flatspeed)
-						SetVehicleHandlingFloat(vehicle , "CHandlingData", "fInitialDriveForce", (driveforce * gear_ratio) * GetControlNormal(0,71)) -- last multiplication for steering wheel pedals
+						SetVehicleHandlingFloat(vehicle , "CHandlingData", "fInitialDriveForce", (driveforce * gear_ratio) * throttle) -- last multiplication for steering wheel pedals
 						SetVehicleHandlingInt(vehicle , "CHandlingData", "nInitialDriveGears", 1)
 						SetVehicleMaxSpeed(vehicle,gearmaxspeed+1.0)
 						ModifyVehicleTopSpeed(vehicle,1.0)
 						SetVehicleHandlingInt(vehicle , "CCarHandlingData", "strAdvancedFlags", vehicleflags+0x400000+0x20000+0x4000000+0x20000000)
-						SetVehicleHandlingFloat(vehicle , "CHandlingData", "fDriveInertia", default_fDriveInertia)
+						SetVehicleHandlingFloat(vehicle , "CHandlingData", "fDriveInertia", default_fDriveInertia * throttle)
 					end
 				elseif not switching and not auto and gear < maxgear then
 					if rpm > 0.9 then
@@ -231,9 +234,9 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 					if currentmaxgear == 1 or true then
 						currentmaxgear = maxgear
 						SetVehicleHandlingFloat(vehicle , "CHandlingData", "fInitialDriveMaxFlatVel", maxspeed+0.01)
-						SetVehicleHandlingFloat(vehicle , "CHandlingData", "fInitialDriveForce", driveforce+0.0)
+						SetVehicleHandlingFloat(vehicle , "CHandlingData", "fInitialDriveForce", driveforce+0.0 * throttle)
 						SetVehicleHandlingInt(vehicle , "CHandlingData", "nInitialDriveGears", maxgear)
-						SetVehicleHandlingFloat(vehicle , "CHandlingData", "fDriveInertia", default_fDriveInertia)
+						SetVehicleHandlingFloat(vehicle , "CHandlingData", "fDriveInertia", default_fDriveInertia * throttle)
 						SetVehicleCheatPowerIncrease(vehicle,1.0)
 						ForceVehicleGear(vehicle,switch and gear or 1)
 						SetVehicleHighGear(vehicle,switch and maxgear or 1)
@@ -252,19 +255,19 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 				elseif gear == 1 then
 					SetVehicleHandlingInt(vehicle , "CCarHandlingData", "strAdvancedFlags", vehicleflags+0x20000+0x200+0x1000)
 				end
-			elseif not dyno and GetControlNormal(0,72) < 0.1 and gear_ratio and rpm > 0.3 then
+			elseif not dyno and GetControlNormal(0,72) < 0.1 and gear_ratio and rpm > 0.3 and not clutch then
 				local rpm = ((speed / 3.6) / gearmaxspeed) * 1.01
 				switch = false
 				SetVehicleHandlingFloat(vehicle , "CHandlingData", "fDriveInertia", 0.1+ (default_fDriveInertia / gear) * (1.0 - rpm))
 				SetVehicleHandlingFloat(vehicle , "CHandlingData", "fInitialDriveForce", (driveforce * (gear / maxgear)) * (1 - rpm))
             end
-
-			local reverse = GetControlNormal(0,72)
-			if not dyno and reverse < 0.1 then
+			
+			local inverse = GetControlNormal(0,72)
+			if not dyno and inverse < 0.1 then
 				ForceVehicleGear(vehicle,switch and gear or 1)
 				SetVehicleHighGear(vehicle,switch and maxgear or 1)
 			end
-			if reverse > 0.4 and speed < 1 then
+			if inverse > 0.4 and speed < 1 then
 				SetVehicleHandlingFloat(vehicle , "CHandlingData", "fInitialDriveForce", driveforce+0.0)
 				while GetControlNormal(0,72) > 0.5 do Wait(111) SetVehicleHandlingFloat(vehicle , "CHandlingData", "fInitialDriveForce", driveforce+0.0) end
 			end
@@ -272,6 +275,11 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 			if dyno and IsControlJustPressed(0,47) then
 				manual = false
 				break
+			end
+			if clutch then 
+				SetVehicleClutch(vehicle,1.0) 
+				ForceVehicleGear(vehicle,0) 
+				SetVehicleHandlingFloat(vehicle , "CHandlingData", "fDriveInertia", default_fDriveInertia)
 			end
 			Wait(0)
 		end
@@ -405,6 +413,27 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 		end
 	end
 
+	exports('Gear', function(GEAR) -- this will be used from steering wheels api resource
+		if GEAR == 0 then print(clutch) clutch = true return end
+		if GEAR > maxgear then reverse = true return end
+		if GetControlNormal(0,21) < 0.5 then return end
+		switching = true
+		reverse = false
+		gear = GEAR
+		clutch = false
+		local nextgear_ratio = vehicle_gear_ratio[maxgear][gear] * (1/0.9)
+		nextgearspeed = ((maxspeed * 1.32) / 3.6) / nextgear_ratio
+		SetVehicleHandlingInt(vehicle , "CCarHandlingData", "strAdvancedFlags", vehicleflags+0x20000+0x200+0x1000)
+		SetVehicleCheatPowerIncrease(vehicle,turbopower+0.0)
+		ForceVehicleSingleGear(vehicle,nextgearspeed,dyno)
+		ent:set('gearshift',{gear = gear, gearmaxspeed = gearmaxspeed, flatspeed = (maxspeed / nextgear_ratio), driveforce = (driveforce * nextgear_ratio)}, true)
+		if GetResourceState('renzu_turbo') == 'started' then
+			exports.renzu_turbo:BoostPerGear(boostpergear[gear] or 1.0)
+		end
+		Wait(50)
+		switching = false
+	end)
+
 	ManualOff = function()
 		FreezeEntityPosition(vehicle,false)
 		DetachEntity(vehicle,false,true)
@@ -417,8 +446,7 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 	RegisterKeyMapping('upshift'..commandstring, 'Manual Gear Upshift', 'keyboard', 'UP')
 	RegisterKeyMapping('downshift'..commandstring, 'Manual Gear Downshift', 'keyboard', 'DOWN')
 	RegisterCommand('manualoff', ManualOff)
-	exports('Gear', function(gear) -- this will be used from steering wheels api resource
-		gear = gear
-	end)
+	return maxgear,vehicleflags
+
 	-- clutching to followed
 end
