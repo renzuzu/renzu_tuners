@@ -75,28 +75,29 @@ OnVehicle = function(value)
 				local nitro = ent.nitroenable -- renzu_nitro states bag if nitro is being used
 				local turbodeduct = 1.0
 				local nitrodeduct = 1.0
-				local chance = nitro and 10 or 25
+				local chance = nitro and 7 or 15
 				if turbo then
 					turbodeduct = turbopower
 				end
 				if nitro then
 					nitrodeduct = turbopower -- fix degration for now when using NOS
 				end
-				local chance_degrade = math.random(1,100) < chance
+				local chance_degrade = math.random(1,100) < (chance * ( 2.0 - efficiency))
 				synctimer += 1
 				local resettimer = false
 				for _,v2 in pairs(config.engineparts) do
 					local stock = not upgraded[v2.item]	
 					for k,v in ipairs(config.degrade) do
 						local mileage_degration = mileage >= v.min
-						local candegrade = mileage and mileage > 1000 and mileage_degration and chance_degrade -- chances of degration and conditions
+						local candegrade = mileage_degration and chance_degrade -- chances of degration and conditions
 						for k,handlingname in pairs(v2.handling) do
 							if candegrade or (tune[handlingname] or 1.0) > 1.0 and chance_degrade and mileage_degration or turbo and chance_degrade and mileage_degration or nitro and mileage_degration and chance_degrade then
 								local efficiency_degrade = 1.0 + (1.0 - efficiency)
 								local stock_degrade = stock and 1.5 or efficiency_degrade -- if parts are stock degration is higher when using turbos, nitros and ECU over tunes.
 								local upgraded_degrade = stock and 1.0 or (efficiency_degrade * 0.9) -- if parts are upgraded degration is lower compared to stock when using turbos, nitros and ECU over tunes.
-								local degrade = v2.state ~= 'oem_suspension' and ((((v.degrade * upgraded_degrade) * (turbodeduct * stock_degrade)) * (nitrodeduct * stock_degrade)) * (efficiency_degrade * stock_degrade) * rpm) or 1.0
-								ent:set(v2.item, ent[v2.item] and ent[v2.item] - degrade or vehiclestats[plate] and vehiclestats[plate][v2.item] and vehiclestats[plate][v2.item] - degrade or 100 - degrade, synctimer > 20) -- set local state bag
+								local degrade = ((((v.degrade * upgraded_degrade) * (turbodeduct * stock_degrade)) * (nitrodeduct * stock_degrade)) * (efficiency_degrade * stock_degrade) * rpm) or 1.0
+								local value = ent[v2.item] and ent[v2.item] - degrade or vehiclestats[plate] and vehiclestats[plate][v2.item] and vehiclestats[plate][v2.item] - degrade or 100 - degrade
+								ent:set(v2.item, value, synctimer > 20) -- set local state bag
 								resettimer = true
 								break
 							end
