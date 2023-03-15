@@ -207,7 +207,7 @@ for k,v in pairs(config.engineupgrades) do
 	local name = v.item
 	AddStateBagChangeHandler(name --[[key filter]], nil --[[bag filter]], function(bagName, key, value, _unused, replicated)
 		Wait(0)
-		if not value then return end
+		if value == nil then return end
 		local net = tonumber(bagName:gsub('entity:', ''), 10)
 		local vehicle = NetworkGetEntityFromNetworkId(net)
 		if DoesEntityExist(vehicle) then
