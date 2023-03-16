@@ -386,7 +386,7 @@ CheckPerformance = function()
 		if localhandling[v.handling] and default_perf[v.handling] and not unique[v.affects] then
 			local prog = (localhandling[v.handling] / default_perf[v.handling]+0.0) * 100.0
 			unique[v.affects] = true
-			table.insert(options, {icon = '' , label = v.affects, description = 'current performance of '..v.affects, progress = prog, colorScheme = 'blue'})
+			table.insert(options, {icon = '' , label = v.affects, description = 'current performance of '..v.affects, progress = prog or 100, colorScheme = 'blue'})
 		end
 	end
 	lib.registerMenu({
@@ -551,7 +551,7 @@ CheckWheels = function()
 	local default_perf = GetEnginePerformance(vehicle,plate)
 	HandleTires(vehicle,plate,default_perf,ent)
 	for k,v in pairs(GetWheelHandling(vehicle)) do
-		table.insert(options, {icon = '' , label = v.label, description = 'current health of '..v.label, progress = v.health, colorScheme = 'blue'})
+		table.insert(options, {icon = '' , label = v.label, description = 'current health of '..v.label, progress = v.health or 100, colorScheme = 'blue'})
 	end
 	local wheeltype = ent.tires?.type or 'Default OEM'
 	lib.registerMenu({
