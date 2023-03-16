@@ -153,6 +153,7 @@ OnVehicle = function(value)
 end
 
 Citizen.CreateThreadNow(function()
+	Wait(3000)
 	SetDefaultVehicleNumberPlateTextPattern(-1, config.plateformat)
 	if config.enablemarkers then
 		for k,v in pairs(config.points) do
