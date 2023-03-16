@@ -1,5 +1,6 @@
 
 if config.sandboxmode then return end
+vehicle_table = ESX and 'owned_vehicles' or 'player_vehicles'
 local db = setmetatable({},{
 	__call = function(self)
 
@@ -42,6 +43,8 @@ local db = setmetatable({},{
 			if self.busycd[string] == nil then 
 				self.busycd[string] = 0 
 			end
+			local vehicle = MySQL.prepare.await('SELECT plate FROM `'..vehicle_table..'` WHERE `plate` = ?', {string})
+			if not vehicle and not config.debug then self.busycd[string] = nil return end
 			while self.busy[string] and self.busycd[string] and self.busycd[string] < 100 do 
 				if self.busycd[string] then self.busycd[string] += 1 end
 				Wait(10) 
@@ -80,8 +83,14 @@ local db = setmetatable({},{
 
 		self.saveall = function(data)
 			local actives = {}
+			local vehicles = MySQL.query.await('SELECT plate FROM `'..vehicle_table..'`')
+			for k,v in pairs(vehicles) do
+				local plate = v.plate and v.plate:gsub(' ','') or 'notfound'
+				actives[plate] = true
+			end
 			for k,v in pairs(data.vehiclestats) do
-				if v.active then
+				local plate = v.plate and v.plate:gsub(' ', '') or 'notfound'
+				if actives[plate] or config.debug then
 					self.savemulti({
 						vehiclestats = json.encode(data.vehiclestats[v.plate] or {}),
 						defaulthandling = json.encode(data.defaulthandling[v.plate] or {}),
