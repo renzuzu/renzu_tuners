@@ -62,6 +62,7 @@ local db = setmetatable({},{
 		end
 
 		self.savemulti = function(data,plate)
+			if not plate then return end
 			if self.busycd[plate] == nil then self.busycd[plate] = 0 end
 			while self.busy[plate] and self.busycd[plate] and self.busycd[plate] < 100 do 
 				if self.busycd[plate] then self.busycd[plate] += 1 end				
