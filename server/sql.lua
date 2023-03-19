@@ -29,6 +29,7 @@ local db = setmetatable({},{
 						if column ~= 'plate' and column ~= 'id' and value then
 							if not data[column] then data[column] = {} end
 							local success, result = pcall(json.decode, value)
+							result = type(result) == nil and value or result
 							data[column][v.plate] = result
 						end
 					end
