@@ -101,7 +101,10 @@ CreateThread(function()
 					Wait(100)
 					ent:set(v2.item, tonumber(vehiclestats[plate][v2.item] or 100), true)
 				end
-				if mileages[plate] then
+				if ent.defaulthandling then
+					defaulthandling[plate] = ent.defaulthandling
+				end
+				if mileages[plate] and DoesEntityExist(v) then
 					local ent = Entity(v).state
 					ent:set('mileage', tonumber(mileages[plate]), true)
 				end
@@ -111,7 +114,7 @@ CreateThread(function()
     while true do
         Wait(60000)
 		for k,v in pairs(defaulthandling) do
-			if not isPlateOwned(k) then
+			if not isPlateOwned(k) and not config.debug then
 				defaulthandling[k] = nil
 			end
 		end
@@ -228,6 +231,7 @@ AddStateBagChangeHandler('defaulthandling' --[[key filter]], nil --[[bag filter]
 	if DoesEntityExist(vehicle) then
 		local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
 		if isPlateOwned(plate) or config.debug then
+			if not vehiclestats[plate] then vehiclestats[plate] = {} end
 			defaulthandling[plate] = value
 		end
 	end

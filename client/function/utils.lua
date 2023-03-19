@@ -258,7 +258,7 @@ GetDefaultHandling = function(vehicle, plate) -- saves default handling of new v
 	if not ent.engine then
 		ent:set('currentengine','default',false)
 	end
-	if not handlings and not ent.engine or not hashandling then
+	if not handlings and not ent.engine or not hashandling and not ent.defaulthandling then
 		hashandling = true
 		handlings = {
 			fInitialDriveForce = GetVehicleHandlingFloat(vehicle,'CHandlingData', 'fInitialDriveForce'),
