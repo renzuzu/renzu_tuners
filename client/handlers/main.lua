@@ -13,7 +13,7 @@ AddStateBagChangeHandler('drivetrain' --[[key filter]], nil --[[bag filter]], fu
 	if not value then return end
 	local vehicle = GetEntityFromStateBagName(bagName)
 	if DoesEntityExist(vehicle) then
-		SetVehicleDriveTrain(vehicle,tonumber(value))
+		SetVehicleDriveTrain(vehicle,tonumber(value)+0.0)
 	end
 end)
 
