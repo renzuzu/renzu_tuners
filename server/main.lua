@@ -291,6 +291,7 @@ end
 lib.callback.register('renzu_tuners:checkitem', function(src,item,isShop,required)
 	local hasitems = false
 	local amount = 1
+	local xPlayer = GetPlayerFromId(src)
 	if not config.purchasableUpgrade then
 		local metadata = config.metadata
 		local itemstate = GetItemState(item)
@@ -306,7 +307,6 @@ lib.callback.register('renzu_tuners:checkitem', function(src,item,isShop,require
 			end
 		end
 	elseif config.jobmanagemoney and config.job[xPlayer.job.name] then
-		local xPlayer = GetPlayerFromId(src)
 		local cost = GetItemCosts(item)
 		local money = GetJobMoney(xPlayer.job.name)
 		if money >= cost then
