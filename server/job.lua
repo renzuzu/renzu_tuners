@@ -15,6 +15,15 @@ GetJobMoney = function(job)
     end
 end
 
+format_int = function(n)
+	return tostring(math.floor(n)):reverse():gsub("(%d%d%d)","%1,"):gsub(",(%-?)$","%1"):reverse()
+end
+
+lib.callback.register('renzu_tuners:getJobMoney', function(src,job)
+	if not job then return 0 end
+	return format_int(GetJobMoney(job) or 0)
+end)
+
 RemoveJobMoney = function(job,amount)
 	if GetResourceState('renzu_jobs') == 'started' then
 		return exports.renzu_jobs:removeMoney(amount,job,nil,'money',true)

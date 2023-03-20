@@ -53,43 +53,83 @@ Options = function(data,shop,job)
 
 	if data.tires then
 		for k,v in pairs(config.tires) do
-			table.insert(options,{icon = imagepath..''..v.item..'.png', label = v.label, description = 'Upgrade tires to '..v.label, args = v.item, checked = v.item == data.type})
+			local desc = 'Upgrade tires to '..v.label
+			if config.purchasableUpgrade then
+				desc = 'Cost: $ '..v.cost or 100000
+			end
+			table.insert(options,{icon = imagepath..''..v.item..'.png', label = v.label, description = desc, args = v.item, checked = v.item == data.type})
 		end
 	elseif data.drivetrain then
 		for k,v in pairs(config.drivetrain) do
-			table.insert(options,{icon = imagepath..''..v.item..'.png', label = v.label, description = 'Swap Drivetrain to '..v.label, args = v.item, checked = v.label == data.type})
+			local desc = 'Swap Drivetrain to '..v.label
+			if config.purchasableUpgrade then
+				desc = 'Cost: $ '..v.cost or 100000
+			end
+			table.insert(options,{icon = imagepath..''..v.item..'.png', label = v.label, description = desc, args = v.item, checked = v.label == data.type})
 		end
 	elseif data.extras then
 		for k,v in pairs(config.extras) do
-			table.insert(options,{icon = imagepath..''..v.item..'.png', label = v.label, description = 'Install '..v.label, args = v.item})
+			local desc = 'Install '..v.label
+			if config.purchasableUpgrade then
+				desc = 'Cost: $ '..v.cost or 100000
+			end
+			table.insert(options,{icon = imagepath..''..v.item..'.png', label = v.label, description = desc, args = v.item})
 		end
 	elseif data.turbo then
 		local turbos = turboconfig
 		for k,v in pairs(turbos) do
-			table.insert(options,{icon = imagepath..''..v.item..'.png' , label = v.label, description = 'Install '..v.label, colorScheme = 'blue', args = v.item})
+			local desc = 'Install '..v.label
+			if config.purchasableUpgrade then
+				desc = v.cost and 'Cost: $ '..v.cost or 100000
+			end
+			table.insert(options,{icon = imagepath..''..v.item..'.png' , label = v.label, description = desc, colorScheme = 'blue', args = v.item})
 		end
 	elseif data.nitro then
 		local nitros = exports.renzu_nitro:nitros()
 		for k,v in pairs(nitros) do
-			table.insert(options,{icon = imagepath..''..v.item..'.png' , label = v.label, description = 'Install '..v.label..' nitro', colorScheme = 'blue', args = v.item})
+			local desc = 'Install '..v.label..' nitro'
+			if config.purchasableUpgrade then
+				desc = v.cost and 'Cost: $ '..v.cost or 100000
+			end
+			table.insert(options,{icon = imagepath..''..v.item..'.png' , label = v.label, description = desc, colorScheme = 'blue', args = v.item})
 		end
 	elseif data.localengine then
 		for k,v in pairs(data.value) do
-			table.insert(options,{icon = imagepath..'engine.png' , label = v.name or 'engine', description = 'Install Engine ', colorScheme = 'blue', args = v.name})
+			local desc = 'Install Engine '
+			if config.purchasableUpgrade then
+				desc = v.cost and 'Cost: $ '..v.cost or 100000
+			end
+			table.insert(options,{icon = imagepath..'engine.png' , label = v.name or 'engine', description = desc, colorScheme = 'blue', args = v.name})
 		end
 	elseif data.customengine then
 		for k,v in pairs(data.value) do
-			table.insert(options,{icon = imagepath..'engine.png' , label = v.label or 'engine', description = 'Install Engine '..v.label, colorScheme = 'blue', args = {engine = true, item = v.soundname}})
+			local desc = 'Install Engine '..v.label
+			if config.purchasableUpgrade then
+				desc = v.cost and 'Cost: $ '..v.cost or 100000
+			end
+			table.insert(options,{icon = imagepath..'engine.png' , label = v.label or 'engine', description = desc, colorScheme = 'blue', args = {engine = true, item = v.soundname}})
 		end
 	elseif job and not data.ecu and not data.mileage then
 		if data.state == data.installed then 
-			table.insert(options,{icon = imagepath..''..data.installed..'.png', label = 'Repair '..data.label, description = 'Repair '..data.label, args = data.installed})
+			local desc = 'Repair '..data.label
+			if config.purchasableUpgrade then
+				desc = 25000
+			end
+			table.insert(options,{icon = imagepath..''..data.installed..'.png', label = 'Repair '..data.label, description = desc, args = data.installed})
 		else
-			table.insert(options,{icon = imagepath..''..data.state..'.png', label = 'Install OEM ', description = 'Replace '..data.label, args = data.state})
+			local desc = 'Replace '..data.label
+			if config.purchasableUpgrade then
+				desc = 25000
+			end
+			table.insert(options,{icon = imagepath..''..data.state..'.png', label = 'Install OEM ', description = desc, args = data.state})
 		end
 		for k,v in pairs(config.engineupgrades) do
 			if config.upgradevariation[v.category] and data.part ~= v.item and v.state == data.state then
-				table.insert(options,{icon = imagepath..''..v.state..'.png', label = v.item == data.installed and 'Repair '..v.label or 'Install to '..v.label, description = v.item == data.installed and 'Repair '..v.label or 'Upgrade with '..v.label, args = v.item})
+				local desc = v.item == data.installed and 'Repair '..v.label or 'Upgrade with '..v.label
+				if config.purchasableUpgrade then
+					desc = 'Cost: $ '..v.cost
+				end
+				table.insert(options,{icon = imagepath..''..v.state..'.png', label = v.item == data.installed and 'Repair '..v.label or 'Install to '..v.label, description = desc, args = v.item})
 			end
 		end
 	elseif job and not data.ecu then
@@ -113,9 +153,10 @@ Options = function(data,shop,job)
 		end
 	end
 	if hasmenu then
+		local jobmoney = lib.callback.await('renzu_tuners:getJobMoney',false,PlayerData?.job?.name)
 		lib.registerMenu({
 			id = 'upgrade_options',
-			title = 'Parts Options',
+			title = config.purchasableUpgrade and config.jobmanagemoney and 'Job Money: '..jobmoney or 'Parts Options',
 			position = 'top-right',
 
 			onClose = function(keyPressed)
