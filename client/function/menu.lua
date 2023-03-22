@@ -401,6 +401,9 @@ CheckVehicle = function(menu,shop)
 		title = menu and '🛠️ Upgrade Vehicle' or 'Engine Status',
 		position = 'top-right',
 		imageSize = 'large',
+		onClose = function(keyPressed)
+			FreezeEntityPosition(GetVehiclePedIsIn(cache.ped),false)
+		end,
 		options = options
 	}, function(selected, scrollIndex, args)
 		Options(args,shop,menu)

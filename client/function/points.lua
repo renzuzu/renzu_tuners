@@ -19,6 +19,7 @@ SetupUpgradePoints = function(data,index)
 		--DrawMarker(2, self.coords.x, self.coords.y, self.coords.z, 0.0, 0.0, 0.0, 0.0, 180.0, 0.0, 1.0, 1.0, 1.0, 200, 20, 20, 50, false, true, 2, nil, nil, false)
 		if self.currentDistance < 1 and IsControlJustReleased(0, 38) and IsPedInAnyVehicle(cache.ped) then
 			CheckVehicle(HasAccess())
+			FreezeEntityPosition(GetVehiclePedIsIn(cache.ped),true)
 		end
 	end
 end
