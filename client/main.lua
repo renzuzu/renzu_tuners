@@ -14,6 +14,7 @@ OnVehicle = function(value)
 	if not isdriver then return end
 	local plate = string.gsub(GetVehicleNumberPlateText(value), '^%s*(.-)%s*$', '%1'):upper()
 	local state = GetVehicleServerStates(plate)
+	if not DoesEntityExist(value) then return end
 	--local vehiclestats = GlobalState.vehiclestats
     local coord = GetEntityCoords(value)
     local lastcoord = nil
