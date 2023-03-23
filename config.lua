@@ -373,6 +373,12 @@ config.crafting = { -- crafting config and requires item
 				},
 				label = 'NOS',
 			},
+			[5] = {
+				items = {
+					[1] = {name = 'repairparts', label = 'Repair Engine Kit', durability = 100, requires = {steel = 10,aluminum = 10,iron = 10, copper = 10}},
+				},
+				label = 'Repair Engine Parts Kit',
+			},
 		}
 	},
 }

@@ -1,4 +1,14 @@
 
+repairparts = {
+	weight = 20,
+	shouldClose = "true",
+	image = "repairparts.png",
+	name = "repairparts",
+	type = "item",
+	label = "Repair Engine Parts",
+	useable = "true",
+  },
+
 ultimate_block = {
 	weight = 20,
 	shouldClose = "true",

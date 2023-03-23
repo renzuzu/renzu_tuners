@@ -376,15 +376,47 @@ lib.callback.register('renzu_tuners:Craft', function(src,slots,requiredata,item,
 				reward = 'enginegago'
 			end
 			if config.metadata then
-				if item.type == 'upgrade' then
+				if item.type == 'upgrade' and item.name ~= 'repairparts' then
 					reward = item.state
 					metadata = {upgrade = item.name, label = item.label, description = item.label..' Engine Parts', image = item.name}
 				end
+				if item.name == 'repairparts' then
+					metadata = {durability = item.durability ,upgrade = item.name, label = item.label, description = item.label..'  \n  Restore Parts Durability ', image = item.name}
+				end
+			elseif item.name == 'repairparts' then
+				metadata = {durability = 100 ,upgrade = item.name, label = 'Repair Engine Parts Kit', description = ' Restore Parts Durability to 100%', image = item.name}
 			end
 			AddInventoryItem(src, reward, 1, metadata)
 		end
 	end
 	return success
+end)
+
+lib.callback.register('renzu_tuners:RepairPart', function(src,percent,noMetadata)
+	local src = src
+	local items = GetInventoryItems(src, 'slots', 'repairparts')
+	local hasitem = false
+	if items then
+		for k,v in pairs(items) do
+			if v.metadata.durability == nil then
+				v.metadata.durability = 100
+			end
+			if v.metadata?.durability and v.metadata?.durability >= percent then
+				local newvalue = v.metadata?.durability - percent
+				SetDurability(src,newvalue,v.slot,v.metadata,v.name)
+				if newvalue <= 0 then
+					RemoveInventoryItem(src, 'repairparts', 1,nil, v.slot)
+				end
+				return newvalue
+			end
+			hasitem = true
+		end
+		if not hasitem then return 'item' end
+	end
+	if noMetadata then
+		RemoveInventoryItem(src, 'repairparts', 1)
+	end
+	return noMetadata or false
 end)
 
 SetTunerData = function(entity)

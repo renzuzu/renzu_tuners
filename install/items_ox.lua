@@ -1,5 +1,18 @@
 -- here we go the 1000 items
 -- ox_inventory format
+
+['repairparts'] = {
+	label = 'Repair Engine Parts',
+	weight = 250,
+	stack = true,
+	close = true,
+	client = {
+		anim = { dict = 'mini@repair', clip = 'fixing_a_player' },
+		usetime = 5500,
+		export = 'renzu_tuners.useItem'
+	}
+},
+
 ['street_tires'] = {
 	label = 'Street Tires',
 	weight = 250,

@@ -1,6 +1,17 @@
 -- ox_inventory
 -- this does not include other variant upgrades. default item will be used for metadata. eg. engine_camshaft -> racing_camshaft
 
+['repairparts'] = {
+	label = 'Repair Engine Parts',
+	weight = 250,
+	stack = true,
+	close = true,
+	client = {
+		anim = { dict = 'mini@repair', clip = 'fixing_a_player' },
+		usetime = 5500,
+		export = 'renzu_tuners.useItem'
+	}
+},
 
 ['street_tires'] = {
 	label = 'Street Tires',

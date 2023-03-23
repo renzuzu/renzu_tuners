@@ -115,7 +115,7 @@ Options = function(data,shop,job)
 			if config.purchasableUpgrade then
 				desc = 25000
 			end
-			table.insert(options,{icon = imagepath..''..data.installed..'.png', label = 'Repair '..data.label, description = desc, args = data.installed})
+			table.insert(options,{icon = imagepath..''..data.installed..'.png', label = 'Repair '..data.label, description = desc, args = {name = 'repairparts', part = data.installed}})
 		else
 			local desc = 'Replace '..data.label
 			if config.purchasableUpgrade then
@@ -129,7 +129,7 @@ Options = function(data,shop,job)
 				if config.purchasableUpgrade then
 					desc = 'Cost: $ '..v.cost
 				end
-				table.insert(options,{icon = imagepath..''..v.state..'.png', label = v.item == data.installed and 'Repair '..v.label or 'Install to '..v.label, description = desc, args = v.item})
+				table.insert(options,{icon = imagepath..''..v.state..'.png', label = v.item == data.installed and 'Repair '..v.label or 'Install to '..v.label, description = desc, args = v.item == data.installed and {name = 'repairparts', part = data.installed, state = v.state} or v.item})
 			end
 		end
 	elseif job and not data.ecu then
@@ -294,13 +294,55 @@ Options = function(data,shop,job)
 					end
 				end
 			else
-				local hasitem = lib.callback.await('renzu_tuners:checkitem',false,item)
+				local name = type(args) == 'string' and item or args.name
+				local hasitem = false
+				if name == 'repairparts' then
+					local percent = {}
+					local ent = Entity(vehicle).state
+					local ismetadataSupport = ESX and GetResourceState('ox_inventory') == 'started' or QBCore or false
+					if name == 'repairparts' and ismetadataSupport then
+						percent = lib.inputDialog('Repair Engine Parts', {
+							{type = 'slider', label = 'Repair Percent', description = 'Percentage of your target repair'},
+						})
+						if not percent then return end
+					end
+					local state = args.state or args.part
+					local oldvalue = state and ent[state] or 50
+					local percent = percent[1] or 100
+					local success = lib.callback.await('renzu_tuners:RepairPart',false,percent,ismetadataSupport == false)
+					if success == 'item' then return lib.notify({description = 'Failed to repair.  \n  You dont have a repair item', type = 'error'}) end
+					if success then
+						lib.progressCircle({
+							duration = 2000,
+							position = 'bottom',
+							useWhileDead = false,
+							canCancel = false,
+							disable = {
+								car = true,
+								move = true,
+							},
+							anim = {
+								dict = 'mini@repair',
+								clip = 'fixing_a_player'
+							},
+						})
+						local durability = success or 0
+						lib.notify({description = 'Repair Success.  \n  Repair kit Durability is '..durability, type = 'success'})
+						local newvalue = (oldvalue + percent)
+						ent:set(state,newvalue <= 100 and newvalue or 100,true)
+						return CheckVehicle(HasAccess() or type,shop)
+					else
+						return lib.notify({description = 'Failed to repair.  \n  the current repair parts cannot repair this percentage', type = 'error'})
+					end
+				else
+					hasitem = lib.callback.await('renzu_tuners:checkitem',false,name)
+				end
 				if config.freeupgrade or hasitem then
 					Entity(vehicle).state:set(data.upgrade or '',false,true)
 					ItemFunction(vehicle,{
-						name = item,
+						name = name,
 						label = data.label,
-						engine = data.localengine or data.customengine or false
+						engine = data.localengine or data.customengine or false,
 					},true)
 					if not engine then
 						CheckVehicle(HasAccess() or type,shop)
@@ -355,7 +397,8 @@ CheckVehicle = function(menu,shop)
 			unique[v.state] = true
 			upgrades[v.item] = true
 			local parts = upgrades_data[v.item].label
-			table.insert(options,{icon = imagepath..''..v.state..'.png' , label = parts, description = '', progress = ent[v.state] or 100, colorScheme = 'blue', args = {installed = v.item, state = v.state, label = v.label}})
+			local durability = ent[v.state] or 100
+			table.insert(options,{icon = imagepath..''..v.state..'.png' , label = parts, description = parts..' Durability: '..durability, progress = durability, colorScheme = 'blue', args = {installed = v.item, state = v.state, label = v.label}})
 		end
 	end
 	for k,v in pairs(config.engineparts) do
@@ -363,7 +406,8 @@ CheckVehicle = function(menu,shop)
 			if not ent[v.item] then
 				ent:set(v.item, tonumber(vehiclestat[v.item]) or 100, true)
 			end
-			table.insert(options,{icon = imagepath..''..v.item..'.png' , label = v.label, description = '', progress = ent[v.item] or 100, colorScheme = 'blue', args = {installed = v.item, state = v.item, label = v.label}})
+			local durability = ent[v.item] or 100
+			table.insert(options,{icon = imagepath..''..v.item..'.png' , label = v.label, description = v.label..' Durability: '..durability..'%', progress = durability, colorScheme = 'blue', args = {installed = v.item, state = v.item, label = v.label}})
 		end
 	end
 	if menu then

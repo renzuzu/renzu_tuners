@@ -27,6 +27,10 @@ GetInventoryItems = function(src, method, items, metadata)
 		local data = {}
         for _, item in pairs(Player?.PlayerData?.items or {}) do
 			if items == item.name then
+				item.metadata = item.info
+				if item?.metadata?.quality then
+					item.metadata.durability = item.metadata.quality
+				end
 				table.insert(data,item)
 			end
         end
@@ -82,10 +86,21 @@ AddInventoryItem = function(src, item, count, metadata, slot)
 	if GetResourceState('ox_inventory') == 'started' then
 		return exports.ox_inventory:AddItem(src, item, count, metadata, slot)
 	elseif QbCore then
+		metadata.quality = metadata.durability
 		return exports['qb-inventory']:AddItem(src, item, count, slot, metadata)
 	elseif ESX then
 		local Player = GetPlayerFromId(src)
 		return Player.addInventoryItem(item, count, metadata, slot)
+	end
+end
+
+SetDurability = function(src,percent,slot,metadata,item)
+	if GetResourceState('ox_inventory') == 'started' then
+		return exports.ox_inventory:SetDurability(src, slot, percent)
+	elseif QbCore then
+		local Player = GetPlayerFromId(src)
+		Player.PlayerData.items[slot].info.quality = percent
+		Player.Functions.SetPlayerData("items", Player.PlayerData.items)
 	end
 end
 
@@ -126,4 +141,6 @@ if GetResourceState('ox_inventory') ~= 'started' then
 	for k,v in pairs(config.extras) do
 		RegisterUsableItem(v.item, register)
 	end
+	RegisterUsableItem('repairparts', register)
+
 end
