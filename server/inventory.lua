@@ -11,7 +11,11 @@ GetPlayerFromId = function(src)
 	if ESX then
 		return ESX.GetPlayerFromId(src)
 	elseif QbCore then
-		return QbCore.Functions.GetPlayer(src)
+		local Player = QbCore.Functions.GetPlayer(src)
+		if Player.job == nil then
+			Player.job = Player.PlayerData.job
+		end
+		return Player
 	end
 end
 
