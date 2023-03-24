@@ -121,7 +121,6 @@ OnVehicle = function(value)
 		for _,v2 in pairs(config.engineparts) do
 			ent:set(v2.item, ent[v2.item] and ent[v2.item]+0.01, true) -- sync local state bag to server
 		end
-		ent:set('vehicle_loaded', false, true)
 	end)
 	
 
