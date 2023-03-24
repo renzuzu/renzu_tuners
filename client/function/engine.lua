@@ -117,7 +117,7 @@ GetEngineUpgrades = function(vehicle, name)
 end
 
 GetTuningData = function(plate)
-	local tunes = GlobalState.ecu
+	local tunes = ecu
 	local data = {
 		['fInitialDriveMaxFlatVel'] = 1.0,
 		['fDriveInertia'] = 1.0,

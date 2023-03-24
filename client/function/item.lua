@@ -37,7 +37,7 @@ ItemFunction = function(vehicle,data,menu) -- item use handler
 	local extras = GetExtras(item)
 	local isturbo = isTurbo(item)
 	local isnitro = isNitro(item)
-	local ecu = item == 'ecu'
+	local ECU = item == 'ecu'
 	-- tires
 	if tires then
 
@@ -56,12 +56,15 @@ ItemFunction = function(vehicle,data,menu) -- item use handler
 		TriggerServerEvent('renzu_nitro:AddNitro',NetworkGetNetworkIdFromEntity(vehicle),item)
 	elseif data.engine then
 		TriggerServerEvent('renzu_engine:EngineSwap',NetworkGetNetworkIdFromEntity(vehicle),item)
-	elseif ecu then
+	elseif ECU then
 		local boostpergear = {}
 		for i = 1, GetVehicleHighGear(vehicle) do
 			boostpergear[i] = 1.0
 		end
 		lib.callback.await('renzu_tuners:Tune',false,{vehicle = NetworkGetNetworkIdFromEntity(vehicle) ,profile = 'Default', tune = {acceleration = 1.0, topspeed = 1.0, engineresponse = 1.0, gear_response = 1.0, boostpergear = boostpergear}})
+		Wait(1000)
+		local plate = string.gsub(GetVehicleNumberPlateText(GetVehiclePedIsIn(cache.ped)), '^%s*(.-)%s*$', '%1'):upper()
+		vehiclestats, vehicletires, mileages, ecu = lib.callback.await('renzu_tuners:vehiclestats', 0, plate)
 	else
 		local oldval = ent[state]
 		ent:set(state,math.random(1,77),true)

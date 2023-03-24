@@ -57,7 +57,7 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 	local vehicle_gear_ratio = {}
 	local gears = config.gears
 	local customgears = nil
-	local ecu_gears = GlobalState.ecu[plate] and GlobalState.ecu[plate].active?.gear_ratio
+	local ecu_gears = ecu[plate] and ecu[plate].active?.gear_ratio
 	if ecu_gears then
 		customgears = {}
 		customgears[maxgear] = ecu_gears
@@ -89,7 +89,7 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 	local rawturbopower = 1.0
 	upgrade, stats = GetEngineUpgrades(vehicle) -- get current upgraded parts
 	tune = GetTuningData(plate) -- get current tuned data
-	boostpergear = GlobalState.ecu[plate] and GlobalState.ecu[plate].active?.boostpergear or {}
+	boostpergear = ecu[plate] and ecu[plate].active?.boostpergear or {}
 	efficiency, Fuel_Air_Volume, maxafr = EngineEfficiency(vehicle,stats,tune,rawturbopower)
 	local afr = 14.0
 	local explode = false
@@ -104,7 +104,7 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 
 	Citizen.CreateThreadNow(function() -- realtime update from upgrades
 		while dyno do
-			local data = GlobalState.ecu
+			local data = ecu
 			boostpergear = data[plate] and data[plate].active?.boostpergear or {}
 			vehicle_gear_ratio[maxgear] = data[plate] and data[plate].active?.gear_ratio or gears[maxgear]
 			upgrade, stats = GetEngineUpgrades(vehicle) -- get current upgraded parts

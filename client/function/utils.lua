@@ -177,8 +177,9 @@ function applyVehicleMods(veh,wheel) -- https://forum.cfx.re/t/cant-change-setve
 end
 
 GetVehicleServerStates = function(plate) -- fetch only the current vehicle data
-	vehiclestats, vehicletires, mileages,GlobalState.ecu = lib.callback.await('renzu_tuners:vehiclestats', 0, plate) -- temporary work around to bypass statebag size limits.
 	Wait(5000) -- allowed other state bag to applied before saving a default handling.
+	local plate = string.gsub(GetVehicleNumberPlateText(GetVehiclePedIsIn(cache.ped)), '^%s*(.-)%s*$', '%1'):upper()
+	vehiclestats, vehicletires, mileages, ecu = lib.callback.await('renzu_tuners:vehiclestats', 0, plate) -- temporary work around to bypass statebag size limits.
 	return true
 end
 

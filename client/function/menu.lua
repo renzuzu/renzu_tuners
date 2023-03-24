@@ -140,8 +140,8 @@ Options = function(data,shop,job)
 	end
 	if job and data.ecu then
 		hasmenu = true
-		local tune_profiles = GlobalState.ecu[plate] or {}
-		if GlobalState.ecu[plate] then
+		local tune_profiles = ecu[plate] or {}
+		if ecu[plate] then
 			table.insert(options,{icon = imagepath..'engine.png' , label = 'New Profile', description = 'Create New Tuning Profile', colorScheme = 'blue', args = {tune = true, profile = 'new'}})
 			for name,tuning in pairs(tune_profiles) do
 				if name ~= 'active' then
@@ -233,7 +233,8 @@ Options = function(data,shop,job)
 						lib.callback.await('renzu_tuners:Tune',false,{vehicle = NetworkGetNetworkIdFromEntity(vehicle) ,profile = input[1], tune = {acceleration = input[2], topspeed = input[5], engineresponse = input[3], gear_response = input[4], boostpergear = boostpergear, gear_ratio = gear_ratio}})
 						Wait(200)
 						HandleEngineDegration(vehicle,Entity(vehicle).state,plate)
-						ecu = GlobalState.ecu[plate] and GlobalState.ecu[plate].active?.boostpergear
+						local plate = string.gsub(GetVehicleNumberPlateText(GetVehiclePedIsIn(cache.ped)), '^%s*(.-)%s*$', '%1'):upper()
+						vehiclestats, vehicletires, mileages, ecu = lib.callback.await('renzu_tuners:vehiclestats', 0, plate)
 					else
 						lib.notify({
 							description = 'Tune is not saved',   
@@ -285,7 +286,8 @@ Options = function(data,shop,job)
 						lib.callback.await('renzu_tuners:Tune',false,{vehicle = NetworkGetNetworkIdFromEntity(vehicle) ,profile = args.profile, tune = {acceleration = input[1], topspeed = input[4], engineresponse = input[2], gear_response = input[3], boostpergear = boostpergear, gear_ratio = gear_ratio}})
 						Wait(200)
 						HandleEngineDegration(vehicle,Entity(vehicle).state,plate)
-						ecu = GlobalState.ecu[plate] and GlobalState.ecu[plate].active?.boostpergear
+						local plate = string.gsub(GetVehicleNumberPlateText(GetVehiclePedIsIn(cache.ped)), '^%s*(.-)%s*$', '%1'):upper()
+						vehiclestats, vehicletires, mileages, ecu = lib.callback.await('renzu_tuners:vehiclestats', 0, plate)
 					else
 						lib.notify({
 							description = 'Tune is not saved',   
@@ -503,7 +505,7 @@ TuningMenu = function()
 	local ent = Entity(vehicle).state
 	local options = {}
 	local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
-	local activeprofile = GlobalState.ecu[plate] and GlobalState.ecu[plate].active
+	local activeprofile = ecu[plate] and ecu[plate].active
 	if not activeprofile and not config.sandboxmode then
 		lib.notify({
 			description = 'No Programable ECU Install', 

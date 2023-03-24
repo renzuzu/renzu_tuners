@@ -20,7 +20,7 @@ OnVehicle = function(value)
     local lastcoord = nil
 	local ent = value and Entity(value).state
 	local turbo = ent.turbo?.turbo -- renzu_turbo states bag
-	local ecu_state = GlobalState.ecu
+	local ecu_state = ecu
 	local turbopower = 1.0
 	local turboinstall = GetResourceState('renzu_turbo') == 'started'
 	if value then
@@ -29,7 +29,7 @@ OnVehicle = function(value)
 		LoadVehicleSetup(value,ent,vehiclestats)
 		ent:set('vehicle_loaded', true, true)
 		--print("setup",value ~= 0 , tonumber(value) , ecu , invehicle)
-		ecu = ecu_state[plate] and ecu_state[plate].active?.boostpergear
+		--ecu = ecu_state[plate] and ecu_state[plate].active?.boostpergear
 		Citizen.CreateThreadNow(function()
 			local lockspeed = 0
 			local driveforce = GetVehicleHandlingFloat(value,'CHandlingData', 'fInitialDriveForce')

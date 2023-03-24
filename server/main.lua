@@ -83,7 +83,7 @@ CreateThread(function()
 	advancedflags = cache.advancedflags or {}
 
 	GlobalState.ecu = cache.ecu or {}
-	ecu = GlobalState.ecu
+	ecu = cache.ecu
 
 	currentengine = cache.currentengine or {}
 
