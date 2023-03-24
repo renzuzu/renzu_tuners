@@ -27,6 +27,7 @@ OnVehicle = function(value)
 		DefaultSetting(value)
 		plate = string.gsub(GetVehicleNumberPlateText(value), '^%s*(.-)%s*$', '%1'):upper()
 		LoadVehicleSetup(value,ent,vehiclestats)
+		ent:set('vehicle_loaded', true, true)
 		--print("setup",value ~= 0 , tonumber(value) , ecu , invehicle)
 		ecu = ecu_state[plate] and ecu_state[plate].active?.boostpergear
 		Citizen.CreateThreadNow(function()
@@ -120,6 +121,7 @@ OnVehicle = function(value)
 		for _,v2 in pairs(config.engineparts) do
 			ent:set(v2.item, ent[v2.item] and ent[v2.item]+0.01, true) -- sync local state bag to server
 		end
+		ent:set('vehicle_loaded', false, true)
 	end)
 	
 

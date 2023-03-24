@@ -376,6 +376,7 @@ CheckVehicle = function(menu,shop)
 		return 
 	end
 	local ent = Entity(vehicle).state
+	while not ent.vehicle_loaded do Wait(11) end
 	local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
 	local default_perf = GetEnginePerformance(vehicle,plate)
 	HandleTires(vehicle,plate,default_perf,ent)
@@ -465,6 +466,7 @@ CheckPerformance = function()
 		return 
 	end
 	local ent = Entity(vehicle).state
+	while not ent.vehicle_loaded do Wait(11) end
 	local options = {}
 	local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
 	local default_perf = GetEnginePerformance(vehicle,plate)
@@ -634,6 +636,7 @@ CheckWheels = function()
 		return 
 	end
 	local ent = Entity(vehicle).state
+	while not ent.vehicle_loaded do Wait(11) end
 	local options = {}
 	local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
 	local default_perf = GetEnginePerformance(vehicle,plate)
