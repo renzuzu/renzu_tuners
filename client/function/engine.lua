@@ -126,7 +126,7 @@ GetTuningData = function(plate)
 		['fClutchChangeRateScaleDownShift'] = 1.0,
 
 	}
-	if tunes[plate] then
+	if tunes and tunes[plate] then
 		for k,v in pairs(tunes[plate]?.active or {}) do
 			if k == 'topspeed' then
 				data['fInitialDriveMaxFlatVel'] = v
