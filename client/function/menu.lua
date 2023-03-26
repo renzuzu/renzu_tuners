@@ -337,12 +337,12 @@ Options = function(data,shop,job)
 						return lib.notify({description = 'Failed to repair.  \n  the current repair parts cannot repair this percentage', type = 'error'})
 					end
 				else
-					hasitem = lib.callback.await('renzu_tuners:checkitem',false,name)
+					hasitem = lib.callback.await('renzu_tuners:checkitem',false,item)
 				end
 				if config.freeupgrade or hasitem then
 					Entity(vehicle).state:set(data.upgrade or '',false,true)
 					ItemFunction(vehicle,{
-						name = name,
+						name = item,
 						label = data.label,
 						engine = data.localengine or data.customengine or false,
 					},true)
