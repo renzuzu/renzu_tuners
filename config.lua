@@ -5,30 +5,48 @@ config.debug = true -- enable commands for dev. /sethandling 100 (0-100), /setfu
 config.sandboxmode = false -- different tuning and no degrations and other stuff. mostly used only when trying to tweak a vehicle handling meta in dyno.
 config.freeupgrade = true -- for upgrades. set to true best for standalone purpose or testing purpose, for roleplay use the crafting/jobmanage money. if false menu will requires you a specific item for each upgrades
 config.metadata = false -- use item metadata when crafting items if ox_inventory. if your inventory does not support it, set this to false.
+
 config.job = { -- set to false (config.job = false) if you want all feature are accesible by any player, or true, required job to use repairs and upgrade menu, dyno -- job access for menu upgrade and points. ex. mechanic, tuner?
 	['mechanic'] = 1, -- @jobname -- @grade_level
 	['tuners'] = 1, -- @jobname -- @grade_level
 }
+
 config.usetarget = true -- if false, please configure the points config -- supports ox_target,qtarget,qb-target only
 config.enablepackage = true -- easy install all upgrade variants. ex. Full Upgrade all Racing Parts. this will install all in one package for each variants. each upgrades requires item if itemrequired is true
 config.upgradepackageAnimation = false -- do animation for each upgrades in package
+
 config.upgradevariation = { -- enable/disable upgrade variation.
 	['elite'] = true,
 	['pro'] = true,
 	['racing'] = true,
 	['ultimate'] = true,
 }
+
 config.enablecrafting = true -- crafting for items and parts,turbo, engine etc..
 config.purchasableUpgrade = false -- dont like crafting / item based? set this to true to use money to all item upgrades
 config.jobmanagemoney = false -- use job money if purchasableUpgrade. ex. esx_society, qb-management
--- prevent local entity / spawn entity by admin to be saved in server.
-config.plateprefix = 'CFX' -- recommended 3 char
-config.plateformat = config.plateprefix..'^ 111' -- this will make plate CFXIE91F for example.. this is required to prevent local vehicles/ admin spawn entity filling up global state vehicle stats -- docs: https://docs.fivem.net/natives/?_0x79780FD2
-config.nosaveplate = { -- dont save this plate pattern
+
+config.nosaveplate = { -- dont save this plate pattern unless debuging
 	['CFX'] = true,
 	['RENT'] = true,
 	['ESX'] = true,
 }
+
+config.enableDegration = true -- enable / disable degration of engine parts
+config.degrade = { -- degrade value when specific mileage value is reach
+	[1] = { min = 50000, degrade = 0.9},
+	[2] = { min = 20000, degrade = 0.8},
+	[3] = { min = 10000, degrade = 0.75},
+	[4] = { min = 5000, degrade = 0.65},
+	[5] = { min = 3000, degrade = 0.55},
+	[6] = { min = 2000, degrade = 0.45},
+	[7] = { min = 1500, degrade = 0.35},
+	[8] = { min = 1000, degrade = 0.25},
+	[9] = { min = 500, degrade = 0.15},
+	[10] = { min = 100, degrade = 0.11},
+	[11] = { min = 1, degrade = 0.01},
+}
+
 -- points
 config.engineswapper = {
 	coords = {
@@ -383,20 +401,6 @@ config.crafting = { -- crafting config and requires item
 	},
 }
 
-config.degrade = { -- degrade value when specific mileage value is reach
-	[1] = { min = 50000, degrade = 0.9},
-	[2] = { min = 20000, degrade = 0.8},
-	[3] = { min = 10000, degrade = 0.75},
-	[4] = { min = 5000, degrade = 0.65},
-	[5] = { min = 3000, degrade = 0.55},
-	[6] = { min = 2000, degrade = 0.45},
-	[7] = { min = 1500, degrade = 0.35},
-	[8] = { min = 1000, degrade = 0.25},
-	[9] = { min = 500, degrade = 0.15},
-	[10] = { min = 100, degrade = 0.11},
-	[11] = { min = 1, degrade = 0.01},
-}
-
 config.tires = { -- tires handling @item = item name, @degrade = degrade percent for each MS tick. 
 	[1] = {label = 'Street Tires', item = 'street_tires', degrade = 0.01, handling = {fLowSpeedTractionLossMult = 1.1,fTractionLossMult = 1.1,fTractionCurveMin = 1.2, fTractionCurveMax = 1.0, fTractionCurveLateral = 1.25}, cost = 10000},
 	[2] = {label = 'Sports Tires', item = 'sports_tires', degrade = 0.02, handling = {fLowSpeedTractionLossMult = 0.9,fTractionLossMult = 0.9,fTractionCurveMin = 1.1, fTractionCurveMax = 1.1, fTractionCurveLateral = 1.0}, cost = 211000},
@@ -412,6 +416,7 @@ config.drivetrain = {
 	[3] = { label = 'RWD', item = 'rearwheeldrive', value = 0.0, cost = 255000 }
 }
 
+ -- @cost amount of parts when purchase
 config.extras = { -- do not change unless you know how vehicle flags works for this resource
 	[1] = { label = 'Limited Slip Differential (Front)', item = 'lsdf' ,handling = {type = 'CCarHandlingData', name = 'strAdvancedFlags', value = {0,3}}, cost = 25000},
 	[2] = { label = 'Limited Slip Differential (Rear)', item = 'lsdr', handling = {type = 'CCarHandlingData', name = 'strAdvancedFlags', value = {1,4}}, cost = 25000},
@@ -441,19 +446,6 @@ config.gears = { -- hugo simones config data. gear 8 are corrected due to probab
 	[7] = {4.00, 2.34, 1.67, 1.31, 1.14, 1.08, 0.90},--7
 	[8] = {4.025, 2.025, 1.523, 1.314, 1.154, 1.073, 1.0, 0.90},--8
 	[9] = {7.70, 4.51, 3.22, 2.52, 2.20, 2.08, 1.73, 1.31, 0.90}--9
-}
-
-config.tunableRPM = {
-	[1] = 1.0,
-	[2] = 0.9,
-	[3] = 0.8,
-	[4] = 0.7,
-	[5] = 0.6,
-	[6] = 0.5,
-	[7] = 0.4,
-	[8] = 0.3,
-	[9] = 0.2,
-	[10] = 0.1,
 }
 
 config.radialoptions = {
