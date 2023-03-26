@@ -449,6 +449,7 @@ CheckVehicle = function(menu,shop)
 		position = 'top-right',
 		imageSize = 'large',
 		onClose = function(keyPressed)
+			if indyno then return end
 			FreezeEntityPosition(GetVehiclePedIsIn(cache.ped),false)
 		end,
 		options = options
