@@ -179,8 +179,8 @@ end
 GetVehicleServerStates = function(plate) -- fetch only the current vehicle data
 	Wait(5000) -- allowed other state bag to applied before saving a default handling.
 	local vehicle = GetVehiclePedIsIn(cache.ped)
-	local plate = vehicle and string.gsub(GetVehicleNumberPlateText(GetVehiclePedIsIn(cache.ped)), '^%s*(.-)%s*$', '%1'):upper()
 	if not DoesEntityExist(vehicle) then return end
+	local plate = string.gsub(GetVehicleNumberPlateText(GetVehiclePedIsIn(cache.ped)), '^%s*(.-)%s*$', '%1'):upper()
 	vehiclestats, vehicletires, mileages, ecu = lib.callback.await('renzu_tuners:vehiclestats', 0, plate) -- temporary work around to bypass statebag size limits.
 	return true
 end
