@@ -63,7 +63,7 @@ ItemFunction = function(vehicle,data,menu) -- item use handler
 		end
 		lib.callback.await('renzu_tuners:Tune',false,{vehicle = NetworkGetNetworkIdFromEntity(vehicle) ,profile = 'Default', tune = {acceleration = 1.0, topspeed = 1.0, engineresponse = 1.0, gear_response = 1.0, boostpergear = boostpergear}})
 		Wait(1000)
-		local plate = string.gsub(GetVehicleNumberPlateText(GetVehiclePedIsIn(cache.ped)), '^%s*(.-)%s*$', '%1'):upper()
+		local plate = string.gsub(vehicle), '^%s*(.-)%s*$', '%1'):upper()
 		vehiclestats, vehicletires, mileages, ecu = lib.callback.await('renzu_tuners:vehiclestats', 0, plate)
 	else
 		local oldval = ent[state]
