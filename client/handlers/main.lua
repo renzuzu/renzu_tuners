@@ -105,6 +105,7 @@ AddStateBagChangeHandler('gearshift' --[[key filter]], nil --[[bag filter]], fun
     Wait(0)
     if not value then return end
     local vehicle = GetEntityFromStateBagName(bagName)
+	if not DoesEntityExist(vehicle) then return end
 	if DoesEntityExist(vehicle) and GetPedInVehicleSeat(vehicle,-1) ~= cache.ped then
 		SetVehicleHandlingFloat(vehicle , "CHandlingData", "fInitialDriveMaxFlatVel", value.flatspeed+0.0)
 		SetVehicleHandlingFloat(vehicle , "CHandlingData", "fInitialDriveForce", value.driveforce+0.0)

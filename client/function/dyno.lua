@@ -209,7 +209,7 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 				DisableControlAction(0,71)
 				SetVehicleCheatPowerIncrease(vehicle,1.0)
 				ForceVehicleSingleGear(vehicle,gearmaxspeed,dyno)
-				Wait(1)
+				Wait(10)
 				switching = false
 			end
 			rawturbopower = turbopower
@@ -245,7 +245,7 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 						SetEntityMaxSpeed(vehicle,gearmaxspeed)
 						SetVehicleMaxSpeed(vehicle,gearmaxspeed)
 						ModifyVehicleTopSpeed(vehicle,1.0)
-						Wait(0)
+						Wait(1)
 					end
 				end
 				if lastgear ~= gear then
@@ -266,8 +266,14 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 			
 			local inverse = GetControlNormal(0,72)
 			if not dyno and inverse < 0.1 and clutching < 0.1 then
+				SetVehicleHandlingInt(vehicle , "CHandlingData", "nInitialDriveGears", switch and maxgear or 1)
 				ForceVehicleGear(vehicle,switch and gear or 1)
 				SetVehicleHighGear(vehicle,switch and maxgear or 1)
+				if throttle < 0.1 and speed > 10 then
+					local nextgear_ratio = vehicle_gear_ratio[maxgear][gear] * (1/0.9)
+					nextgearspeed = ((maxspeed * 1.32) / 3.6) / nextgear_ratio
+					SetVehicleCurrentRpm(vehicle,GetEntitySpeed(vehicle) / nextgearspeed)
+				end
 			end
 			if inverse > 0.4 and speed < 1 then
 				SetVehicleHandlingFloat(vehicle , "CHandlingData", "fInitialDriveForce", driveforce+0.0)
