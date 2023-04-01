@@ -269,11 +269,6 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 				SetVehicleHandlingInt(vehicle , "CHandlingData", "nInitialDriveGears", switch and maxgear or 1)
 				ForceVehicleGear(vehicle,switch and gear or 1)
 				SetVehicleHighGear(vehicle,switch and maxgear or 1)
-				if throttle < 0.1 and speed > 10 then
-					local nextgear_ratio = vehicle_gear_ratio[maxgear][gear] * (1/0.9)
-					nextgearspeed = ((maxspeed * 1.32) / 3.6) / nextgear_ratio
-					SetVehicleCurrentRpm(vehicle,GetEntitySpeed(vehicle) / nextgearspeed)
-				end
 			end
 			if inverse > 0.4 and speed < 1 then
 				SetVehicleHandlingFloat(vehicle , "CHandlingData", "fInitialDriveForce", driveforce+0.0)
@@ -419,16 +414,15 @@ SetVehicleManualGears = function(vehicle,dyno,auto,eco)
 				SetVehicleHandlingFloat(vehicle , "CHandlingData", "fDriveInertia", new_inertia+0.04)
 				ent:set('dynodata',{inertia = new_inertia+0.04, gear = gear, rpm = rpm}, true)
 			elseif GetEntitySpeed(vehicle) >= nextgearspeed then
-				SetVehicleCurrentRpm(vehicle,1.5)
 				SetVehicleForwardSpeed(vehicle,nextgearspeed)
-			else
-				ent:set('gearshift',{gear = gear, gearmaxspeed = gearmaxspeed, flatspeed = (maxspeed / nextgear_ratio), driveforce = (driveforce * nextgear_ratio)}, true)
+				local rpm = GetEntitySpeed(vehicle) / nextgearspeed
+				SetVehicleCurrentRpm(vehicle,rpm >= 1.0 and 1.5 or rpm)
 			end
 			
 			SetVehicleHandlingInt(vehicle , "CCarHandlingData", "strAdvancedFlags", vehicleflags+0x20000+0x200+0x1000)
 			SetVehicleCheatPowerIncrease(vehicle,turbopower+0.0)
-			ForceVehicleSingleGear(vehicle,gearmaxspeed,dyno)
-			ent:set('gearshift',{gear = gear, gearmaxspeed = gearmaxspeed, flatspeed = (maxspeed / nextgear_ratio), driveforce = (driveforce * nextgear_ratio)}, true)
+			ForceVehicleSingleGear(vehicle,nextgearspeed,dyno)
+			ent:set('gearshift',{gear = gear, gearmaxspeed = nextgearspeed, flatspeed = (maxspeed / nextgear_ratio), driveforce = (driveforce * nextgear_ratio)}, true)
 			if GetResourceState('renzu_turbo') == 'started' then
 				exports.renzu_turbo:BoostPerGear(boostpergear[gear] or 1.0)
 			end
