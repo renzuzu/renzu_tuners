@@ -92,7 +92,7 @@ local db = setmetatable({},{
 			end
 			for k,v in pairs(data.vehiclestats) do
 				local plate = v.plate and v.plate:gsub(' ', '') or 'notfound'
-				if actives[plate] or config.debug and v.plate then
+				if actives[plate] and v.active or config.debug and v.plate then
 					self.savemulti({
 						vehiclestats = json.encode(data.vehiclestats[v.plate] or {}),
 						defaulthandling = json.encode(data.defaulthandling[v.plate] or {}),
