@@ -65,6 +65,7 @@ CreateThread(function()
 	local stats = {}
 	for k,v in pairs(cache.vehiclestats or {}) do
 		if isPlateOwned(k) then
+			v.active = false
 			stats[k] = v
 		end
 	end
