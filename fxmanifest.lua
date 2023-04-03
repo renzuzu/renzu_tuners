@@ -18,6 +18,7 @@ server_scripts {
 	'config.lua',
 	'server/inventory.lua',
 	'server/job.lua',
+	'server/sql.lua',
 	'server/main.lua'
 }
 files {

@@ -1,5 +1,3 @@
-local db = import('server/sql')
-local vehiclestats = {}
 local defaulthandling = {}
 local controller = {}
 local vehicleupgrades = {}
@@ -11,6 +9,7 @@ local ecu = {}
 local currentengine = {}
 local dyno_net = {}
 local ramp = {}
+local db = sql()
 
 SpawnDyno = function(index)
 	if config.useMlo then return end
@@ -184,6 +183,7 @@ AddStateBagChangeHandler('mileage' --[[key filter]], nil --[[bag filter]], funct
 		local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
 		if isPlateOwned(plate) or config.debug then
 			mileages[plate] = value
+			vehiclestats[plate].active = true
 		end
 	end
 end)
@@ -234,6 +234,7 @@ AddStateBagChangeHandler('defaulthandling' --[[key filter]], nil --[[bag filter]
 		if isPlateOwned(plate) or config.debug then
 			if not vehiclestats[plate] then vehiclestats[plate] = {} end
 			defaulthandling[plate] = value
+			vehiclestats[plate].active = true
 		end
 	end
 end)
@@ -246,7 +247,8 @@ AddStateBagChangeHandler('tires' --[[key filter]], nil --[[bag filter]], functio
 	local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
 	if DoesEntityExist(vehicle) and isPlateOwned(plate) or config.debug then
 		vehicletires[plate] = value
-		db.save('vehicletires','plate',plate,json.encode(vehicletires[plate]))
+		--db.save('vehicletires','plate',plate,json.encode(vehicletires[plate]))
+		vehiclestats[plate].active = true
 	end
 end)
 
@@ -264,6 +266,7 @@ lib.callback.register('renzu_tuners:Tune', function(src,data)
 	if not isPlateOwned(plate) and not config.debug then return end
 	db.save('ecu','plate',plate,json.encode(tune[plate]))
 	ecu = tune
+	vehiclestats[plate].active = true
 end)
 
 GetItemState = function(name)
@@ -482,7 +485,6 @@ AddEventHandler('entityRemoved', function(entity)
 	if DoesEntityExist(entity) and GetEntityType(entity) == 2 and GetEntityPopulationType(entity) == 7 then
 		local plate = string.gsub(GetVehicleNumberPlateText(entity), '^%s*(.-)%s*$', '%1'):upper()
 		if vehiclestats[plate] and vehiclestats[plate].active then
-			vehiclestats[plate].active = nil
 			vehiclestats[plate].plate = nil
 		end
 	end

@@ -1,7 +1,9 @@
 
+vehiclestats = {}
+
 if config.sandboxmode then return end
 vehicle_table = ESX and 'owned_vehicles' or 'player_vehicles'
-local db = setmetatable({},{
+sql = setmetatable({},{
 	__call = function(self)
 
 		self.insert = function(column, data, plate)
@@ -99,6 +101,9 @@ local db = setmetatable({},{
 						vehicleupgrades = json.encode(data.vehicleupgrades[v.plate] or {}),
 						mileages = tonumber(data.mileages[v.plate]) or 0,
 					},v.plate)
+					if vehiclestats[v.plate] then
+					    vehiclestats[v.plate].active = nil
+					end
 					Wait(500)
 				end
 			end
@@ -130,5 +135,3 @@ Citizen.CreateThreadNow(function()
 	-- query to fix column type
 	local success, result = pcall(MySQL.query.await, 'ALTER TABLE `renzu_tuner` CHANGE COLUMN `advancedflags` `advancedflags` LONGTEXT NULL') -- temp
 end)
-
-return db()
