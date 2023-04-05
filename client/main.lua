@@ -70,7 +70,7 @@ OnVehicle = function(value)
 		local synctimer = 0
         while invehicle do
 			local ent = ent
-			local sleep = ent.nitroenable and 200 or 3000
+			local sleep = ent.nitroenable and 200 or config.degradetick or 3000
 			local rpm = GetVehicleCurrentRpm(value)
 			if rpm > 0.5 then -- start degrading states if its above 0.5 RPM
 				local mileage = ent.mileage or 0
@@ -78,23 +78,26 @@ OnVehicle = function(value)
 				local nitro = ent.nitroenable -- renzu_nitro states bag if nitro is being used
 				local turbodeduct = 1.0
 				local nitrodeduct = 1.0
-				local chance = nitro and 7 or 15
+				local chance = nitro and (config.chancedegradenitro or 7) or (config.chancedegrade or 2)
 				if turbo then
 					turbodeduct = turbopower
 				end
 				if nitro then
 					nitrodeduct = turbopower -- fix degration for now when using NOS
 				end
-				local chance_degrade = math.random(1,100) < (chance * ( 2.0 - efficiency))
 				synctimer += 1
+				local chance_degrade = {}
 				local resettimer = false
 				for _,v2 in pairs(config.engineparts) do
-					local stock = not upgraded[v2.item]	
+					local stock = not upgraded[v2.item]
+					if chance_degrade[v2.item] == nil then
+						chance_degrade[v2.item] = math.random(1,100) < (chance * ( 2.0 - efficiency))
+					end
 					for k,v in ipairs(config.degrade) do
 						local mileage_degration = mileage >= v.min
-						local candegrade = mileage_degration and chance_degrade -- chances of degration and conditions
+						local candegrade = mileage_degration and chance_degrade[v2.item] -- chances of degration and conditions
 						for k,handlingname in pairs(v2.handling) do
-							if candegrade or (tune[handlingname] or 1.0) > 1.0 and chance_degrade and mileage_degration or turbo and chance_degrade and mileage_degration or nitro and mileage_degration and chance_degrade then
+							if candegrade or (tune[handlingname] or 1.0) > 1.0 and chance_degrade[v2.item] and mileage_degration or turbo and chance_degrade[v2.item] and mileage_degration or nitro and mileage_degration and chance_degrade[v2.item] then
 								local efficiency_degrade = 1.0 + (1.0 - efficiency)
 								local stock_degrade = stock and 1.5 or efficiency_degrade -- if parts are stock degration is higher when using turbos, nitros and ECU over tunes.
 								local upgraded_degrade = stock and 1.0 or (efficiency_degrade * 0.9) -- if parts are upgraded degration is lower compared to stock when using turbos, nitros and ECU over tunes.
@@ -107,6 +110,9 @@ OnVehicle = function(value)
 						end
 					end
 				end
+
+				chance_degrade = {}
+
 				if synctimer > 20 and resettimer then
 					synctimer = 0
 					resettimer = false
