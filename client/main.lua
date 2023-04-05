@@ -59,6 +59,7 @@ OnVehicle = function(value)
 	end
 	Citizen.CreateThreadNow(function()
 		if not config.enableDegration then return end
+		if GlobalState?.NoDegradePlate[plate] == 1 then warn('this vehicle is excluded in degration mode') return end
 		local tune = GetTuningData(plate)
 		local upgraded = {}
 		for k,v in pairs(config.engineupgrades) do -- create a list of upgraded states
@@ -78,12 +79,12 @@ OnVehicle = function(value)
 				local nitro = ent.nitroenable -- renzu_nitro states bag if nitro is being used
 				local turbodeduct = 1.0
 				local nitrodeduct = 1.0
-				local chance = nitro and (config.chancedegradenitro or 7) or (config.chancedegrade or 2)
+				local chance = nitro and (config.chancedegradenitro or 11) or (config.chancedegrade or 2)
 				if turbo then
 					turbodeduct = turbopower
 				end
 				if nitro then
-					nitrodeduct = turbopower -- fix degration for now when using NOS
+					nitrodeduct = turbopower * ( 2.0 - efficiency) -- fix degration for now when using NOS
 				end
 				synctimer += 1
 				local chance_degrade = {}

@@ -117,7 +117,7 @@ Citizen.CreateThreadNow(function()
 	
 	local success, result = pcall(MySQL.scalar.await, 'SELECT 1 FROM renzu_tuner')
 	if not success then
-		MySQL.query([[CREATE TABLE `renzu_tuner` (
+		MySQL.query.await([[CREATE TABLE `renzu_tuner` (
 			`id` int NOT NULL AUTO_INCREMENT KEY,
 			`plate` varchar(60) DEFAULT NULL,
 			`mileages` int DEFAULT 0,
@@ -128,10 +128,15 @@ Citizen.CreateThreadNow(function()
 			`drivetrain` varchar(60) DEFAULT NULL,
 			`advancedflags` longtext DEFAULT NULL,
 			`ecu` longtext DEFAULT NULL,
+			`nodegrade` int DEFAULT 0,
 			`currentengine` varchar(60) DEFAULT NULL
 		)]])
 		print("^2SQL INSTALL SUCCESSFULLY, dont forget to install the items. /install/ folder ^0")
 	end
 	-- query to fix column type
-	local success, result = pcall(MySQL.query.await, 'ALTER TABLE `renzu_tuner` CHANGE COLUMN `advancedflags` `advancedflags` LONGTEXT NULL') -- temp
+	pcall(MySQL.query.await, 'ALTER TABLE `renzu_tuner` CHANGE COLUMN `advancedflags` `advancedflags` LONGTEXT NULL') -- temp
+	local success, result = pcall(MySQL.scalar.await,'SELECT `nodegrade` FROM renzu_tuner') -- check if nodegrade column is exist
+	if not success then
+		pcall(MySQL.query.await, 'ALTER TABLE renzu_tuner ADD COLUMN `nodegrade` int DEFAULT 0')
+	end
 end)

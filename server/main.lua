@@ -7,6 +7,7 @@ local drivetrain = {}
 local advancedflags = {}
 local ecu = {}
 local currentengine = {}
+local nodegrade = {}
 local dyno_net = {}
 local ramp = {}
 local db = sql()
@@ -84,6 +85,10 @@ CreateThread(function()
 
 	GlobalState.ecu = cache.ecu or {}
 	ecu = cache.ecu or {}
+
+	nodegrade = cache.nodegrade or {}
+
+	GlobalState.NoDegradePlate = nodegrade or {}
 
 	currentengine = cache.currentengine or {}
 
@@ -504,4 +509,34 @@ lib.addCommand('sandboxmode', {
     restricted = 'group.admin'
 }, function(source, args, raw)
     TriggerClientEvent('renzu_tuners:SandBoxmode',source)
+end)
+
+lib.addCommand('nodegrade', {
+    help = 'Disable Degration to Current vehicle (you need to be in the vehicle)',
+	params = {},
+	restricted = 'group.admin'
+}, function(source, args, raw)
+
+	local vehicle = GetVehiclePedIsIn(GetPlayerPed(source))
+
+	if not DoesEntityExist(vehicle) then 
+		lib.notify(source, {
+			description = 'You need to be in the vehicle', 
+			type = 'error'
+		})
+		return 
+	end
+
+	local plate = string.gsub(GetVehicleNumberPlateText(vehicle), '^%s*(.-)%s*$', '%1'):upper()
+
+	db.save('nodegrade','plate',plate,1)
+
+	nodegrade[plate] = 1
+
+	GlobalState.NoDegradePlate = nodegrade
+
+	lib.notify(source, {
+		description = 'Successfully Added this vehicle to No Degration mode', 
+		type = 'success'
+	})
 end)
