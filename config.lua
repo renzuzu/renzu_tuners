@@ -46,6 +46,9 @@ config.degrade = { -- degrade value when specific mileage value is reach
 	[10] = { min = 100, degrade = 0.11},
 	[11] = { min = 1, degrade = 0.01},
 }
+config.chancedegrade = 2 -- 2% chance per degrade function run
+config.chancedegradenitro = 7 -- 7%
+config.degradetick = 3000 -- every 3 seconds when in vehicle
 
 -- points
 config.engineswapper = {
