@@ -117,20 +117,13 @@ CreateThread(function()
 		end
     end
     while true do
-        Wait(60000)
+        Wait(20000)
 		for k,v in pairs(defaulthandling) do
 			if not isPlateOwned(k) and not config.debug then
 				defaulthandling[k] = nil
 			end
 		end
-		local datas = {
-			vehiclestats = vehiclestats,
-			defaulthandling = defaulthandling,
-			vehicleupgrades = vehicleupgrades,
-			mileages = mileages
-		}
 		GlobalState.mileages = mileages
-		db.saveall(datas)
     end
 end)
 
@@ -491,6 +484,16 @@ AddEventHandler('entityRemoved', function(entity)
 		local plate = string.gsub(GetVehicleNumberPlateText(entity), '^%s*(.-)%s*$', '%1'):upper()
 		if vehiclestats[plate] and vehiclestats[plate].active then
 			vehiclestats[plate].plate = nil
+			vehiclestats[plate].active = nil
+			local vehicle = MySQL.query.await('SELECT plate FROM `'..vehicle_table..'` WHERE `plate` = ?', {plate})
+			if vehicle and vehicle[1].plate then
+				db.updateall({
+					vehiclestats = json.encode(vehiclestats[plate] or {}),
+					defaulthandling = json.encode(defaulthandling[plate] or {}),
+					vehicleupgrades = json.encode(vehicleupgrades[plate] or {}),
+					mileages = tonumber(mileages[plate]) or 0,
+				},plate)
+			end
 		end
 	end
 end)

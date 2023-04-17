@@ -64,7 +64,7 @@ sql = setmetatable({},{
 			self.busycd[string] = nil
 		end
 
-		self.savemulti = function(data,plate)
+		self.updateall = function(data,plate)
 			if not plate then return end
 			if self.busycd[plate] == nil then self.busycd[plate] = 0 end
 			while self.busy[plate] and self.busycd[plate] and self.busycd[plate] < 100 do 
@@ -83,30 +83,6 @@ sql = setmetatable({},{
 			end
 			self.busy[plate] = false
 			self.busycd[plate] = nil
-		end
-
-		self.saveall = function(data)
-			local actives = {}
-			local vehicles = MySQL.query.await('SELECT plate FROM `'..vehicle_table..'`')
-			for k,v in pairs(vehicles) do
-				local plate = v.plate and v.plate:gsub(' ','') or 'notfound'
-				actives[plate] = true
-			end
-			for k,v in pairs(data.vehiclestats) do
-				local plate = v.plate and v.plate:gsub(' ', '') or 'notfound'
-				if actives[plate] and v.active or config.debug and v.plate then
-					self.savemulti({
-						vehiclestats = json.encode(data.vehiclestats[v.plate] or {}),
-						defaulthandling = json.encode(data.defaulthandling[v.plate] or {}),
-						vehicleupgrades = json.encode(data.vehicleupgrades[v.plate] or {}),
-						mileages = tonumber(data.mileages[v.plate]) or 0,
-					},v.plate)
-					if vehiclestats[v.plate] then
-					    vehiclestats[v.plate].active = nil
-					end
-					Wait(500)
-				end
-			end
 		end
 
 		return self
